@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -28,7 +29,7 @@ public class TDView extends Application {
 	private StackPane content;
 	private int rows;
 	private int columns;
-	private static final String FILE = "TDMap3";
+	private static final String FILE = "resources/maps/TDMap3";
 	
 	private static final int WIDTH = 50;
 	private static final int HEIGHT = 50;
@@ -43,6 +44,8 @@ public class TDView extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
+	
+	
 	
 	/**
 	 * This method createMap sets up the map that is based off from a text
@@ -71,8 +74,8 @@ public class TDView extends Application {
                String line = in.nextLine();
                for (int i = 0; i < line.length(); i ++) {
             	   FileInputStream input = null;
-				   String road = "Ground.png";
-				   String grass = "Grass.png";
+				   String road = "resources/images/Ground.png";
+				   String grass = "resources/images/Grass.png";
 				   if (line.charAt(i) == '*') {
             		   input = new FileInputStream(grass);
             		   Image image = new Image(input); 
