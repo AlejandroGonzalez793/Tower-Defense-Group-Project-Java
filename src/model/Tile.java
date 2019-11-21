@@ -9,6 +9,9 @@ public class Tile {
 	private int width;
 	private int height;
 	
+	public static final int DEFAULT_WIDTH = 50;
+	public static final int DEFAULT_HEIGHT = 50;
+	
 	public Tile(Image image, boolean placeable, int width, int height) {
 		this.image = image;
 		this.placeable = placeable;
@@ -17,7 +20,7 @@ public class Tile {
 	}
 	
 	public Tile(Image image, boolean placeable) {
-		this(image, placeable, 50, 50);
+		this(image, placeable, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 	
 	public Entity getEntity() {
