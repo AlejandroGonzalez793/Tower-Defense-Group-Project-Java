@@ -30,6 +30,9 @@ public class TDView extends Application {
 	private int columns;
 	private static final String FILE = "TDMap3";
 	
+	private static final int WIDTH = 50;
+	private static final int HEIGHT = 50;
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		gc = createMap();
