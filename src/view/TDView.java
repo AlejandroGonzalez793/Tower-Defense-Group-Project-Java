@@ -33,7 +33,7 @@ public class TDView extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		gc = createMap();
-
+		
 		scene = new Scene(root);
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(scene);
