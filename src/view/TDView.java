@@ -27,7 +27,7 @@ public class TDView extends Application {
 	private GraphicsContext gc;
 	private int rows;
 	private int columns;
-	private static final String FILE = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/TDMap2";
+	private static final String FILE = "TDMap2";
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -45,7 +45,7 @@ public class TDView extends Application {
 		
 		root.setCenter(content);
 
-		scene = new Scene(root, columns*50, rows*50);
+		scene = new Scene(root);
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -54,7 +54,9 @@ public class TDView extends Application {
 	public void createLayout() {
 		Button tower = new Button("Buy Tower");
 		GridPane.setConstraints(tower, 0,0);
-		grid.add(tower,0,0);
+		root.setRight(tower);
+		
+		
 	}
 	
 	public void createMap2() {
@@ -69,8 +71,8 @@ public class TDView extends Application {
                for (int i = 0; i < line.length(); i ++) {
             	   Rectangle tile = new Rectangle(50 *k, 50 *i, 50, 50);
             	   FileInputStream input = null;
-				   String road = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/Road.png";
-				   String grass = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/Grass.png";
+				   String road = "Road.png";
+				   String grass = "Grass.png";
 				   if (line.charAt(i) == '*') {
             		   input = new FileInputStream(grass);
             		   Image image = new Image(input); 
