@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.IOException;
+
 import model.TDModel;
 
 /**
@@ -15,19 +17,26 @@ import model.TDModel;
 public class TDTowerEconomyController 
 {
 	private TDModel model;
+	private Thread playerGainOverTime;
 	
 	public TDTowerEconomyController(TDModel model)
 	{
 		this.model = model;
 	}// end TDTowerEconomyController constructor
 	
+	/**
+	 * The gainMoney method will add money to the players total money.
+	 * 
+	 * @param money Integer that is the amount of money to be added to player's total money.
+	 */
 	public void gainMoney(int money)
 	{
-		// create a new current player currency then add it to total amount
 		model.setMoney(model.getMoney() + money);	
 	}// end gainMoney
 	
 	/**
+	 * The makePurchase method will subtract the player's total money from the
+	 * cost of the tower object. 
 	 * 
 	 * @return boolean if a purchase could be made or not.
 	 */
@@ -42,10 +51,41 @@ public class TDTowerEconomyController
 		
 		return true;	
 	}// end makePurchase
-	
-	
-	
-	
-	
+		
+	/**
+	 * The playerCurrencyGain method creates a new thread that will constantly
+	 * give the player money every few seconds.
+	 */
+	public void playerCurrencyGain() {
+		playerGainOverTime = new Thread() {
+			@Override
+			public void run() {
+				int moneyGained = 50;
+				
+				try {
+					
+					model.setMoney(model.getMoney() + moneyGained);
+					Thread.sleep(2000);// 2 seconds
+				} catch (IOException e) {
+					//e.printStackTrace();
+					System.out.println("Error");
+				}// end try catch
 
+
+			}// end run
+		};// end thread
+		playerGainOverTime.start();
+ 
+	}// end playerCurrencyGain
+	
+	/*
+	 * The closeplayerCurrencyGainThread will interrupt the thread to close it.
+	 */
+	public void closeplayerCurrencyGainThread()
+	{
+		playerGainOverTime.interrupt();
+		//playerGainOverTime.stop();
+		System.gc();
+	}// end closeplayerCurrencyGainThread
+	
 }// end TDTowerEconomyController
