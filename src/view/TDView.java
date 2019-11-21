@@ -28,7 +28,7 @@ public class TDView extends Application {
 	private StackPane content;
 	private int rows;
 	private int columns;
-	private static final String FILE = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/TDMap2";
+	private static final String FILE = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/TDMap3";
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -40,6 +40,8 @@ public class TDView extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
+	
+	
 	
 	public GraphicsContext createMap() { // grid pane is not being used right now, might keep it if needed for checking if spot taken
 		root = new BorderPane();
@@ -60,7 +62,7 @@ public class TDView extends Application {
                String line = in.nextLine();
                for (int i = 0; i < line.length(); i ++) {
             	   FileInputStream input = null;
-				   String road = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/Road.png";
+				   String road = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/Ground.png";
 				   String grass = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/Grass.png";
 				   if (line.charAt(i) == '*') {
             		   input = new FileInputStream(grass);
