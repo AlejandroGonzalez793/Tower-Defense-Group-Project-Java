@@ -3,6 +3,7 @@ package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
 import javafx.application.Application;
@@ -11,33 +12,24 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class TDView extends Application {
 	
 	private BorderPane root;
 	private Scene scene;
-	private GridPane grid;
-	private Canvas canvas;
 	private GraphicsContext gc;
-	private StackPane content;
 	private int rows;
 	private int columns;
-	private static final String FILE = "resources/maps/TDMap3";
 	
-	private static final int WIDTH = 50;
-	private static final int HEIGHT = 50;
+	public static final int WIDTH = 50;
+	public static final int HEIGHT = 50;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		gc = createMap();
-		
+		Application.Parameters params = this.getParameters(); 
+		List<String> rawParams = params.getRaw();
+		gc = createMap(rawParams);
 		scene = new Scene(root);
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(scene);
@@ -55,20 +47,16 @@ public class TDView extends Application {
 	 * GraphicsContext2D of the canvas. 
 	 */
 	
-	public GraphicsContext createMap() { 
+	public GraphicsContext createMap(List<String> params) { 
 		root = new BorderPane();
-		grid = new GridPane();
 		Canvas canvas = new Canvas();
-		try {// grid pane is not being used right now, might keep it if needed for checking if spot taken
-			Scanner in = new Scanner(new File(FILE));
+		try {
+			Scanner in = new Scanner(new File(params.get(0)));
 			columns = Integer.valueOf(in.nextLine());
 			rows = Integer.valueOf(in.nextLine());
-			canvas.setHeight(rows*50);
-			canvas.setWidth(columns*50);
+			canvas.setHeight(rows * HEIGHT);
+			canvas.setWidth(columns * WIDTH);
 			gc = canvas.getGraphicsContext2D();
-			content = new StackPane();
-			content.getChildren().add(grid);
-			content.getChildren().add(canvas);
 			int k = 0;
 			while (in.hasNextLine()) {
                String line = in.nextLine();
@@ -76,23 +64,24 @@ public class TDView extends Application {
             	   FileInputStream input = null;
 				   String road = "resources/images/Ground.png";
 				   String grass = "resources/images/Grass.png";
-				   if (line.charAt(i) == '*') {
+				   char tile = line.charAt(i);
+				   if (tile == '*') {
             		   input = new FileInputStream(grass);
             		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * 50, k* 50);
+            		   gc.drawImage(image, i * WIDTH, k * HEIGHT);
             	   } else if (line.charAt(i) == '-') {
             		   input = new FileInputStream(road);
             		   Image image = new Image(input); 
-            		   gc.drawImage(image, i* 50, k*50);
+            		   gc.drawImage(image, i * WIDTH, k * HEIGHT);
             	   }
                }
                k++;
             }
             in.close();
-		} catch (FileNotFoundException e){
-			System.out.println("File not found " + FILE); // change later 
+		} catch (FileNotFoundException | NullPointerException e){
+			System.out.println("File not found or file does not fit format"); // change later 
 		}
-		root.setCenter(content);
+		root.setCenter(canvas);
 		return canvas.getGraphicsContext2D();
 	}
 
