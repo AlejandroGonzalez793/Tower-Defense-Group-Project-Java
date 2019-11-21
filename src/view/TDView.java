@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -36,8 +37,8 @@ public class TDView extends Application {
 		canvas = new Canvas();
 		gc = canvas.getGraphicsContext2D();
 		
-		
 		createMap2();
+		createLayout();
 		
 		content.getChildren().add(canvas);
 		content.getChildren().add(grid);
@@ -48,6 +49,12 @@ public class TDView extends Application {
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+	
+	public void createLayout() {
+		Button tower = new Button("Buy Tower");
+		GridPane.setConstraints(tower, 0,0);
+		grid.add(tower,0,0);
 	}
 	
 	public void createMap2() {
