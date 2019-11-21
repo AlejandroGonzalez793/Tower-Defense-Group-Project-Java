@@ -28,7 +28,7 @@ public class TDView extends Application {
 	private StackPane content;
 	private int rows;
 	private int columns;
-	private static final String FILE = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/TDMap3";
+	private static final String FILE = "TDMap3";
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -62,8 +62,8 @@ public class TDView extends Application {
                String line = in.nextLine();
                for (int i = 0; i < line.length(); i ++) {
             	   FileInputStream input = null;
-				   String road = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/Ground.png";
-				   String grass = "/Users/jarodbristol/OneDrive/Desktop/University of Arizona/Fall 2019/CSC 335/Projects/csc335-final-project-TD/Grass.png";
+				   String road = "Ground.png";
+				   String grass = "Grass.png";
 				   if (line.charAt(i) == '*') {
             		   input = new FileInputStream(grass);
             		   Image image = new Image(input); 
