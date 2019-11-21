@@ -1,7 +1,5 @@
 package model;
 
-import javafx.scene.image.Image;
-
 /**
  * A minimal template for the different Towers that can be drawn and used
  * in the game.
@@ -14,18 +12,31 @@ import javafx.scene.image.Image;
 public class Tower extends Entity {
 	public static final double SELLBACK_FACTOR = 0.9;
 	public static final double DEFAULT_RATE = 1.0;
+	public static final int DEFAULT_POWER = 1;
 	
+	private int radius;
 	private int cost;
+	private int power;
 	private double rate; // rate at which the tower fires
 	
-	public Tower(Image image, int x, int y, int width, int height, int cost, double rate) {
-		super(image, x, y, width, height);
+	public Tower(int x, int y, int width, int height, int radius, int cost, int power, double rate) {
+		super(x, y, width, height);
+		this.radius = radius;
 		this.cost = cost;
+		this.power = power;
 		this.rate = rate;
 	}
 	
-	public Tower(Image image, int x, int y, int width, int height, int cost) {
-		this(image, x, y, width, height, cost, DEFAULT_RATE);
+	public Tower(int x, int y, int width, int height, int radius, int cost) {
+		this(x, y, width, height, radius, cost, DEFAULT_POWER, DEFAULT_RATE);
+	}
+	
+	public int getRadius() {
+		return radius;
+	}
+	
+	public void setRadius(int radius) {
+		this.radius = radius;
 	}
 	
 	public int getCost() {
@@ -34,6 +45,14 @@ public class Tower extends Entity {
 	
 	public void setCost(int cost) {
 		this.cost = cost;
+	}
+	
+	public int getPower() {
+		return power;
+	}
+	
+	public void setPower(int power) {
+		this.power = power;
 	}
 	
 	public double getRate() {

@@ -1,7 +1,5 @@
 package model;
 
-import javafx.scene.image.Image;
-
 /**
  * A minimal template for the different Enemies that can be used and drawn 
  * in the game.
@@ -16,13 +14,13 @@ public class Enemy extends Entity {
 	
 	private double speed;
 	
-	public Enemy(Image image, int x, int y, int width, int height, int speed) {
-		super(image, x, y, width, height);
+	public Enemy(int x, int y, int width, int height, int speed) {
+		super(x, y, width, height);
 		this.speed = speed;
 	}
 	
-	public Enemy(Image image, int x, int y, int width, int height) {
-		this(image, x, y, width, height, DEFAULT_SPEED);
+	public Enemy(int x, int y, int width, int height) {
+		this(x, y, width, height, DEFAULT_SPEED);
 	}
 	
 	public void setSpeed(double speed) {

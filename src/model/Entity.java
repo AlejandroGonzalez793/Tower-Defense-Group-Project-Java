@@ -1,7 +1,5 @@
 package model;
 
-import javafx.scene.image.Image;
-
 /**
  * A general abstract Entity class used to represent different objects used
  * and displayed in the game. Contains the information necessary to figure
@@ -16,26 +14,19 @@ import javafx.scene.image.Image;
  * @see Tile
  */
 public abstract class Entity {
-	private Image image;
+	public static final int DEFAULT_WIDTH = 50;
+	public static final int DEFAULT_HEIGHT = 50;
+	
 	private int x; // x coord of top left corner
 	private int y; // y coord of top left corner
 	private int width; // width in pixels
 	private int height; // height in pixels
 	
-	public Entity(Image image, int x, int y, int width, int height) {
-		this.image = image;
+	public Entity(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-	}
-	
-	public Image getImage() {
-		return image;
-	}
-	
-	public void setImage(Image image) {
-		this.image = image;
 	}
 	
 	public int getX() {
