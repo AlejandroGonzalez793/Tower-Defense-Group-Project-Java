@@ -2,15 +2,27 @@ package model;
 
 import javafx.scene.image.Image;
 
+/**
+ * The underlying object on our game board that may contain references to 
+ * all other entities that can be drawn in the GUI. Contains information
+ * that specifies how to draw itself when it is retrieved.
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu) 
+ * 
+ * @see Entity
+ */
 public class Tile {
+	public static final int DEFAULT_WIDTH = 50;
+	public static final int DEFAULT_HEIGHT = 50;
+	
 	private Entity entity;
 	private Image image;
 	private boolean placeable;
 	private int width;
 	private int height;
-	
-	public static final int DEFAULT_WIDTH = 50;
-	public static final int DEFAULT_HEIGHT = 50;
 	
 	public Tile(Image image, boolean placeable, int width, int height) {
 		this.image = image;

@@ -1,5 +1,14 @@
 package model;
 
+/**
+ * A Player object represents the current player playing the game. It keeps track
+ * of information necessary to determine game completion and purchasing ability.
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu) 
+ */
 public class Player {
 	public static final int STARTING_MONEY = 1000;
 	public static final int STARTING_HEALTH = 100;

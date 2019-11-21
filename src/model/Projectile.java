@@ -3,11 +3,11 @@ package model;
 import javafx.scene.image.Image;
 
 public class Projectile extends Entity {
-	private int speed;
+	public static final double DEFAULT_SPEED = 1.0;
 	
-	public static final int DEFAULT_SPEED = 1;
+	private double speed;
 	
-	public Projectile(Image image, int x, int y, int radius, int speed) {
+	public Projectile(Image image, int x, int y, int radius, double speed) {
 		super(image, x, y, radius * 2, radius * 2);
 		this.speed = speed;
 	}
@@ -16,11 +16,11 @@ public class Projectile extends Entity {
 		this(image, x, y, radius, DEFAULT_SPEED);
 	}
 
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 	
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 }
