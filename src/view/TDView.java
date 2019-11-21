@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.Entity;
 
 public class TDView extends Application {
 	
@@ -21,9 +22,6 @@ public class TDView extends Application {
 	private GraphicsContext gc;
 	private int rows;
 	private int columns;
-	
-	public static final int WIDTH = 50;
-	public static final int HEIGHT = 50;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -54,8 +52,8 @@ public class TDView extends Application {
 			Scanner in = new Scanner(new File(params.get(0)));
 			columns = Integer.valueOf(in.nextLine());
 			rows = Integer.valueOf(in.nextLine());
-			canvas.setHeight(rows * HEIGHT);
-			canvas.setWidth(columns * WIDTH);
+			canvas.setHeight(rows * Entity.DEFAULT_HEIGHT);
+			canvas.setWidth(columns * Entity.DEFAULT_WIDTH);
 			gc = canvas.getGraphicsContext2D();
 			int k = 0;
 			while (in.hasNextLine()) {
@@ -68,11 +66,13 @@ public class TDView extends Application {
 				   if (tile == '*') {
             		   input = new FileInputStream(grass);
             		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * WIDTH, k * HEIGHT);
+            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
+            				   k * Entity.DEFAULT_HEIGHT);
             	   } else if (line.charAt(i) == '-') {
             		   input = new FileInputStream(road);
             		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * WIDTH, k * HEIGHT);
+            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
+            				   k * Entity.DEFAULT_HEIGHT);
             	   }
                }
                k++;
