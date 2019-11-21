@@ -41,13 +41,19 @@ public class TDView extends Application {
 		primaryStage.show();
 	}
 	
+	/**
+	 * This method createMap sets up the map that is based off from a text
+	 * file. The green region indicates that a tower can be placed where the 
+	 * brown or visible path shows where enemies will be traveling.
+	 * @return GraphicsContext A GraphicsContext is returned that is the 
+	 * GraphicsContext2D of the canvas. 
+	 */
 	
-	
-	public GraphicsContext createMap() { // grid pane is not being used right now, might keep it if needed for checking if spot taken
+	public GraphicsContext createMap() { 
 		root = new BorderPane();
 		grid = new GridPane();
 		Canvas canvas = new Canvas();
-		try {
+		try {// grid pane is not being used right now, might keep it if needed for checking if spot taken
 			Scanner in = new Scanner(new File(FILE));
 			columns = Integer.valueOf(in.nextLine());
 			rows = Integer.valueOf(in.nextLine());
