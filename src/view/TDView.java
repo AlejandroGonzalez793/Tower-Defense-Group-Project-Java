@@ -37,7 +37,7 @@ public class TDView extends Application {
 		canvas = new Canvas();
 		gc = canvas.getGraphicsContext2D();
 		
-		createMap2();
+		createMap();
 		createLayout();
 		
 		content.getChildren().add(canvas);
@@ -59,32 +59,36 @@ public class TDView extends Application {
 		
 	}
 	
-	public void createMap2() {
+	public GraphicsContext createMap() { 
+		root = new BorderPane();
 		grid = new GridPane();
-		try {
+		Canvas canvas = new Canvas();
+		try {// grid pane is not being used right now, might keep it if needed for checking if spot taken
 			Scanner in = new Scanner(new File(FILE));
 			columns = Integer.valueOf(in.nextLine());
 			rows = Integer.valueOf(in.nextLine());
+			canvas.setHeight(rows*50);
+			canvas.setWidth(columns*50);
+			gc = canvas.getGraphicsContext2D();
+			content = new StackPane();
+			content.getChildren().add(grid);
+			content.getChildren().add(canvas);
 			int k = 0;
 			while (in.hasNextLine()) {
                String line = in.nextLine();
                for (int i = 0; i < line.length(); i ++) {
-            	   Rectangle tile = new Rectangle(50 *k, 50 *i, 50, 50);
             	   FileInputStream input = null;
-				   String road = "Road.png";
+				   String road = "Ground.png";
 				   String grass = "Grass.png";
 				   if (line.charAt(i) == '*') {
             		   input = new FileInputStream(grass);
             		   Image image = new Image(input); 
-            		   ImagePattern image_pattern = new ImagePattern(image);
-            		   tile.setFill(image_pattern);
+            		   gc.drawImage(image, i * 50, k* 50);
             	   } else if (line.charAt(i) == '-') {
             		   input = new FileInputStream(road);
             		   Image image = new Image(input); 
-            		   ImagePattern image_pattern = new ImagePattern(image);
-            		   tile.setFill(image_pattern);
+            		   gc.drawImage(image, i* 50, k*50);
             	   }
-            	   grid.add(tile, i, k); 
                }
                k++;
             }
@@ -92,6 +96,8 @@ public class TDView extends Application {
 		} catch (FileNotFoundException e){
 			System.out.println("File not found " + FILE); // change later 
 		}
+		root.setCenter(content);
+		return canvas.getGraphicsContext2D();
 	}
 
 }
