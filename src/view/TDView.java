@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 
+import controller.TDController;
+import controller.TDTowerEconomyController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -16,9 +18,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Entity;
+import model.Player;
+import model.Tower;
 
 public class TDView extends Application {
 	
+	private TDController mainController;
+	private TDTowerEconomyController ecoController; 
 	private BorderPane root;
 	private Scene scene;
 	private GraphicsContext gc;
@@ -31,6 +37,9 @@ public class TDView extends Application {
 		Application.Parameters params = this.getParameters(); 
 		List<String> rawParams = params.getRaw();
 		gc = createMap(rawParams);
+		Player player = new Player();
+		this.mainController = new TDController(player);
+		this.ecoController = new TDTowerEconomyController(player);
 		scene = new Scene(root);
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(scene);
@@ -52,6 +61,7 @@ public class TDView extends Application {
 		// Instantiate event handler.
 		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
 		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
+		canvas.setDisable(true);
 		try {
 			Scanner in = new Scanner(new File(params.get(0)));
 			columns = Integer.valueOf(in.nextLine());
@@ -108,7 +118,20 @@ public class TDView extends Application {
 		{	
 			//System.out.println(event.getSceneX());
 	        //System.out.println(event.getSceneY());
+			int row = (int) ((event.getSceneY() / Entity.DEFAULT_HEIGHT) % rows);
+			int col = (int) ((event.getSceneX() / Entity.DEFAULT_WIDTH) % columns);
 			
+			if (path[row][col] == '*')
+			{
+				System.out.println("valid");
+				
+				ecoController.makePurchase(some_tower); // need connection to tower
+				mainController.addTower(some_tower); // need connection to tower
+			}
+			else
+			{
+				System.out.println("NOPE"); // else for testing
+			}// end if
 			
 		}// end handle
 	}// end class MouseClickedOnCanvas
