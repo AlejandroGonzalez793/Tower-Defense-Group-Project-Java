@@ -1,8 +1,7 @@
 package controller;
 
-import java.io.IOException;
-
-import model.TDModel;
+import model.Player;
+import model.Tower;
 
 /**
  * The TDTowerEconomyController class has a collection of methods that
@@ -16,12 +15,12 @@ import model.TDModel;
  */
 public class TDTowerEconomyController 
 {
-	private TDModel model;
+	private Player player;
 	private Thread playerGainOverTime;
 	
-	public TDTowerEconomyController(TDModel model)
+	public TDTowerEconomyController(Player player)
 	{
-		this.model = model;
+		this.player = player;
 	}// end TDTowerEconomyController constructor
 	
 	/**
@@ -31,7 +30,7 @@ public class TDTowerEconomyController
 	 */
 	public void gainMoney(int money)
 	{
-		model.setMoney(model.getMoney() + money);	
+		player.setMoney(player.getMoney() + money);	
 	}// end gainMoney
 	
 	/**
@@ -40,14 +39,14 @@ public class TDTowerEconomyController
 	 * 
 	 * @return boolean if a purchase could be made or not.
 	 */
-	public boolean makePurchase(TowerObject tower)
+	public boolean makePurchase(Tower tower)
 	{
-		if (model.getMoney() < tower.getCost())
+		if (player.getMoney() < tower.getCost())
 		{
 			return false;
 		}// end if
 		
-		model.setMoney(model.getMoney() - tower.getCost());
+		player.setMoney(player.getMoney() - tower.getCost());
 		
 		return true;	
 	}// end makePurchase
@@ -64,11 +63,11 @@ public class TDTowerEconomyController
 				
 				try {
 					
-					model.setMoney(model.getMoney() + moneyGained);
+					player.setMoney(player.getMoney() + moneyGained);
 					Thread.sleep(2000);// 2 seconds
-				} catch (IOException e) {
+				} catch (InterruptedException e) {
 					//e.printStackTrace();
-					System.out.println("Error");
+					System.out.println("interrupted");
 				}// end try catch
 
 
