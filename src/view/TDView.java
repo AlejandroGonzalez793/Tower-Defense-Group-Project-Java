@@ -20,6 +20,7 @@ public class TDView extends Application {
 	private BorderPane root;
 	private Scene scene;
 	private GraphicsContext gc;
+	private char[][] path;
 	private int rows;
 	private int columns;
 	
@@ -34,8 +35,6 @@ public class TDView extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
-	
-	
 	
 	/**
 	 * This method createMap sets up the map that is based off from a text
@@ -52,6 +51,7 @@ public class TDView extends Application {
 			Scanner in = new Scanner(new File(params.get(0)));
 			columns = Integer.valueOf(in.nextLine());
 			rows = Integer.valueOf(in.nextLine());
+			path = new char[rows][columns];
 			canvas.setHeight(rows * Entity.DEFAULT_HEIGHT);
 			canvas.setWidth(columns * Entity.DEFAULT_WIDTH);
 			gc = canvas.getGraphicsContext2D();
@@ -64,11 +64,13 @@ public class TDView extends Application {
 				   String grass = "resources/images/Grass.png";
 				   char tile = line.charAt(i);
 				   if (tile == '*') {
+					   path[k][i] = tile;
             		   input = new FileInputStream(grass);
             		   Image image = new Image(input); 
             		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
             				   k * Entity.DEFAULT_HEIGHT);
             	   } else if (line.charAt(i) == '-') {
+            		   path[k][i] = tile;
             		   input = new FileInputStream(road);
             		   Image image = new Image(input); 
             		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
