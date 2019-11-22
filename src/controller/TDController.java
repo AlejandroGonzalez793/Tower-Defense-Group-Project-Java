@@ -102,8 +102,28 @@ public class TDController {
 				e1.getY() + e1.getHeight() > e2.getY();
 	}
 	
+	/**
+	 * The CheapTower method creates a new CheapTower from the model
+	 * and it returns it back to the view.
+	 * 
+	 * @return CheapTower object 
+	 */
 	public CheapTower getCheapTower()
 	{
 		return new CheapTower(0, 0, 50, 50, 50, 100);
 	}// end getCheapTower
+	
+	/**
+	 * The setTowerCoordinates method sets the coordinates of the
+	 * tower placement.
+	 * 
+	 * @param tower A tower object that was placed.
+	 * @param x The tower's x coordinate.
+	 * @param y The tower's Y coordinate.
+	 */
+	public void setTowerCoordinates(Tower tower, int x, int y)
+	{
+		tower.setX(x);
+		tower.setY(y);
+	}// end setTowerCoordinates
 }

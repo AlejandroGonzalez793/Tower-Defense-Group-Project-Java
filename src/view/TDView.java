@@ -21,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -232,6 +233,7 @@ public class TDView extends Application {
 					System.out.println("File not found or file does not fit format"); // change later 
 				}// end try catch
       			  
+				mainController.setTowerCoordinates(towerObject, (int)event.getX(), (int)event.getY());
       		    mainController.addTower(towerObject);
       		    towerObject = null;
       		    System.gc();
@@ -247,6 +249,10 @@ public class TDView extends Application {
 			{
 				System.out.println("NOPE"); // else for testing
 			}// end if
+			
+			// need some way to find the pixal's of the map 
+			// so that the towers can be placed properly. 
+			//PixelReader pixelReader = canvas.getPixelReader();
 			
 		}// end handle
 	}// end class MouseClickedOnCanvas
