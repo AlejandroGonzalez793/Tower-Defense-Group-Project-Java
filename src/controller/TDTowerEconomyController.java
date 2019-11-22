@@ -16,6 +16,8 @@ import model.Tower;
  */
 public class TDTowerEconomyController 
 {
+	static final int MONEY_GAINED = 50;
+	
 	private Player player;
 	private Thread playerGainOverTime;
 	
@@ -38,6 +40,7 @@ public class TDTowerEconomyController
 	 * The makePurchase method will subtract the player's total money from the
 	 * cost of the tower object. 
 	 * 
+	 * @param Tower object.
 	 * @return boolean if a purchase could be made or not.
 	 */
 	public boolean makePurchase(Tower tower)
@@ -55,10 +58,12 @@ public class TDTowerEconomyController
 	/**
 	 * The sellBackTower method will add to the player's money the cost of the tower
 	 * being sold at a decreased amount. 
+	 * 
+	 * @param Tower object.
 	 */
 	public void sellBackTower(Tower tower)
 	{
-		player.setMoney(player.getMoney() + (int)Math.round(tower.getCost() * 0.8));	
+		player.setMoney(player.getMoney() + (int)Math.round(tower.getCost() * tower.SELLBACK_FACTOR));	
 	}// end makePurchase
 
 	/**
@@ -69,11 +74,9 @@ public class TDTowerEconomyController
 		playerGainOverTime = new Thread() {
 			@Override
 			public void run() {
-				int moneyGained = 50;
-				
 				try {
 					
-					player.setMoney(player.getMoney() + moneyGained);
+					player.setMoney(player.getMoney() + MONEY_GAINED);
 					Thread.sleep(2000);// 2 seconds
 				} catch (InterruptedException e) {
 					//e.printStackTrace();
