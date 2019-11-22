@@ -215,8 +215,8 @@ public class TDView extends Application {
 		{	
 			//System.out.println(event.getSceneX());
 	        //System.out.println(event.getSceneY());
-			int row = (int) ((event.getSceneY() / Entity.DEFAULT_HEIGHT) % rows);
-			int col = (int) ((event.getSceneX() / Entity.DEFAULT_WIDTH) % columns);
+			int row = (int) ((event.getY() / Entity.DEFAULT_HEIGHT) % rows);
+			int col = (int) ((event.getX() / Entity.DEFAULT_WIDTH) % columns);
 			
 			if (path[row][col] == '*')
 			{
@@ -233,7 +233,7 @@ public class TDView extends Application {
 					System.out.println("File not found or file does not fit format"); // change later 
 				}// end try catch
       			  
-				mainController.setTowerCoordinates(towerObject, (int)event.getX(), (int)event.getY());
+				mainController.setTowerCoordinates(towerObject, (int)event.getX() + 25, (int)event.getY() + 25);
       		    mainController.addTower(towerObject);
       		    towerObject = null;
       		    System.gc();
