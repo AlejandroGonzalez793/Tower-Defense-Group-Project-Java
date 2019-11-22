@@ -63,7 +63,7 @@ public class TDTowerEconomyController
 	 */
 	public void sellBackTower(Tower tower)
 	{
-		player.setMoney(player.getMoney() + (int)Math.round(tower.getCost() * tower.SELLBACK_FACTOR));	
+		player.setMoney(player.getMoney() + (int)Math.round(tower.getCost() * Tower.SELLBACK_FACTOR));	
 	}// end makePurchase
 
 	/**
