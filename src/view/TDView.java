@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -54,10 +55,20 @@ public class TDView extends Application {
 	
 	public void createLayout() {
 		VBox box = new VBox();
-		box.setSpacing(10);;
+		box.setSpacing(10);
 		
-		Button tower1 = new Button("Tower 1");
+		Button tower1 = new Button();
 		GridPane.setConstraints(tower1, 0,0);
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream("tower1.png");
+		} catch (FileNotFoundException e) {
+				e.printStackTrace();
+		}
+		Image towerImage1 = new Image(in);
+		tower1.setGraphic(new ImageView(towerImage1));
+		
+		
 		box.getChildren().add(tower1);
 		
 		Button tower2 = new Button("Tower 2");
