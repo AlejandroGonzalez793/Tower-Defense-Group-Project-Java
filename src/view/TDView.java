@@ -16,14 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import model.Entity;
 
@@ -31,17 +25,10 @@ public class TDView extends Application {
 	
 	private BorderPane root;
 	private Scene scene;
-	private GridPane grid;
-	private Canvas canvas;
 	private GraphicsContext gc;
 	private char[][] path;
-	private StackPane content;
 	private int rows;
 	private int columns;
-	private static final String FILE = "TDMap3";
-	
-	private static final int WIDTH = 50;
-	private static final int HEIGHT = 50;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -73,32 +60,26 @@ public class TDView extends Application {
 		box.setSpacing(10);
 		
 		Button tower1 = new Button("tower 1");
-		GridPane.setConstraints(tower1, 0,0);
 		tower1.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower1);
 		
-		Button tower2 = new Button("Tower 2");
-		GridPane.setConstraints(tower2, 0,1);
+		Button tower2 = new Button("Tower 2");	
 		tower2.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower2);
 		
-		Button tower3 = new Button("Tower 3");
-		GridPane.setConstraints(tower3, 0,2);
+		Button tower3 = new Button("Tower 3");	
 		tower3.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower3);
 		
 		Button tower4 = new Button("Tower 4");
-		GridPane.setConstraints(tower4, 0,3);
 		tower4.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower4);
 		
-		Button tower5 = new Button("Tower 5");
-		GridPane.setConstraints(tower5, 0,4);
+		Button tower5 = new Button("Tower 5");		
 		tower5.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower5);
 		
-		Button tower6 = new Button("Tower 6");
-		GridPane.setConstraints(tower6, 0,4);
+		Button tower6 = new Button("Tower 6");		
 		tower6.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower6);
 		
