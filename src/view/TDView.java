@@ -225,8 +225,8 @@ public class TDView extends Application {
 				try {
 				FileInputStream input = new FileInputStream("resources/images/tower1.png");
       		    Image image = new Image(input); 
-      		    gc.drawImage(image, event.getSceneX() * towerObject.getWidth(), 
-      		    		event.getSceneY() * towerObject.getHeight());
+      		    gc.drawImage(image, event.getX(), event.getY());
+      		    System.out.println(event.getX());
       		    input.close();
 				} catch (NullPointerException | IOException e){
 					System.out.println("File not found or file does not fit format"); // change later 
