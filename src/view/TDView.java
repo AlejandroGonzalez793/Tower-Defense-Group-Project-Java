@@ -9,13 +9,16 @@ import java.util.Scanner;
 import controller.TDController;
 import controller.TDTowerEconomyController;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Entity;
 import model.Player;
@@ -109,7 +112,8 @@ public class TDView extends Application {
 	class MouseClickedOnCanvas implements EventHandler<MouseEvent>  
 	{
 		/**
-		 * The handle method handles the event for when 
+		 * The handle method handles the event for when the user clicks on the
+		 * map to place a tower.
 		 * 
 		 * @param event The MouseEvent object.
 		 */
@@ -125,8 +129,8 @@ public class TDView extends Application {
 			{
 				System.out.println("valid");
 				
-				ecoController.makePurchase(some_tower); // need connection to tower
-				mainController.addTower(some_tower); // need connection to tower
+				//ecoController.makePurchase(some_tower); // need connection to tower
+				//mainController.addTower(some_tower); // need connection to tower
 			}
 			else
 			{
@@ -135,4 +139,24 @@ public class TDView extends Application {
 			
 		}// end handle
 	}// end class MouseClickedOnCanvas
+	
+	/**
+	 * The TowerOneButton class is the event handler class that will
+	 * check if the player can buy tower1, then they can place it on the map.
+	 * If they can't buy the tower, then they won't be able to place anything.
+	 */
+	class TowerOneButton implements EventHandler<ActionEvent>
+	{
+		/**
+		 * The handle method handles the event for when the Tower 1 button is pressed.
+		 * 
+		 * @param e The ActionEvent object.
+		 */
+		public void handle(ActionEvent e) 
+		{
+			
+			//System.out.println("\nCLICK\n"); //used to test
+		}// end handle
+	}// end TowerOneButton class
+	
 }
