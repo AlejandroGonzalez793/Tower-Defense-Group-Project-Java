@@ -67,26 +67,35 @@ public class TDView extends Application {
 		VBox box = new VBox();
 		box.setSpacing(10);
 		
-		Button tower1 = new Button();
+		Button tower1 = new Button("tower 1");
 		GridPane.setConstraints(tower1, 0,0);
 		tower1.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower1);
 		
 		Button tower2 = new Button("Tower 2");
 		GridPane.setConstraints(tower2, 0,1);
+		tower2.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower2);
 		
 		Button tower3 = new Button("Tower 3");
 		GridPane.setConstraints(tower3, 0,2);
+		tower3.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower3);
 		
 		Button tower4 = new Button("Tower 4");
 		GridPane.setConstraints(tower4, 0,3);
+		tower4.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower4);
 		
 		Button tower5 = new Button("Tower 5");
 		GridPane.setConstraints(tower5, 0,4);
+		tower5.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower5);
+		
+		Button tower6 = new Button("Tower 6");
+		GridPane.setConstraints(tower6, 0,4);
+		tower6.setGraphic(setImage("tower1.png"));
+		box.getChildren().add(tower6);
 		
 		root.setRight(box);
 		
