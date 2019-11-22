@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Scanner;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Entity;
@@ -47,6 +49,9 @@ public class TDView extends Application {
 	public GraphicsContext createMap(List<String> params) { 
 		root = new BorderPane();
 		Canvas canvas = new Canvas();
+		// Instantiate event handler.
+		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
+		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
 		try {
 			Scanner in = new Scanner(new File(params.get(0)));
 			columns = Integer.valueOf(in.nextLine());
@@ -87,4 +92,24 @@ public class TDView extends Application {
 		return canvas.getGraphicsContext2D();
 	}
 
+	/**
+	 * The MouseClickedOnCanvas class is the event handler for the 
+	 * canvas setOnMouseClicked.
+	 */
+	class MouseClickedOnCanvas implements EventHandler<MouseEvent>  
+	{
+		/**
+		 * The handle method handles the event for when 
+		 * 
+		 * @param event The MouseEvent object.
+		 */
+		@Override
+		public void handle(MouseEvent event) 
+		{	
+			//System.out.println(event.getSceneX());
+	        //System.out.println(event.getSceneY());
+			
+			
+		}// end handle
+	}// end class MouseClickedOnCanvas
 }
