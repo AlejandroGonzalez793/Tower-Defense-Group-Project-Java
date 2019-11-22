@@ -1,5 +1,6 @@
 package controller;
 
+import java.lang.Math; 
 import model.Player;
 import model.Tower;
 
@@ -50,7 +51,16 @@ public class TDTowerEconomyController
 		
 		return true;	
 	}// end makePurchase
-		
+	
+	/**
+	 * The sellBackTower method will add to the player's money the cost of the tower
+	 * being sold at a decreased amount. 
+	 */
+	public void sellBackTower(Tower tower)
+	{
+		player.setMoney(player.getMoney() + (int)Math.round(tower.getCost() * 0.8));	
+	}// end makePurchase
+
 	/**
 	 * The playerCurrencyGain method creates a new thread that will constantly
 	 * give the player money every few seconds.
