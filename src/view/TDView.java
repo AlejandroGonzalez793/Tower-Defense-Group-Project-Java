@@ -226,14 +226,14 @@ public class TDView extends Application {
 				try {
 				FileInputStream input = new FileInputStream("resources/images/tower1.png");
       		    Image image = new Image(input); 
-      		    gc.drawImage(image, event.getX(), event.getY());
+      		    gc.drawImage(image, event.getX() - 25, event.getY() - 25);
       		    System.out.println(event.getX());
       		    input.close();
 				} catch (NullPointerException | IOException e){
 					System.out.println("File not found or file does not fit format"); // change later 
 				}// end try catch
       			  
-				mainController.setTowerCoordinates(towerObject, (int)event.getX() + 25, (int)event.getY() + 25);
+				mainController.setTowerCoordinates(towerObject, (int)event.getX() - 25, (int)event.getY() - 25);
       		    mainController.addTower(towerObject);
       		    towerObject = null;
       		    System.gc();
