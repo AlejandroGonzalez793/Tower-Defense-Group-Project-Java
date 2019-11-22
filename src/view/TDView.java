@@ -61,7 +61,7 @@ public class TDView extends Application {
 	private ImageView setImage(String pic) {
 		FileInputStream in = null;
 		try {
-			in = new FileInputStream(pic);
+			in = new FileInputStream("resources/images/" + pic);
 		} catch (FileNotFoundException e) {
 		}
 		Image towerImage1 = new Image(in);
