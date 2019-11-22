@@ -53,22 +53,23 @@ public class TDView extends Application {
 	}
 	
 	
+	private ImageView setImage(String pic) {
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(pic);
+		} catch (FileNotFoundException e) {
+		}
+		Image towerImage1 = new Image(in);
+		return new ImageView(towerImage1);
+	}
+	
 	public void createLayout() {
 		VBox box = new VBox();
 		box.setSpacing(10);
 		
 		Button tower1 = new Button();
 		GridPane.setConstraints(tower1, 0,0);
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream("tower1.png");
-		} catch (FileNotFoundException e) {
-				e.printStackTrace();
-		}
-		Image towerImage1 = new Image(in);
-		tower1.setGraphic(new ImageView(towerImage1));
-		
-		
+		tower1.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower1);
 		
 		Button tower2 = new Button("Tower 2");
