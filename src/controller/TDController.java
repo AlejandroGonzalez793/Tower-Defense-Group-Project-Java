@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.CheapTower;
 import model.Enemy;
 import model.Entity;
 import model.Player;
@@ -100,4 +101,9 @@ public class TDController {
 				e1.getY() < e2.getY() + e2.getHeight() &&
 				e1.getY() + e1.getHeight() > e2.getY();
 	}
+	
+	public CheapTower getCheapTower()
+	{
+		return new CheapTower(0, 0, 50, 50, 50, 100);
+	}// end getCheapTower
 }

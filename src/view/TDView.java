@@ -3,6 +3,7 @@ package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,7 +15,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -41,6 +41,15 @@ public class TDView extends Application {
 	private char[][] path;
 	private int rows;
 	private int columns;
+	
+	private Tower towerObject;
+	private Button tower1;
+	private Button tower2;
+	private Button tower3;
+	private Button tower4;
+	private Button tower5;
+	private Button tower6;
+	
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -73,42 +82,42 @@ public class TDView extends Application {
 		VBox box = new VBox();
 		box.setSpacing(10);
 		
-		Button tower1 = new Button("tower 1");
+		tower1 = new Button("tower 1");
 		tower1.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower1);
 		// Instantiate event handler.
 		TowerOneButton tower1BtnHandler = new TowerOneButton();
 		tower1.setOnAction(tower1BtnHandler); // Associate tower button with the named EventHandler
 		
-		Button tower2 = new Button("Tower 2");	
+		tower2 = new Button("Tower 2");	
 		tower2.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower2);
 		// Instantiate event handler.
 		TowerTwoButton tower2BtnHandler = new TowerTwoButton();
 		tower2.setOnAction(tower2BtnHandler); // Associate tower button with the named EventHandler	
 		
-		Button tower3 = new Button("Tower 3");	
+		tower3 = new Button("Tower 3");	
 		tower3.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower3);
 		// Instantiate event handler.
 		TowerThreeButton tower3BtnHandler = new TowerThreeButton();
 		tower3.setOnAction(tower3BtnHandler); // Associate tower button with the named EventHandler	
 		
-		Button tower4 = new Button("Tower 4");
+		tower4 = new Button("Tower 4");
 		tower4.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower4);
 		// Instantiate event handler.
 		TowerFourButton tower4BtnHandler = new TowerFourButton();
 		tower4.setOnAction(tower4BtnHandler); // Associate tower button with the named EventHandler		
 		
-		Button tower5 = new Button("Tower 5");		
+		tower5 = new Button("Tower 5");		
 		tower5.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower5);
 		// Instantiate event handler.
 		TowerFiveButton tower5BtnHandler = new TowerFiveButton();
 		tower5.setOnAction(tower5BtnHandler); // Associate tower button with the named EventHandler	
 		
-		Button tower6 = new Button("Tower 6");		
+		tower6 = new Button("Tower 6");		
 		tower6.setGraphic(setImage("tower1.png"));
 		box.getChildren().add(tower6);
 		// Instantiate event handler.
@@ -212,9 +221,26 @@ public class TDView extends Application {
 			{
 				System.out.println("valid");
 				
-				//ecoController.makePurchase(some_tower); // need connection to tower
-				//mainController.addTower(some_tower); // need connection to tower
-				
+				//ecoController.makePurchase(some_tower);
+				try {
+				FileInputStream input = new FileInputStream("resources/images/tower1.png");
+      		    Image image = new Image(input); 
+      		    gc.drawImage(image, event.getSceneX() * towerObject.getWidth(), 
+      		    		event.getSceneY() * towerObject.getHeight());
+      		    input.close();
+				} catch (NullPointerException | IOException e){
+					System.out.println("File not found or file does not fit format"); // change later 
+				}// end try catch
+      			  
+      		    mainController.addTower(towerObject);
+      		    towerObject = null;
+      		    System.gc();
+      		    tower1.setDisable(false);
+      		    tower2.setDisable(false);
+      		    tower3.setDisable(false);
+      		    tower4.setDisable(false);
+      		    tower5.setDisable(false);
+      		    tower6.setDisable(false);
 				canvas.setDisable(true);
 			}
 			else
@@ -240,11 +266,20 @@ public class TDView extends Application {
 		public void handle(ActionEvent e) 
 		{
 			//System.out.println("\nCLICK\n"); //used to test
-			if (ecoController.makePurchase(tower1))
+			towerObject = mainController.getCheapTower();
+			
+			if (ecoController.makePurchase(towerObject))
 			{
 				// here would be a way to reference the tower object
 				// so that the mouse handler would know what tower to place
+				tower1.setDisable(true);
+				tower2.setDisable(true);
+				tower3.setDisable(true);
+				tower4.setDisable(true);
+				tower5.setDisable(true);
+				tower6.setDisable(true);
 				canvas.setDisable(false);
+				System.out.println("Bought Tower 1");
 			}
 			else
 			{
@@ -269,6 +304,7 @@ public class TDView extends Application {
 		public void handle(ActionEvent e) 
 		{
 			//System.out.println("\nCLICK\n"); //used to test
+			/*
 			if (ecoController.makePurchase(tower2))
 			{
 				// here would be a way to reference the tower object
@@ -280,6 +316,7 @@ public class TDView extends Application {
 				// do something like flash red on box
 				System.out.println("Can't buy tower2");
 			}// end if
+			*/
 		}// end handle
 	}// end TowerTwoButton class
 	
@@ -298,6 +335,7 @@ public class TDView extends Application {
 		public void handle(ActionEvent e) 
 		{
 			//System.out.println("\nCLICK\n"); //used to test
+			/*
 			if (ecoController.makePurchase(tower3))
 			{
 				// here would be a way to reference the tower object
@@ -309,6 +347,7 @@ public class TDView extends Application {
 				// do something like flash red on box
 				System.out.println("Can't buy tower3");
 			}// end if
+			*/
 		}// end handle
 	}// end TowerThreeButton class
 	
@@ -327,6 +366,7 @@ public class TDView extends Application {
 		public void handle(ActionEvent e) 
 		{
 			//System.out.println("\nCLICK\n"); //used to test
+			/*
 			if (ecoController.makePurchase(tower4))
 			{
 				// here would be a way to reference the tower object
@@ -338,6 +378,7 @@ public class TDView extends Application {
 				// do something like flash red on box
 				System.out.println("Can't buy tower4");
 			}// end if
+			*/
 		}// end handle
 	}// end TowerFourButton class
 	
@@ -356,6 +397,7 @@ public class TDView extends Application {
 		public void handle(ActionEvent e) 
 		{
 			//System.out.println("\nCLICK\n"); //used to test
+			/*
 			if (ecoController.makePurchase(tower5))
 			{
 				// here would be a way to reference the tower object
@@ -367,7 +409,8 @@ public class TDView extends Application {
 				// do something like flash red on box
 				System.out.println("Can't buy tower5");
 			}// end if
-		}// end handle
+			*/
+		}// end handle	
 	}// end TowerFiveButton class
 	
 	/**
@@ -385,6 +428,7 @@ public class TDView extends Application {
 		public void handle(ActionEvent e) 
 		{
 			//System.out.println("\nCLICK\n"); //used to test
+			/*
 			if (ecoController.makePurchase(tower6))
 			{
 				// here would be a way to reference the tower object
@@ -396,6 +440,7 @@ public class TDView extends Application {
 				// do something like flash red on box
 				System.out.println("Can't buy tower6");
 			}// end if
+			*/
 		}// end handle
 	}// end TowerSixButton class
 }
