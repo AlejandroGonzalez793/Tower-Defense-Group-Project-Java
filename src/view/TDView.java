@@ -48,6 +48,9 @@ public class TDView extends Application {
 	private static final char FREE_CHAR = '*';
 	private static final char ROAD_CHAR = '-';
 	private static final int TOWER_ROWS = 2;
+	private static final String IMAGE_PATH = "resources/images";
+	private static final String TOWER_IMAGE_PATH = "resources/images/towers/";
+
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -66,10 +69,21 @@ public class TDView extends Application {
 	}
 	
 	
-	private ImageView setImage(String pic) {
+	private ImageView getImage(String pic) {
 		FileInputStream in = null;
 		try {
-			in = new FileInputStream("resources/images/" + pic);
+			in = new FileInputStream(IMAGE_PATH + pic);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		Image towerImage = new Image(in);
+		return new ImageView(towerImage);
+	}
+	
+	private ImageView getTowerImage(String pic) {
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(TOWER_IMAGE_PATH + pic);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +102,7 @@ public class TDView extends Application {
 		for (Tower tower : towers) {
 			Button button = new Button();
 			button.setOnAction(new TowerButton(tower));
-			button.setGraphic(setImage(tower.getImageName()));
+			button.setGraphic(getTowerImage(tower.getImageName()));
 			towerPane.add(button, j, i);
 			
 			i++;
@@ -193,7 +207,7 @@ public class TDView extends Application {
 				
 				FileInputStream input = null;
 				try {
-					input = new FileInputStream("resources/images/" + selectedTower.getImageName());
+					input = new FileInputStream(TOWER_IMAGE_PATH + selectedTower.getImageName());
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -238,7 +252,6 @@ public class TDView extends Application {
 		 */
 		public void handle(ActionEvent e) {		
 			selectedTower = tower;
-			
 			if (ecoController.makePurchase(tower)) {
 				towerPane.setDisable(true);
 				canvas.setDisable(false);
