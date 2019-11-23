@@ -135,9 +135,13 @@ public class TDView extends Application implements Observer {
 		
 		statsBox.getChildren().addAll(hpBox, moneyBox);
 		
+		VBox controlBox = new VBox();
+		Button newWaveButton = new Button("New Wave >>");
+		controlBox.getChildren().add(newWaveButton);
+		
 		sidebarPane.setTop(statsBox);
 		sidebarPane.setCenter(towerPane);
-		sidebarPane.setBottom(new Button("New Wave >>"));
+		sidebarPane.setBottom(controlBox);
 		
 		root.setRight(sidebarPane);
 	}
