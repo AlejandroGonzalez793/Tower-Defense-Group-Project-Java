@@ -87,7 +87,7 @@ public class TDView extends Application {
 		int j = 0;
 		for (Tower tower : towers) {
 			Button button = new Button();
-			button.setOnAction(new TowerButton());
+			button.setOnAction(new TowerButton(tower));
 			button.setGraphic(setImage(tower.getImageName()));
 			towerPane.add(button, j, i);
 			
@@ -225,15 +225,21 @@ public class TDView extends Application {
 	 * If they can't buy the tower, then they won't be able to place anything.
 	 */
 	class TowerButton implements EventHandler<ActionEvent> {
+		private Tower tower;
+		
+		public TowerButton(Tower tower) {
+			this.tower = tower;
+		}
+		
 		/**
 		 * The handle method handles the event for when the Tower 1 button is pressed.
 		 * 
 		 * @param e The ActionEvent object.
 		 */
-		public void handle(ActionEvent e) {
-			selectedTower = mainController.getRandomTower();
+		public void handle(ActionEvent e) {		
+			selectedTower = tower;
 			
-			if (ecoController.makePurchase(selectedTower)) {
+			if (ecoController.makePurchase(tower)) {
 				towerPane.setDisable(true);
 				canvas.setDisable(false);
 			} else {
