@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Entity;
 import model.Player;
@@ -120,10 +121,10 @@ public class TDView extends Application {
 		hbox.setSpacing(20);
 		
 		Label hp = new Label("HP: ");
-		TextField hpText = new TextField("100");
+		Text hpText = new Text(Integer.toString(Player.STARTING_HEALTH));
 		
 		Label gold = new Label("Gold: ");
-		TextField goldText = new TextField("100");
+		Text goldText = new Text(Integer.toString(Player.STARTING_MONEY));
 		
 		hbox.getChildren().addAll(hp, hpText, gold, goldText);
 		
@@ -197,28 +198,17 @@ public class TDView extends Application {
 		 * @param event The MouseEvent object.
 		 */
 		@Override
-		public void handle(MouseEvent event) {	
-			int rowTopLeft = (int) (((event.getY()+((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_HEIGHT) % rows);
-			int colTopLeft = (int) (((event.getX()-((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_WIDTH) % columns);
+		public void handle(MouseEvent event) {
+			int col = (int)(event.getX() / Entity.DEFAULT_WIDTH) % columns;
+			int row = (int)(event.getY() / Entity.DEFAULT_HEIGHT) % rows;
 			
-			int rowTopRight = (int) (((event.getY()+((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_HEIGHT) % rows);
-			int colTopRight = (int) (((event.getX()+((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_WIDTH) % columns);
-			
-			int rowBottomLeft = (int) (((event.getY()-((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_HEIGHT) % rows);
-			int colBottomLeft = (int) (((event.getX()-((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_WIDTH) % columns);
-			
-			int rowBottomRight = (int) (((event.getY()-((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_HEIGHT) % rows);
-			int colBottomRight = (int) (((event.getX()+((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_WIDTH) % columns);
+			int x = col * Entity.DEFAULT_WIDTH;
+			int y = row * Entity.DEFAULT_HEIGHT;
 			
 			System.out.println(event.getX());
 			System.out.println(event.getY());
 			
-			if (path[rowTopLeft][colTopLeft] == FREE_CHAR && path[rowTopRight][colTopRight] == FREE_CHAR
-					&& path[rowBottomLeft][colBottomLeft] == FREE_CHAR && path[rowBottomRight][colBottomRight] == FREE_CHAR 
-					&& (event.getX()+((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) < canvas.getWidth()
-					&& (event.getY()+((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) < canvas.getHeight()
-					&& (event.getX()-((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) > 0
-					&& (event.getY()-((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) > 0) {
+			if (path[row][col] == FREE_CHAR) {
 				System.out.println("valid");
 				
 				FileInputStream input = null;
@@ -231,7 +221,7 @@ public class TDView extends Application {
       		    try {
       		    	if (input != null) {
     	      		    Image image = new Image(input);
-    	      		    gc.drawImage(image, event.getX() - 25, event.getY() - 25);
+    	      		    gc.drawImage(image, x, y, Entity.DEFAULT_WIDTH, Entity.DEFAULT_HEIGHT);
     					input.close();
     				}
 				} catch (IOException e) {
@@ -239,7 +229,7 @@ public class TDView extends Application {
 				}
 			
       		    ecoController.makePurchase(selectedTower);
-				mainController.setTowerCoordinates(selectedTower, (int)event.getX() - 25, (int)event.getY() - 25);
+				mainController.setTowerCoordinates(selectedTower, x, y);
 				mainController.addTower(selectedTower);
       		    selectedTower = null;
       		    towerPane.setDisable(false);
