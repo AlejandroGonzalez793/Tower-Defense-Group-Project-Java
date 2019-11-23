@@ -26,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Entity;
@@ -85,18 +86,6 @@ public class TDView extends Application implements Observer {
 		
 	}
 	
-	
-	private ImageView getImage(String pic) {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(IMAGE_PATH + pic);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		Image towerImage = new Image(in);
-		return new ImageView(towerImage);
-	}
-	
 	private ImageView getTowerImage(String pic) {
 		FileInputStream in = null;
 		try {
@@ -109,6 +98,7 @@ public class TDView extends Application implements Observer {
 	}
 	
 	public void createLayout() {
+		BorderPane sidebarPane = new BorderPane();
 		towerPane = new GridPane();
 		towerPane.setPadding(new Insets(5, 5, 5, 5));
 		towerPane.setVgap(5);
@@ -130,22 +120,30 @@ public class TDView extends Application implements Observer {
 			}
 		}
 		
-		root.setRight(towerPane);
+		VBox statsBox = new VBox();
+		statsBox.setSpacing(5);
 		
-		HBox hbox = new HBox();
-		hbox.setSpacing(20);
-		
-		Label hp = new Label("HP: ");
+		HBox hpBox = new HBox();
+		Label hpLabel = new Label("HP: ");
 		health = new Text(Integer.toString(Player.STARTING_HEALTH));
+		hpBox.getChildren().addAll(hpLabel, health);
 		
-		Label gold = new Label("Gold: ");
+		HBox moneyBox = new HBox();
+		Label moneyLabel = new Label("Gold: ");
 		money = new Text(Integer.toString(Player.STARTING_MONEY));
+		moneyBox.getChildren().addAll(moneyLabel, money);
 		
-		hbox.getChildren().addAll(hp, health, gold, money);
+		statsBox.getChildren().addAll(hpBox, moneyBox);
 		
-		root.setTop(hbox);
+		VBox controlBox = new VBox();
+		Button newWaveButton = new Button("New Wave >>");
+		controlBox.getChildren().add(newWaveButton);
 		
-		root.setBottom(new Button("New Wave >>>>"));
+		sidebarPane.setTop(statsBox);
+		sidebarPane.setCenter(towerPane);
+		sidebarPane.setBottom(controlBox);
+		
+		root.setRight(sidebarPane);
 	}
 	
 	/**
