@@ -52,6 +52,7 @@ public class TDView extends Application implements Observer {
 	
 	private static final char FREE_CHAR = '*';
 	private static final char ROAD_CHAR = '-';
+	private static final char TOWER_CHAR = 't';
 	private static final int TOWER_ROWS = 2;
 	private static final String IMAGE_PATH = "resources/images/";
 	private static final String TOWER_IMAGE_PATH = "resources/images/towers/";
@@ -218,12 +219,7 @@ public class TDView extends Application implements Observer {
 			int x = col * Entity.DEFAULT_WIDTH;
 			int y = row * Entity.DEFAULT_HEIGHT;
 			
-			System.out.println(event.getX());
-			System.out.println(event.getY());
-			
 			if (path[row][col] == FREE_CHAR) {
-				System.out.println("valid");
-				
 				FileInputStream input = null;
 				try {
 					input = new FileInputStream(TOWER_IMAGE_PATH + selectedTower.getImageName());
@@ -241,14 +237,13 @@ public class TDView extends Application implements Observer {
 					e.printStackTrace();
 				}
 			
+      		    path[row][col] = TOWER_CHAR;
       		    ecoController.makePurchase(selectedTower);
 				mainController.setTowerCoordinates(selectedTower, x, y);
 				mainController.addTower(selectedTower);
       		    selectedTower = null;
       		    towerPane.setDisable(false);
 				canvas.setDisable(true);
-			} else {
-				System.out.println("NOPE"); // else for testing
 			}
 		}
 	}
