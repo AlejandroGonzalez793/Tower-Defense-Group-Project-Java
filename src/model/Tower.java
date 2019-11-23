@@ -13,6 +13,7 @@ public class Tower extends Entity {
 	public static final double SELLBACK_FACTOR = 0.9;
 	public static final double DEFAULT_RATE = 1.0;
 	public static final int DEFAULT_POWER = 1;
+	public static final int DEFAULT_COST = 100;
 	
 	private String imageName = "tower1.png";
 	private int radius;
@@ -28,8 +29,8 @@ public class Tower extends Entity {
 		this.rate = rate;
 	}
 	
-	public Tower(int x, int y, int width, int height, int radius, int cost) {
-		this(x, y, width, height, radius, cost, DEFAULT_POWER, DEFAULT_RATE);
+	public Tower(int x, int y, int width, int height, int radius) {
+		this(x, y, width, height, radius, DEFAULT_COST, DEFAULT_POWER, DEFAULT_RATE);
 	}
 	
 	public String getImageName() {

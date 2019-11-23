@@ -118,13 +118,13 @@ public class TDController {
 		try { 
 			TowerType type = TowerType.randomTower();
 			Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class, int.class);
-			object = cons.newInstance(0, 0, 50, 50, 50, 100);
+			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
+			object = cons.newInstance(0, 0, 50, 50, 50);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 				InvocationTargetException | NoSuchMethodException | SecurityException |
 				ClassNotFoundException e) {
 			e.printStackTrace();
-			object = new Tower(0, 0, 50, 50, 50, 100);
+			object = new Tower(0, 0, 50, 50, 50);
 		}
 		
 		return (Tower) object;
@@ -143,13 +143,13 @@ public class TDController {
 		try { 
 			TowerType type = TowerType.valueOf(name);
 			Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class, int.class);
-			object = cons.newInstance(0, 0, 50, 50, 50, 100);
+			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
+			object = cons.newInstance(0, 0, 50, 50, 50);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 				InvocationTargetException | NoSuchMethodException | SecurityException |
 				ClassNotFoundException e) {
 			e.printStackTrace();
-			object = new Tower(0, 0, 50, 50, 50, 100);
+			object = new Tower(0, 0, 50, 50, 50);
 		}
 		
 		return (Tower) object;
@@ -167,8 +167,8 @@ public class TDController {
 		for (TowerType type : towerTypes) {
 			try {
 				Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-				Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class, int.class);
-				Object object = cons.newInstance(0, 0, 50, 50, 50, 100);
+				Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
+				Object object = cons.newInstance(0, 0, 50, 50, 50);
 				towers.add((Tower)object);
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 					InvocationTargetException | NoSuchMethodException | SecurityException |
