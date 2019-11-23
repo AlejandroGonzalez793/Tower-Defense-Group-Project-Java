@@ -192,7 +192,7 @@ public class TDController {
 	}
 	
 	public enum TowerType {
-		CheapTower("CheapTower");
+		CheapTower("CheapTower"), ExpensiveTower("ExpensiveTower");
 		
 		private String name;
 		

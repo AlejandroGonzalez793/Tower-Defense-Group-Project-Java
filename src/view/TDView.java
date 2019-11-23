@@ -14,6 +14,7 @@ import controller.TDTowerEconomyController;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -109,6 +110,7 @@ public class TDView extends Application implements Observer {
 	
 	public void createLayout() {
 		towerPane = new GridPane();
+		towerPane.setPadding(new Insets(5, 5, 5, 5));
 		towerPane.setVgap(5);
 		towerPane.setHgap(5);
 		List<Tower> towers = mainController.getAllTowers();
@@ -121,11 +123,10 @@ public class TDView extends Application implements Observer {
 			button.setGraphic(getTowerImage(tower.getImageName()));
 			towerPane.add(button, j, i);
 			
-			i++;
 			j++;
-			
 			if (j == TOWER_ROWS) {
 				j = 0;
+				i++;
 			}
 		}
 		
