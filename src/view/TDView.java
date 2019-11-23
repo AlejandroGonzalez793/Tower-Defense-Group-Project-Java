@@ -50,6 +50,7 @@ public class TDView extends Application {
 	private static final int TOWER_ROWS = 2;
 	private static final String IMAGE_PATH = "resources/images/";
 	private static final String TOWER_IMAGE_PATH = "resources/images/towers/";
+	private static final int PIXEL_LEEWAY = 5;
 
 	
 	@Override
@@ -197,20 +198,27 @@ public class TDView extends Application {
 		 */
 		@Override
 		public void handle(MouseEvent event) {	
-			int rowTopLeft = (int) (((event.getY()+(selectedTower.getWidth()/2)) / Entity.DEFAULT_HEIGHT) % rows);
-			int colTopLeft = (int) (((event.getX()-(selectedTower.getHeight()/2)) / Entity.DEFAULT_WIDTH) % columns);
+			int rowTopLeft = (int) (((event.getY()+((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_HEIGHT) % rows);
+			int colTopLeft = (int) (((event.getX()-((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_WIDTH) % columns);
 			
-			int rowTopRight = (int) (((event.getY()+(selectedTower.getWidth()/2)) / Entity.DEFAULT_HEIGHT) % rows);
-			int colTopRight = (int) (((event.getX()+(selectedTower.getHeight()/2)) / Entity.DEFAULT_WIDTH) % columns);
+			int rowTopRight = (int) (((event.getY()+((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_HEIGHT) % rows);
+			int colTopRight = (int) (((event.getX()+((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_WIDTH) % columns);
 			
-			int rowBottomLeft = (int) (((event.getY()-(selectedTower.getWidth()/2)) / Entity.DEFAULT_HEIGHT) % rows);
-			int colBottomLeft = (int) (((event.getX()-(selectedTower.getHeight()/2)) / Entity.DEFAULT_WIDTH) % columns);
+			int rowBottomLeft = (int) (((event.getY()-((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_HEIGHT) % rows);
+			int colBottomLeft = (int) (((event.getX()-((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_WIDTH) % columns);
 			
-			int rowBottomRight = (int) (((event.getY()-(selectedTower.getWidth()/2)) / Entity.DEFAULT_HEIGHT) % rows);
-			int colBottomRight = (int) (((event.getX()+(selectedTower.getHeight()/2)) / Entity.DEFAULT_WIDTH) % columns);
+			int rowBottomRight = (int) (((event.getY()-((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_HEIGHT) % rows);
+			int colBottomRight = (int) (((event.getX()+((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) / Entity.DEFAULT_WIDTH) % columns);
 			
-			if (path[rowTopLeft][colTopLeft] == FREE_CHAR && path[rowTopRight][colTopRight] == FREE_CHAR &&
-					path[rowBottomLeft][colBottomLeft] == FREE_CHAR && path[rowBottomRight][colBottomRight] == FREE_CHAR) {
+			System.out.println(event.getX());
+			System.out.println(event.getY());
+			
+			if (path[rowTopLeft][colTopLeft] == FREE_CHAR && path[rowTopRight][colTopRight] == FREE_CHAR
+					&& path[rowBottomLeft][colBottomLeft] == FREE_CHAR && path[rowBottomRight][colBottomRight] == FREE_CHAR 
+					&& (event.getX()+((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) < canvas.getWidth()
+					&& (event.getY()+((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) < canvas.getHeight()
+					&& (event.getX()-((selectedTower.getHeight()/2)-PIXEL_LEEWAY)) > 0
+					&& (event.getY()-((selectedTower.getWidth()/2)-PIXEL_LEEWAY)) > 0) {
 				System.out.println("valid");
 				
 				FileInputStream input = null;
