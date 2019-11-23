@@ -1,7 +1,12 @@
 package controller;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import model.CheapTower;
 import model.Enemy;
@@ -28,6 +33,7 @@ public class TDController {
 	private List<Tower> towers;
 	private List<Enemy> enemies;
 	private List<Projectile> projectiles;
+	private String TOWER_PACKAGE = "model.";
 	
 	public TDController(Player player) {
 		this.player = player;
@@ -103,15 +109,75 @@ public class TDController {
 	}
 	
 	/**
-	 * The CheapTower method creates a new CheapTower from the model
-	 * and it returns it back to the view.
+	 * Gets an instance of a random tower specified by the TowerType enum
 	 * 
-	 * @return CheapTower object 
+	 * @return a random Tower
 	 */
-	public CheapTower getCheapTower()
-	{
-		return new CheapTower(0, 0, 50, 50, 50, 100);
-	}// end getCheapTower
+	public Tower getRandomTower() {
+		Object object;
+		try { 
+			TowerType type = TowerType.randomTower();
+			Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
+			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class, int.class);
+			object = cons.newInstance(0, 0, 50, 50, 50, 100);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+				InvocationTargetException | NoSuchMethodException | SecurityException |
+				ClassNotFoundException e) {
+			e.printStackTrace();
+			object = new Tower(0, 0, 50, 50, 50, 100);
+		}
+		
+		return (Tower) object;
+	}
+	
+	/**
+	 * Gets a specific tower by name by doing a lookup in the TowerType enum and then
+	 * getting and instance of the class through reflection. If a tower of the 
+	 * specified name is not found, the default tower is returned instead.
+	 * 
+	 * @param name the name of the tower to get
+	 * @return A Tower object
+	 */
+	public Tower getTowerByName(String name) {
+		Object object;
+		try { 
+			TowerType type = TowerType.valueOf(name);
+			Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
+			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class, int.class);
+			object = cons.newInstance(0, 0, 50, 50, 50, 100);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+				InvocationTargetException | NoSuchMethodException | SecurityException |
+				ClassNotFoundException e) {
+			e.printStackTrace();
+			object = new Tower(0, 0, 50, 50, 50, 100);
+		}
+		
+		return (Tower) object;
+	}
+	
+	/**
+	 * Gets all of the towers in the TowerType name.
+	 * 
+	 * @return a List of all of the possible Tower objects
+	 */
+	public List<Tower> getAllTowers() {
+		List<TowerType> towerTypes = Arrays.asList(TowerType.values());
+		List<Tower> towers = new ArrayList<>();
+		
+		for (TowerType type : towerTypes) {
+			try {
+				Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
+				Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class, int.class);
+				Object object = cons.newInstance(0, 0, 50, 50, 50, 100);
+				towers.add((Tower)object);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+					InvocationTargetException | NoSuchMethodException | SecurityException |
+					ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		return towers;
+	}
 	
 	/**
 	 * The setTowerCoordinates method sets the coordinates of the
@@ -121,9 +187,30 @@ public class TDController {
 	 * @param x The tower's x coordinate.
 	 * @param y The tower's Y coordinate.
 	 */
-	public void setTowerCoordinates(Tower tower, int x, int y)
-	{
+	public void setTowerCoordinates(Tower tower, int x, int y) {
 		tower.setX(x);
 		tower.setY(y);
-	}// end setTowerCoordinates
+	}
+	
+	public enum TowerType {
+		CheapTower("CheapTower");
+		
+		private String name;
+		
+		private static final List<TowerType> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+		private static final int SIZE = VALUES.size();
+		private static final Random RANDOM = new Random();
+		
+		private TowerType(String name) {
+			this.name = name;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public static TowerType randomTower()  {
+			return VALUES.get(RANDOM.nextInt(SIZE));
+		}
+	}
 }
