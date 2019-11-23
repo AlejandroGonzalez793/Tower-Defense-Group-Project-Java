@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Scanner;
 
 import controller.TDController;
@@ -17,7 +19,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
@@ -31,7 +32,7 @@ import model.Player;
 import model.Tower;
 
 
-public class TDView extends Application {
+public class TDView extends Application implements Observer {
 	
 	private TDController mainController;
 	private TDTowerEconomyController ecoController; 
@@ -43,6 +44,9 @@ public class TDView extends Application {
 	private int rows;
 	private int columns;
 	
+	private Text money;
+	private Text health;
+	
 	private Tower selectedTower;
 	private GridPane towerPane;
 	
@@ -51,7 +55,6 @@ public class TDView extends Application {
 	private static final int TOWER_ROWS = 2;
 	private static final String IMAGE_PATH = "resources/images/";
 	private static final String TOWER_IMAGE_PATH = "resources/images/towers/";
-	private static final int PIXEL_LEEWAY = 5;
 
 	
 	@Override
@@ -59,7 +62,7 @@ public class TDView extends Application {
 		Application.Parameters params = this.getParameters(); 
 		List<String> rawParams = params.getRaw();
 		gc = createMap(rawParams);
-		Player player = new Player();
+		Player player = new Player(this);
 		this.mainController = new TDController(player);
 		this.ecoController = new TDTowerEconomyController(player);
 		createLayout();
@@ -68,6 +71,16 @@ public class TDView extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
+	}
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		if (arg instanceof Player) {
+			Player player = (Player)arg;
+			money.setText(Integer.toString(player.getMoney()));
+			health.setText(Integer.toString(player.getHealth()));
+		}
+		
 	}
 	
 	
@@ -121,12 +134,12 @@ public class TDView extends Application {
 		hbox.setSpacing(20);
 		
 		Label hp = new Label("HP: ");
-		Text hpText = new Text(Integer.toString(Player.STARTING_HEALTH));
+		health = new Text(Integer.toString(Player.STARTING_HEALTH));
 		
 		Label gold = new Label("Gold: ");
-		Text goldText = new Text(Integer.toString(Player.STARTING_MONEY));
+		money = new Text(Integer.toString(Player.STARTING_MONEY));
 		
-		hbox.getChildren().addAll(hp, hpText, gold, goldText);
+		hbox.getChildren().addAll(hp, health, gold, money);
 		
 		root.setTop(hbox);
 		

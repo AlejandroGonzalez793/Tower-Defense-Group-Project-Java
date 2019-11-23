@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import model.CheapTower;
 import model.Enemy;
 import model.Entity;
 import model.Player;
