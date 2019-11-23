@@ -48,7 +48,7 @@ public class TDView extends Application {
 	private static final char FREE_CHAR = '*';
 	private static final char ROAD_CHAR = '-';
 	private static final int TOWER_ROWS = 2;
-	private static final String IMAGE_PATH = "resources/images";
+	private static final String IMAGE_PATH = "resources/images/";
 	private static final String TOWER_IMAGE_PATH = "resources/images/towers/";
 
 	
@@ -159,18 +159,16 @@ public class TDView extends Application {
                String line = in.nextLine();
                for (int i = 0; i < line.length(); i ++) {
             	   FileInputStream input = null;
-				   String road = "resources/images/Ground.png";
-				   String grass = "resources/images/Grass.png";
 				   char tile = line.charAt(i);
 				   if (tile == FREE_CHAR) {
 					   path[k][i] = tile;
-            		   input = new FileInputStream(grass);
+            		   input = new FileInputStream(IMAGE_PATH + "Grass.png");
             		   Image image = new Image(input); 
             		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
             				   k * Entity.DEFAULT_HEIGHT);
             	   } else if (line.charAt(i) == ROAD_CHAR) {
             		   path[k][i] = tile;
-            		   input = new FileInputStream(road);
+            		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
             		   Image image = new Image(input); 
             		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
             				   k * Entity.DEFAULT_HEIGHT);
