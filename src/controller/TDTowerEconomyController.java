@@ -56,6 +56,22 @@ public class TDTowerEconomyController
 	}// end makePurchase
 	
 	/**
+	 * The validPurchase method will check to see if a tower can be bought or not.
+	 * 
+	 * @param Tower object.
+	 * @return boolean if a purchase could be made or not.
+	 */
+	public boolean validPurchase(Tower tower)
+	{
+		if (player.getMoney() < tower.getCost())
+		{
+			return false;
+		}// end if
+		
+		return true;	
+	}// end makePurchase
+	
+	/**
 	 * The sellBackTower method will add to the player's money the cost of the tower
 	 * being sold at a decreased amount. 
 	 * 
