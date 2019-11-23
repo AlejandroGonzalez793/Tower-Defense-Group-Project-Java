@@ -197,10 +197,20 @@ public class TDView extends Application {
 		 */
 		@Override
 		public void handle(MouseEvent event) {	
-			int row = (int) ((event.getY() / Entity.DEFAULT_HEIGHT) % rows);
-			int col = (int) ((event.getX() / Entity.DEFAULT_WIDTH) % columns);
+			int rowTopLeft = (int) (((event.getY()+(selectedTower.getWidth()/2)) / Entity.DEFAULT_HEIGHT) % rows);
+			int colTopLeft = (int) (((event.getX()-(selectedTower.getHeight()/2)) / Entity.DEFAULT_WIDTH) % columns);
 			
-			if (path[row][col] == FREE_CHAR) {
+			int rowTopRight = (int) (((event.getY()+(selectedTower.getWidth()/2)) / Entity.DEFAULT_HEIGHT) % rows);
+			int colTopRight = (int) (((event.getX()+(selectedTower.getHeight()/2)) / Entity.DEFAULT_WIDTH) % columns);
+			
+			int rowBottomLeft = (int) (((event.getY()-(selectedTower.getWidth()/2)) / Entity.DEFAULT_HEIGHT) % rows);
+			int colBottomLeft = (int) (((event.getX()-(selectedTower.getHeight()/2)) / Entity.DEFAULT_WIDTH) % columns);
+			
+			int rowBottomRight = (int) (((event.getY()-(selectedTower.getWidth()/2)) / Entity.DEFAULT_HEIGHT) % rows);
+			int colBottomRight = (int) (((event.getX()+(selectedTower.getHeight()/2)) / Entity.DEFAULT_WIDTH) % columns);
+			
+			if (path[rowTopLeft][colTopLeft] == FREE_CHAR && path[rowTopRight][colTopRight] == FREE_CHAR &&
+					path[rowBottomLeft][colBottomLeft] == FREE_CHAR && path[rowBottomRight][colBottomRight] == FREE_CHAR) {
 				System.out.println("valid");
 				
 				FileInputStream input = null;
@@ -220,6 +230,7 @@ public class TDView extends Application {
 					e.printStackTrace();
 				}
 			
+      		    ecoController.makePurchase(selectedTower);
 				mainController.setTowerCoordinates(selectedTower, (int)event.getX() - 25, (int)event.getY() - 25);
 				mainController.addTower(selectedTower);
       		    selectedTower = null;
@@ -250,7 +261,7 @@ public class TDView extends Application {
 		 */
 		public void handle(ActionEvent e) {		
 			selectedTower = tower;
-			if (ecoController.makePurchase(tower)) {
+			if (ecoController.validPurchase(tower)) {
 				towerPane.setDisable(true);
 				canvas.setDisable(false);
 			} else {
