@@ -60,6 +60,7 @@ public class TDView extends Application implements Observer {
 	private int rows;
 	private int columns;
 	private List<String> portals;
+	private List<String> exits;
 	private Path loonPath;
 	
 	
@@ -112,7 +113,7 @@ public class TDView extends Application implements Observer {
 	    PathTransition pathTransition = new PathTransition(); 
 	      
 	      //Setting the duration of the transition 
-	    pathTransition.setDuration(Duration.millis(8000));       
+	    pathTransition.setDuration(Duration.millis(10000));       
 	      
 	      //Setting the node for the transition 
 	    pathTransition.setNode(circle); 
@@ -139,8 +140,9 @@ public class TDView extends Application implements Observer {
 		loonPath = new Path();
 		String x = portals.get(0).substring(0, portals.get(0).indexOf(','));
 		String y = portals.get(0).substring(portals.get(0).indexOf(',') + 1);
-		MoveTo moveTo = new MoveTo(Integer.valueOf(x), Integer.valueOf(y));
+		MoveTo moveTo = new MoveTo(Integer.valueOf(x)*-50, Integer.valueOf(y)*-50);
 		loonPath.getElements().add(moveTo);
+		loonPath.getElements().add(new LineTo(Integer.valueOf(y)*-50-25, Integer.valueOf(x)*50+25));
 		int i = Integer.valueOf(x);
 		int j = Integer.valueOf(y);
 		int prevX = i;
@@ -172,11 +174,13 @@ public class TDView extends Application implements Observer {
 				prevY = j;
 				i--;
 			}
-			line = new LineTo(j*Entity.DEFAULT_HEIGHT, i*Entity.DEFAULT_WIDTH);
+			line = new LineTo(j*Entity.DEFAULT_HEIGHT+25, i*Entity.DEFAULT_WIDTH+25);
 			loonPath.getElements().add(line);
 			System.out.println(i);
 			System.out.println(j);
 		}
+		line = new LineTo(j*Entity.DEFAULT_HEIGHT+250, i*Entity.DEFAULT_WIDTH+25);
+		loonPath.getElements().add(line);
 	}
 	
 	public void enemy() throws FileNotFoundException {
@@ -194,7 +198,7 @@ public class TDView extends Application implements Observer {
 		for (Enemy loon : enemies) {
 			FileInputStream input = new FileInputStream("resources/Images/Balloons/camo.png");
  		    Image image = new Image(input);  
- 		    gc.drawImage(image, loon.getY()*50, loon.getX()*50, 50, 50);
+ 		    //gc.drawImage(image, loon.getY()*50, loon.getX()*50, 50, 50);
 		}
 		FileInputStream input = new FileInputStream("resources/Images/Balloons/camo.png");
 		Image image = new Image(input);  
@@ -206,7 +210,7 @@ public class TDView extends Application implements Observer {
 		t.setCycleCount(Timeline.INDEFINITE);
 		t.getKeyFrames().add(new KeyFrame(
 				Duration.millis(10000)));
-		t.play();
+		//t.play();
 		
 		//gc.drawImage(image, loon.getY()*50, loon.getX()*50);
 		
@@ -225,6 +229,7 @@ public class TDView extends Application implements Observer {
 		root = new BorderPane();
 		canvas = new Canvas();
 		portals = new ArrayList<String>();
+		exits = new ArrayList<String>();
 		// Instantiate event handler.
 		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
 		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
@@ -249,19 +254,17 @@ public class TDView extends Application implements Observer {
             		   Image image = new Image(input); 
             		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
             				   k * Entity.DEFAULT_HEIGHT);
-            	   } else if (tile == ROAD_CHAR || tile == EXIT_CHAR) {
+            	   } else if (tile == ROAD_CHAR || tile == EXIT_CHAR 
+            			   || tile == PORTAL_CHAR) {
             		   path[k][i] = tile;
             		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
             		   Image image = new Image(input); 
             		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
             				   k * Entity.DEFAULT_HEIGHT);
-            	   } else if (tile == PORTAL_CHAR) {
-            		   path[k][i] = tile;
-            		   portals.add(Integer.toString(k) + "," + Integer.toString(i));
-            		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
-            		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
-            				   k * Entity.DEFAULT_HEIGHT); 
+            		   if (tile == EXIT_CHAR);
+            			   exits.add(Integer.toString(k) + "," + Integer.toString(i));
+            		   if (tile == PORTAL_CHAR);
+            			   portals.add(Integer.toString(k) + "," + Integer.toString(i));
             	   }
                }
                k++;
