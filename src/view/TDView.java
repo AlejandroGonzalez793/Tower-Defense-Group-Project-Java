@@ -32,7 +32,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import model.Entity;
 import model.Player;
@@ -66,10 +65,6 @@ public class TDView extends Application implements Observer {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		Player player = new Player(this);
-		this.mainController = new TDController(player);
-		this.ecoController = new TDTowerEconomyController(player);
-		
 		root = new BorderPane();
 		canvas = new Canvas();
 		
@@ -129,6 +124,10 @@ public class TDView extends Application implements Observer {
 	}
 	
 	public void createLayout() {
+		Player player = new Player(this);
+		this.mainController = new TDController(player);
+		this.ecoController = new TDTowerEconomyController(player);
+		
 		// Create side bar
 		BorderPane sidebarPane = new BorderPane();
 		towerPane = new GridPane();
