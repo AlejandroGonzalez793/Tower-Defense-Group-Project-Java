@@ -206,8 +206,9 @@ public class TDView extends Application implements Observer {
 		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
 		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
 		canvas.setDisable(true);
+		Scanner in = null;
 		try {
-			Scanner in = new Scanner(file);
+			in = new Scanner(file);
 			columns = Integer.valueOf(in.nextLine());
 			rows = Integer.valueOf(in.nextLine());
 			path = new char[rows][columns];
@@ -216,33 +217,34 @@ public class TDView extends Application implements Observer {
 			gc = canvas.getGraphicsContext2D();
 			int k = 0;
 			while (in.hasNextLine()) {
-               String line = in.nextLine();
-               for (int i = 0; i < line.length(); i ++) {
-            	   FileInputStream input = null;
-				   char tile = line.charAt(i);
-				   if (tile == FREE_CHAR) {
-					   path[k][i] = tile;
-            		   input = new FileInputStream(IMAGE_PATH + "Grass.png");
-            		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
-            				   k * Entity.DEFAULT_HEIGHT);
-            	   } else if (line.charAt(i) == ROAD_CHAR) {
-            		   path[k][i] = tile;
-            		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
-            		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
-            				   k * Entity.DEFAULT_HEIGHT);
-            	   }
-               }
-               k++;
-            }
-			in.close();
+				String line = in.nextLine();
+				for (int i = 0; i < line.length(); i ++) {
+					FileInputStream input = null;
+					char tile = line.charAt(i);
+					if (tile == FREE_CHAR) {
+						path[k][i] = tile;
+						input = new FileInputStream(IMAGE_PATH + "Grass.png");
+						Image image = new Image(input); 
+						gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
+								k * Entity.DEFAULT_HEIGHT);
+					} else if (line.charAt(i) == ROAD_CHAR) {
+						path[k][i] = tile;
+						input = new FileInputStream(IMAGE_PATH + "Ground.png");
+						Image image = new Image(input); 
+						gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
+								k * Entity.DEFAULT_HEIGHT);
+					}
+				}
+				k++;
+			}
 		} catch(FileNotFoundException e) {
 			System.err.println("Could not load tile images");
 			e.printStackTrace();
 		} catch (NumberFormatException | IndexOutOfBoundsException e) {
 			System.err.println("File does not fit correct format");
 			e.printStackTrace();
+		} finally {
+			if (in != null) in.close();
 		}
 		
 		root.setCenter(canvas);
