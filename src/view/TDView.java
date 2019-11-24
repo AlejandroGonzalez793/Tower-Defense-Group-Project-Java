@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import model.Entity;
 import model.Player;
 import model.Tower;
+import model.Enemy;
 
 
 public class TDView extends Application implements Observer {
@@ -45,6 +46,8 @@ public class TDView extends Application implements Observer {
 	private char[][] path;
 	private int rows;
 	private int columns;
+	private List<String> portals;
+	
 	
 	private Text money;
 	private Text health;
@@ -54,6 +57,7 @@ public class TDView extends Application implements Observer {
 	
 	private static final char FREE_CHAR = '*';
 	private static final char ROAD_CHAR = '-';
+	private static final char PORTAL_CHAR = '+';
 	private static final char TOWER_CHAR = 't';
 	private static final int TOWER_ROWS = 2;
 	private static final String IMAGE_PATH = "resources/images/";
@@ -77,7 +81,20 @@ public class TDView extends Application implements Observer {
 	}
 	
 	public void enemy() {
-		
+		List<Enemy> enemies = mainController.getAllEnemies();
+		for (int i = 0; i < 10; i++) {
+			for (String coord : portals) {
+				String x = coord.substring(0, coord.indexOf(','));
+				String y = coord.substring(coord.indexOf(',') + 1);
+				Enemy enemy = new Enemy(Integer.valueOf(x), Integer.valueOf(y),
+						Entity.DEFAULT_WIDTH, Entity.DEFAULT_HEIGHT);
+				enemies.add(enemy);
+			}
+			
+		}
+		for (Enemy x : enemies) {
+			
+		}
 	}
 	
 	/**
@@ -115,12 +132,19 @@ public class TDView extends Application implements Observer {
             		   Image image = new Image(input); 
             		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
             				   k * Entity.DEFAULT_HEIGHT);
-            	   } else if (line.charAt(i) == ROAD_CHAR) {
+            	   } else if (tile == ROAD_CHAR) {
             		   path[k][i] = tile;
             		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
             		   Image image = new Image(input); 
             		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
             				   k * Entity.DEFAULT_HEIGHT);
+            	   } else if (tile == PORTAL_CHAR) {
+            		   path[k][i] = tile;
+            		   portals.add(String.valueOf(k) + "," + String.valueOf(i));
+            		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
+            		   Image image = new Image(input); 
+            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
+            				   k * Entity.DEFAULT_HEIGHT); 
             	   }
                }
                k++;

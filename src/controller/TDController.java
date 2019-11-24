@@ -154,6 +154,10 @@ public class TDController {
 		return (Tower) object;
 	}
 	
+	public List<Enemy> getAllEnemies(){
+		return this.enemies;
+	}
+	
 	/**
 	 * Gets all of the towers in the TowerType name.
 	 * 
