@@ -18,8 +18,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
@@ -28,6 +33,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import model.Entity;
 import model.Player;
@@ -35,12 +42,10 @@ import model.Tower;
 
 
 public class TDView extends Application implements Observer {
-	
 	private TDController mainController;
 	private TDTowerEconomyController ecoController; 
 	private BorderPane root;
 	private Canvas canvas;
-	private Scene scene;
 	private GraphicsContext gc;
 	private char[][] path;
 	private int rows;
@@ -61,17 +66,42 @@ public class TDView extends Application implements Observer {
 
 	
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		Application.Parameters params = this.getParameters(); 
-		List<String> rawParams = params.getRaw();
-		gc = createMap(rawParams);
-		Player player = new Player(this);
-		this.mainController = new TDController(player);
-		this.ecoController = new TDTowerEconomyController(player);
-		createLayout();
-		scene = new Scene(root);
+	public void start(Stage primaryStage) {
+		root = new BorderPane();
+		canvas = new Canvas();
+		
+		// Create menu bar
+		MenuBar menuBar = new MenuBar();
+		Menu menu = new Menu("File");
+		MenuItem newMapItem = new MenuItem("New Map");
+		
+		menu.getItems().add(newMapItem);
+		menuBar.getMenus().add(menu);
+		
+		root.setTop(menuBar);
+		
+		newMapItem.setOnAction(e -> {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Map File");
+			FileChooser.ExtensionFilter mapFilter = new ExtensionFilter(
+					"Map Files (*.td)", "*.td");
+			FileChooser.ExtensionFilter allFilter = new ExtensionFilter(
+					"All Files", "*.*");
+			fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+			fileChooser.getExtensionFilters().addAll(mapFilter, allFilter);
+			File file = fileChooser.showOpenDialog(primaryStage);
+			if (file != null) {
+				createLayout();
+				gc = createMap(file);
+			}
+			primaryStage.sizeToScene();
+			primaryStage.centerOnScreen();
+		});
+		
+		primaryStage.setMinHeight(100);
+		primaryStage.setMinWidth(100);
 		primaryStage.setTitle("Tower Defense");
-		primaryStage.setScene(scene);
+		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
@@ -86,6 +116,13 @@ public class TDView extends Application implements Observer {
 		
 	}
 	
+	/**
+	 * Gets an ImageView of a tower image denoted by its file name in the 
+	 * specified path specified by {@link #TOWER_IMAGE_PATH}.
+	 * 
+	 * @param pic the file name of the image to get
+	 * @return an ImageView of the tower image
+	 */
 	private ImageView getTowerImage(String pic) {
 		FileInputStream in = null;
 		try {
@@ -97,7 +134,16 @@ public class TDView extends Application implements Observer {
 		return new ImageView(towerImage);
 	}
 	
+	/**
+	 * Creates the player, controllers, and general board layout for the game. 
+	 */
 	public void createLayout() {
+		// TODO: Call a reset method here instead of recreating controller and player
+		Player player = new Player(this);
+		this.mainController = new TDController(player);
+		this.ecoController = new TDTowerEconomyController(player);
+		
+		// Create side bar
 		BorderPane sidebarPane = new BorderPane();
 		towerPane = new GridPane();
 		towerPane.setPadding(new Insets(5, 5, 5, 5));
@@ -150,19 +196,19 @@ public class TDView extends Application implements Observer {
 	 * This method createMap sets up the map that is based off from a text
 	 * file. The green region indicates that a tower can be placed where the 
 	 * brown or visible path shows where enemies will be traveling.
+	 * 
+	 * @param file a File object representing the current map to create
 	 * @return GraphicsContext A GraphicsContext is returned that is the 
 	 * GraphicsContext2D of the canvas. 
 	 */
-	
-	public GraphicsContext createMap(List<String> params) { 
-		root = new BorderPane();
-		canvas = new Canvas();
+	public GraphicsContext createMap(File file) { 
 		// Instantiate event handler.
 		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
 		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
 		canvas.setDisable(true);
+		Scanner in = null;
 		try {
-			Scanner in = new Scanner(new File(params.get(0)));
+			in = new Scanner(file);
 			columns = Integer.valueOf(in.nextLine());
 			rows = Integer.valueOf(in.nextLine());
 			path = new char[rows][columns];
@@ -171,30 +217,36 @@ public class TDView extends Application implements Observer {
 			gc = canvas.getGraphicsContext2D();
 			int k = 0;
 			while (in.hasNextLine()) {
-               String line = in.nextLine();
-               for (int i = 0; i < line.length(); i ++) {
-            	   FileInputStream input = null;
-				   char tile = line.charAt(i);
-				   if (tile == FREE_CHAR) {
-					   path[k][i] = tile;
-            		   input = new FileInputStream(IMAGE_PATH + "Grass.png");
-            		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
-            				   k * Entity.DEFAULT_HEIGHT);
-            	   } else if (line.charAt(i) == ROAD_CHAR) {
-            		   path[k][i] = tile;
-            		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
-            		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
-            				   k * Entity.DEFAULT_HEIGHT);
-            	   }
-               }
-               k++;
-            }
-            in.close();
-		} catch (FileNotFoundException | NullPointerException e){
-			System.out.println("File not found or file does not fit format"); // change later 
+				String line = in.nextLine();
+				for (int i = 0; i < line.length(); i ++) {
+					FileInputStream input = null;
+					char tile = line.charAt(i);
+					if (tile == FREE_CHAR) {
+						path[k][i] = tile;
+						input = new FileInputStream(IMAGE_PATH + "Grass.png");
+						Image image = new Image(input); 
+						gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
+								k * Entity.DEFAULT_HEIGHT);
+					} else if (line.charAt(i) == ROAD_CHAR) {
+						path[k][i] = tile;
+						input = new FileInputStream(IMAGE_PATH + "Ground.png");
+						Image image = new Image(input); 
+						gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
+								k * Entity.DEFAULT_HEIGHT);
+					}
+				}
+				k++;
+			}
+		} catch(FileNotFoundException e) {
+			System.err.println("Could not load tile images");
+			e.printStackTrace();
+		} catch (NumberFormatException | IndexOutOfBoundsException e) {
+			System.err.println("File does not fit correct format");
+			e.printStackTrace();
+		} finally {
+			if (in != null) in.close();
 		}
+		
 		root.setCenter(canvas);
 		return canvas.getGraphicsContext2D();
 	}
@@ -248,9 +300,9 @@ public class TDView extends Application implements Observer {
 	}
 	
 	/**
-	 * The TowerOneButton class is the event handler class that will
-	 * check if the player can buy tower1, then they can place it on the map.
-	 * If they can't buy the tower, then they won't be able to place anything.
+	 * The TowerButton class is the event handler class that will check if the 
+	 * player can buy a tower, then they can place it on the map. If they can't 
+	 * buy the tower, then they won't be able to place anything.
 	 */
 	class TowerButton implements EventHandler<ActionEvent> {
 		private Tower tower;
@@ -260,17 +312,23 @@ public class TDView extends Application implements Observer {
 		}
 		
 		/**
-		 * The handle method handles the event for when the Tower 1 button is pressed.
+		 * The handle method handles the event for when the tower button
+		 * is clicked. It sets the selected tower to the current tower if
+		 * the player can buy it.
 		 * 
 		 * @param e The ActionEvent object.
 		 */
 		public void handle(ActionEvent e) {		
-			selectedTower = tower;
 			if (ecoController.validPurchase(tower)) {
+				selectedTower = tower;
 				towerPane.setDisable(true);
 				canvas.setDisable(false);
 			} else {
-				System.out.println("Can't buy tower");
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText(null);
+				alert.setContentText("Can't buy this tower");
+				alert.showAndWait();
 			}
 		}
 	}
