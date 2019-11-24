@@ -76,6 +76,63 @@ public class TDView extends Application implements Observer {
 		primaryStage.show();
 	}
 	
+	public void enemy() {
+		
+	}
+	
+	/**
+	 * This method createMap sets up the map that is based off from a text
+	 * file. The green region indicates that a tower can be placed where the 
+	 * brown or visible path shows where enemies will be traveling.
+	 * @return GraphicsContext A GraphicsContext is returned that is the 
+	 * GraphicsContext2D of the canvas. 
+	 */
+	
+	public GraphicsContext createMap(List<String> params) { 
+		root = new BorderPane();
+		canvas = new Canvas();
+		// Instantiate event handler.
+		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
+		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
+		canvas.setDisable(true);
+		try {
+			Scanner in = new Scanner(new File(params.get(0)));
+			columns = Integer.valueOf(in.nextLine());
+			rows = Integer.valueOf(in.nextLine());
+			path = new char[rows][columns];
+			canvas.setHeight(rows * Entity.DEFAULT_HEIGHT);
+			canvas.setWidth(columns * Entity.DEFAULT_WIDTH);
+			gc = canvas.getGraphicsContext2D();
+			int k = 0;
+			while (in.hasNextLine()) {
+               String line = in.nextLine();
+               for (int i = 0; i < line.length(); i ++) {
+            	   FileInputStream input = null;
+				   char tile = line.charAt(i);
+				   if (tile == FREE_CHAR) {
+					   path[k][i] = tile;
+            		   input = new FileInputStream(IMAGE_PATH + "Grass.png");
+            		   Image image = new Image(input); 
+            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
+            				   k * Entity.DEFAULT_HEIGHT);
+            	   } else if (line.charAt(i) == ROAD_CHAR) {
+            		   path[k][i] = tile;
+            		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
+            		   Image image = new Image(input); 
+            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
+            				   k * Entity.DEFAULT_HEIGHT);
+            	   }
+               }
+               k++;
+            }
+            in.close();
+		} catch (FileNotFoundException | NullPointerException e){
+			System.out.println("File not found or file does not fit format"); // change later 
+		}
+		root.setCenter(canvas);
+		return canvas.getGraphicsContext2D();
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg instanceof Player) {
@@ -146,58 +203,7 @@ public class TDView extends Application implements Observer {
 		root.setRight(sidebarPane);
 	}
 	
-	/**
-	 * This method createMap sets up the map that is based off from a text
-	 * file. The green region indicates that a tower can be placed where the 
-	 * brown or visible path shows where enemies will be traveling.
-	 * @return GraphicsContext A GraphicsContext is returned that is the 
-	 * GraphicsContext2D of the canvas. 
-	 */
-	
-	public GraphicsContext createMap(List<String> params) { 
-		root = new BorderPane();
-		canvas = new Canvas();
-		// Instantiate event handler.
-		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
-		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
-		canvas.setDisable(true);
-		try {
-			Scanner in = new Scanner(new File(params.get(0)));
-			columns = Integer.valueOf(in.nextLine());
-			rows = Integer.valueOf(in.nextLine());
-			path = new char[rows][columns];
-			canvas.setHeight(rows * Entity.DEFAULT_HEIGHT);
-			canvas.setWidth(columns * Entity.DEFAULT_WIDTH);
-			gc = canvas.getGraphicsContext2D();
-			int k = 0;
-			while (in.hasNextLine()) {
-               String line = in.nextLine();
-               for (int i = 0; i < line.length(); i ++) {
-            	   FileInputStream input = null;
-				   char tile = line.charAt(i);
-				   if (tile == FREE_CHAR) {
-					   path[k][i] = tile;
-            		   input = new FileInputStream(IMAGE_PATH + "Grass.png");
-            		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
-            				   k * Entity.DEFAULT_HEIGHT);
-            	   } else if (line.charAt(i) == ROAD_CHAR) {
-            		   path[k][i] = tile;
-            		   input = new FileInputStream(IMAGE_PATH + "Ground.png");
-            		   Image image = new Image(input); 
-            		   gc.drawImage(image, i * Entity.DEFAULT_WIDTH,
-            				   k * Entity.DEFAULT_HEIGHT);
-            	   }
-               }
-               k++;
-            }
-            in.close();
-		} catch (FileNotFoundException | NullPointerException e){
-			System.out.println("File not found or file does not fit format"); // change later 
-		}
-		root.setCenter(canvas);
-		return canvas.getGraphicsContext2D();
-	}
+
 
 	/**
 	 * The MouseClickedOnCanvas class is the event handler for the 
