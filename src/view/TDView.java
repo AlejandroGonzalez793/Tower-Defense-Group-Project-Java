@@ -20,6 +20,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
@@ -28,6 +31,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import model.Entity;
 import model.Player;
@@ -40,7 +45,6 @@ public class TDView extends Application implements Observer {
 	private TDTowerEconomyController ecoController; 
 	private BorderPane root;
 	private Canvas canvas;
-	private Scene scene;
 	private GraphicsContext gc;
 	private char[][] path;
 	private int rows;
@@ -61,17 +65,44 @@ public class TDView extends Application implements Observer {
 
 	
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		Application.Parameters params = this.getParameters(); 
-		List<String> rawParams = params.getRaw();
-		gc = createMap(rawParams);
+	public void start(Stage primaryStage) {
 		Player player = new Player(this);
 		this.mainController = new TDController(player);
 		this.ecoController = new TDTowerEconomyController(player);
-		createLayout();
-		scene = new Scene(root);
+		
+		root = new BorderPane();
+		canvas = new Canvas();
+		
+		// Create menu bar
+		MenuBar menuBar = new MenuBar();
+		Menu menu = new Menu("File");
+		MenuItem newMapItem = new MenuItem("New Map");
+		
+		menu.getItems().add(newMapItem);
+		menuBar.getMenus().add(menu);
+		
+		root.setTop(menuBar);
+		
+		newMapItem.setOnAction(e -> {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Map File");
+			FileChooser.ExtensionFilter mapFilter = new FileChooser.ExtensionFilter("Map Files (*.td)", "*.td");
+			FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
+			fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+			fileChooser.getExtensionFilters().addAll(mapFilter, allFilter);
+			File file = fileChooser.showOpenDialog(primaryStage);
+			if (file != null) {
+				createLayout();
+				gc = createMap(file);
+			}
+			primaryStage.sizeToScene();
+			primaryStage.centerOnScreen();
+		});
+		
+		primaryStage.setMinHeight(100);
+		primaryStage.setMinWidth(100);
 		primaryStage.setTitle("Tower Defense");
-		primaryStage.setScene(scene);
+		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
@@ -98,6 +129,7 @@ public class TDView extends Application implements Observer {
 	}
 	
 	public void createLayout() {
+		// Create side bar
 		BorderPane sidebarPane = new BorderPane();
 		towerPane = new GridPane();
 		towerPane.setPadding(new Insets(5, 5, 5, 5));
@@ -154,15 +186,13 @@ public class TDView extends Application implements Observer {
 	 * GraphicsContext2D of the canvas. 
 	 */
 	
-	public GraphicsContext createMap(List<String> params) { 
-		root = new BorderPane();
-		canvas = new Canvas();
+	public GraphicsContext createMap(File file) { 
 		// Instantiate event handler.
 		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
 		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
 		canvas.setDisable(true);
 		try {
-			Scanner in = new Scanner(new File(params.get(0)));
+			Scanner in = new Scanner(file);
 			columns = Integer.valueOf(in.nextLine());
 			rows = Integer.valueOf(in.nextLine());
 			path = new char[rows][columns];
@@ -192,9 +222,14 @@ public class TDView extends Application implements Observer {
                k++;
             }
             in.close();
-		} catch (FileNotFoundException | NullPointerException e){
-			System.out.println("File not found or file does not fit format"); // change later 
+		} catch(FileNotFoundException e) {
+			System.err.println("Could not load tile images");
+			e.printStackTrace();
+		} catch (NumberFormatException | IndexOutOfBoundsException e) {
+			System.err.println("File does not fit correct format");
+			e.printStackTrace();
 		}
+		
 		root.setCenter(canvas);
 		return canvas.getGraphicsContext2D();
 	}
