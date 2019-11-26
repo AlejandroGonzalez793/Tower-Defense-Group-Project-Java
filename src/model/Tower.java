@@ -14,23 +14,30 @@ public class Tower extends Entity {
 	public static final double DEFAULT_RATE = 1.0;
 	public static final int DEFAULT_POWER = 1;
 	public static final int DEFAULT_COST = 100;
+	public static final int DEFAULT_RADIUS = 50;
+	public static final String DEFAULT_IMAGE = "default_tower.png";
 	
-	private String imageName = "tower1.png";
+	private String imageName;
 	private int radius;
 	private int cost;
 	private int power;
 	private double rate; // rate at which the tower fires
 	
-	public Tower(int x, int y, int width, int height, int radius, int cost, int power, double rate) {
+	public Tower(int x, int y, int width, int height, int radius, int cost, int power, double rate, String imageName) {
 		super(x, y, width, height);
 		this.radius = radius;
 		this.cost = cost;
 		this.power = power;
 		this.rate = rate;
+		this.imageName = imageName;
 	}
 	
-	public Tower(int x, int y, int width, int height, int radius) {
-		this(x, y, width, height, radius, DEFAULT_COST, DEFAULT_POWER, DEFAULT_RATE);
+	public Tower(int x, int y, int width, int height) {
+		this(x, y, width, height, DEFAULT_RADIUS, DEFAULT_COST, DEFAULT_POWER, DEFAULT_RATE, DEFAULT_IMAGE);
+	}
+	
+	public Tower() {
+		this(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_RADIUS, DEFAULT_COST, DEFAULT_POWER, DEFAULT_RATE, DEFAULT_IMAGE);
 	}
 	
 	public String getImageName() {

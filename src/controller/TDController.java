@@ -3,13 +3,15 @@ package controller;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import model.CheapTower;
 import model.Enemy;
 import model.Entity;
+import model.ExpensiveTower;
 import model.Player;
 import model.Projectile;
 import model.Tower;
@@ -32,13 +34,17 @@ public class TDController {
 	private List<Tower> towers;
 	private List<Enemy> enemies;
 	private List<Projectile> projectiles;
-	private String TOWER_PACKAGE = "model.";
+	private Map<String, Class<? extends Tower>> towerMap;
 	
 	public TDController(Player player) {
 		this.player = player;
 		this.towers = new ArrayList<>();
 		this.enemies = new ArrayList<>();
 		this.projectiles = new ArrayList<>();
+		
+		this.towerMap = new HashMap<String, Class<? extends Tower>>();
+		towerMap.put("CheapTower", CheapTower.class);
+		towerMap.put("ExpensiveTower", ExpensiveTower.class);
 	}
 	
 	/**
@@ -113,17 +119,18 @@ public class TDController {
 	 * @return a random Tower
 	 */
 	public Tower getRandomTower() {
+		List<Class<? extends Tower>> towerList = new ArrayList<>(towerMap.values());
+		int randomIndex = new Random().nextInt(towerList.size());
+		Class<? extends Tower> randomTower = towerList.get(randomIndex);
+		
 		Object object;
 		try { 
-			TowerType type = TowerType.randomTower();
-			Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
-			object = cons.newInstance(0, 0, 50, 50, 50);
+			Constructor<?> cons = randomTower.getConstructor();
+			object = cons.newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-				InvocationTargetException | NoSuchMethodException | SecurityException |
-				ClassNotFoundException e) {
+				InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
-			object = new Tower(0, 0, 50, 50, 50);
+			object = new Tower();
 		}
 		
 		return (Tower) object;
@@ -138,17 +145,20 @@ public class TDController {
 	 * @return A Tower object
 	 */
 	public Tower getTowerByName(String name) {
+		Class<?> c = towerMap.get(name);
+
+		if (c == null) {
+			return new Tower();
+		}
+		
 		Object object;
 		try { 
-			TowerType type = TowerType.valueOf(name);
-			Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
-			object = cons.newInstance(0, 0, 50, 50, 50);
+			Constructor<?> cons = c.getConstructor();
+			object = cons.newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-				InvocationTargetException | NoSuchMethodException | SecurityException |
-				ClassNotFoundException e) {
+				InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
-			object = new Tower(0, 0, 50, 50, 50);
+			object = new Tower();
 		}
 		
 		return (Tower) object;
@@ -160,18 +170,16 @@ public class TDController {
 	 * @return a List of all of the possible Tower objects
 	 */
 	public List<Tower> getAllTowers() {
-		List<TowerType> towerTypes = Arrays.asList(TowerType.values());
+		List<Class<? extends Tower>> towerList = new ArrayList<>(towerMap.values());
 		List<Tower> towers = new ArrayList<>();
 		
-		for (TowerType type : towerTypes) {
+		for (Class<?> type : towerList) {
 			try {
-				Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-				Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
-				Object object = cons.newInstance(0, 0, 50, 50, 50);
+				Constructor<?> cons = type.getConstructor();
+				Object object = cons.newInstance();
 				towers.add((Tower)object);
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-					InvocationTargetException | NoSuchMethodException | SecurityException |
-					ClassNotFoundException e) {
+					InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}
 		}
@@ -189,27 +197,5 @@ public class TDController {
 	public void setTowerCoordinates(Tower tower, int x, int y) {
 		tower.setX(x);
 		tower.setY(y);
-	}
-	
-	public enum TowerType {
-		CheapTower("CheapTower"), ExpensiveTower("ExpensiveTower");
-		
-		private String name;
-		
-		private static final List<TowerType> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
-		private static final int SIZE = VALUES.size();
-		private static final Random RANDOM = new Random();
-		
-		private TowerType(String name) {
-			this.name = name;
-		}
-		
-		public String getName() {
-			return name;
-		}
-		
-		public static TowerType randomTower()  {
-			return VALUES.get(RANDOM.nextInt(SIZE));
-		}
 	}
 }
