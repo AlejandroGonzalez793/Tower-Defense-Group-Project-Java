@@ -43,6 +43,7 @@ public class TDController {
 		this.projectiles = new ArrayList<>();
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
+		towerMap.put("Tower", Tower.class);
 		towerMap.put("CheapTower", CheapTower.class);
 		towerMap.put("ExpensiveTower", ExpensiveTower.class);
 	}

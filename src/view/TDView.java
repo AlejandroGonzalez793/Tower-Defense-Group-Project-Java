@@ -136,7 +136,7 @@ public class TDView extends Application implements Observer {
 				e.printStackTrace();
 			}
 		}
-		Image towerImage = new Image(in);
+		Image towerImage = new Image(in, Entity.DEFAULT_WIDTH, Entity.DEFAULT_HEIGHT, false, false);
 		return new ImageView(towerImage);
 	}
 	
