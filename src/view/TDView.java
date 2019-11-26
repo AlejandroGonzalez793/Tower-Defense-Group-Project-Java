@@ -128,9 +128,15 @@ public class TDView extends Application implements Observer {
 		try {
 			in = new FileInputStream(TOWER_IMAGE_PATH + pic);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.err.printf("Could not find tower image %s\n", pic);
+			
+			try {
+				in = new FileInputStream(TOWER_IMAGE_PATH + Tower.DEFAULT_IMAGE);
+			} catch (FileNotFoundException e2) {
+				e.printStackTrace();
+			}
 		}
-		Image towerImage = new Image(in);
+		Image towerImage = new Image(in, Entity.DEFAULT_WIDTH, Entity.DEFAULT_HEIGHT, false, false);
 		return new ImageView(towerImage);
 	}
 	
