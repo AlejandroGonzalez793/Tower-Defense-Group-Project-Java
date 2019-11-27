@@ -10,35 +10,23 @@ package model;
  * @author Patrick Dearborn (pdearborn@email.arizona.edu) 
  */
 public class Enemy extends Entity {	
-	public static final int DEFAULT_SPEED = 1;
 	public static final int DEFAULT_HEALTH = 5;
-	
-	private double speed;
 	private int health;
 	
-	public Enemy(int x, int y, int width, int height, int speed, int health) {
-		super(x, y, width, height);
-		this.speed = speed;
+	public Enemy(int x, int y, int width, int height, int dx, int dy, int health) {
+		super(x, y, width, height, dx, dy);
 		this.health = health;
 	}
 	
 	public Enemy(int x, int y, int width, int height) {
-		this(x, y, width, height, DEFAULT_SPEED, DEFAULT_HEALTH);
-	}
-	
-	public void setHealth(int health) {
-		this.health = health;
+		this(x, y, width, height, 5, 5, DEFAULT_HEALTH);
 	}
 	
 	public int getHealth() {
 		return health;
 	}
 	
-	public void setSpeed(double speed) {
-		this.speed = speed;
-	}
-	
-	public double getSpeed() {
-		return speed;
+	public void setHealth(int health) {
+		this.health = health;
 	}
 }

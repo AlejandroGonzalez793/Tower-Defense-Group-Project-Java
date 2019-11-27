@@ -2,18 +2,12 @@ package controller;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Set;
 
-import model.CheapTower;
-import model.Enemy;
-import model.Entity;
-import model.ExpensiveTower;
+import model.GameState;
 import model.Player;
-import model.Projectile;
 import model.Tower;
 
 
@@ -31,21 +25,23 @@ import model.Tower;
  */
 public class TDController {
 	private Player player;
-	private List<Tower> towers;
-	private List<Enemy> enemies;
-	private List<Projectile> projectiles;
+	private GameState gameState;
 	private Map<String, Class<? extends Tower>> towerMap;
 	
-	public TDController(Player player) {
+	public TDController(Player player, GameState gameState) {
 		this.player = player;
-		this.towers = new ArrayList<>();
-		this.enemies = new ArrayList<>();
-		this.projectiles = new ArrayList<>();
+		this.gameState = gameState;
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
 		towerMap.put("Tower", Tower.class);
-		towerMap.put("CheapTower", CheapTower.class);
-		towerMap.put("ExpensiveTower", ExpensiveTower.class);
+	}
+	
+	/**
+	 * Calls the tick method in the game state to update the positions
+	 * of all of the entities on the board.
+	 */
+	public void tick() {
+		gameState.tick();
 	}
 	
 	/**
@@ -58,83 +54,22 @@ public class TDController {
 	}
 	
 	/**
-	 * Subtracts a set amount from the player's health
-	 * 
-	 * @param amount the amount of health to subtract
-	 */
-	public void subtractHealth(int amount) {
-		player.setHealth(player.getHealth() - amount);
-	}
-	
-	/**
-	 * Adds a tower to the current list of towers
+	 * Adds a tower to the current list of towers and subtracts
+	 * the money from the player
 	 * 
 	 * @param tower the Tower to add
 	 */
-	public void addTower(Tower tower) {
-		towers.add(tower);
-	}
-	
-	/**
-	 * Adds an enemy to the current list of enemies
-	 * 
-	 * @param enemy the Enemy to add
-	 */
-	public void addEnemy(Enemy enemy) {
-		enemies.add(enemy);
-	}
-	
-	/**
-	 * Figures out if there is a collision on the board and updates the models
-	 * accordingly.
-	 * 
-	 * TODO: Make this not garbage
-	 */
-	public void finalAllCollisions() {
-		for (Projectile projectile : projectiles) {
-			for (Enemy enemy : enemies) {
-				if (getCollision(projectile, enemy)) {
-					enemy.setHealth(enemy.getHealth() - projectile.getPower());
-				}
-			}
+	public boolean addTower(int x, int y, String name) {
+		Tower tower = getTowerByName(name);
+		tower.setX(x);
+		tower.setY(y);
+
+		if (tower.getCost() <= player.getMoney()) {
+			player.setMoney(player.getMoney() - tower.getCost());
+			gameState.getTowers().add(tower);
+			return true;
 		}
-	}
-	
-	/**
-	 * Determines if there is a collision between two entities.
-	 * 
-	 * @param e1 the first Entity to check
-	 * @param e2 the second Entity to check
-	 * @return true if the two entities are colliding, false otherwise
-	 */
-	public boolean getCollision(Entity e1, Entity e2) {
-		return e1.getX() < e2.getX() + e2.getWidth() &&
-				e1.getX() + e1.getWidth() > e2.getX() &&
-				e1.getY() < e2.getY() + e2.getHeight() &&
-				e1.getY() + e1.getHeight() > e2.getY();
-	}
-	
-	/**
-	 * Gets an instance of a random tower specified by the TowerType enum
-	 * 
-	 * @return a random Tower
-	 */
-	public Tower getRandomTower() {
-		List<Class<? extends Tower>> towerList = new ArrayList<>(towerMap.values());
-		int randomIndex = new Random().nextInt(towerList.size());
-		Class<? extends Tower> randomTower = towerList.get(randomIndex);
-		
-		Object object;
-		try { 
-			Constructor<?> cons = randomTower.getConstructor();
-			object = cons.newInstance();
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-				InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-			object = new Tower();
-		}
-		
-		return (Tower) object;
+		return false;
 	}
 	
 	/**
@@ -145,7 +80,7 @@ public class TDController {
 	 * @param name the name of the tower to get
 	 * @return A Tower object
 	 */
-	public Tower getTowerByName(String name) {
+	private Tower getTowerByName(String name) {
 		Class<?> c = towerMap.get(name);
 
 		if (c == null) {
@@ -166,37 +101,12 @@ public class TDController {
 	}
 	
 	/**
-	 * Gets all of the towers in the TowerType name.
+	 * Returns a set of all of the possible tower names that can be
+	 * added to the board.
 	 * 
-	 * @return a List of all of the possible Tower objects
+	 * @return A Set containing the names of all of the towers available
 	 */
-	public List<Tower> getAllTowers() {
-		List<Class<? extends Tower>> towerList = new ArrayList<>(towerMap.values());
-		List<Tower> towers = new ArrayList<>();
-		
-		for (Class<?> type : towerList) {
-			try {
-				Constructor<?> cons = type.getConstructor();
-				Object object = cons.newInstance();
-				towers.add((Tower)object);
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-					InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-			}
-		}
-		return towers;
-	}
-	
-	/**
-	 * The setTowerCoordinates method sets the coordinates of the
-	 * tower placement.
-	 * 
-	 * @param tower A tower object that was placed.
-	 * @param x The tower's x coordinate.
-	 * @param y The tower's Y coordinate.
-	 */
-	public void setTowerCoordinates(Tower tower, int x, int y) {
-		tower.setX(x);
-		tower.setY(y);
+	public Set<String> getTowerNames() {
+		return towerMap.keySet();
 	}
 }
