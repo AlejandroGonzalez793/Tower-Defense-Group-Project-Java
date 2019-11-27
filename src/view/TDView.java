@@ -16,6 +16,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -75,7 +77,7 @@ public class TDView extends Application implements Observer{
 			gc.drawImage(image, 0, 0, 800, 650);
 			
 			canvas.setOnMouseClicked(e ->{
-				
+				controller.addTower((int) e.getX(), (int) e.getY());
 			});
 		} catch (FileNotFoundException e) {
 			System.out.println("Your image could not be found.");
@@ -99,8 +101,7 @@ public class TDView extends Application implements Observer{
 		int j = 0;
 		for (String tower : towers) {
 			Button button = new Button();
-			button.setOnAction(new TowerButton(tower));
-			button.setGraphic(getTowerImage(tower.getImageName()));
+			button.setOnAction(new TowerButton(tower)); // fix tower images later
 			towerPane.add(button, j, i);
 			
 			j++;
@@ -170,7 +171,7 @@ public class TDView extends Application implements Observer{
 		 * @param e The ActionEvent object.
 		 */
 		public void handle(ActionEvent e) {		
-			if (controller.addTower()) {
+			if (controller.canPurchaseTower(this.tower)) {
 				towerPane.setDisable(true);
 				canvas.setDisable(false);
 			} else {
