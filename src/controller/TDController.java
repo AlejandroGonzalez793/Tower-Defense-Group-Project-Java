@@ -2,10 +2,14 @@ package controller;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import javafx.scene.image.Image;
 import model.GameState;
 import model.Player;
 import model.Tower;
@@ -113,6 +117,28 @@ public class TDController {
 		}
 		
 		return (Tower) object;
+	}
+	
+	/**
+	 * Gets a map of all of the tower names to its associated image.
+	 * 
+	 * @return A Map of String to Image with the key being the tower's name and
+	 * the value being the tower's Image
+	 */
+	public Map<String, Image> getTowerImageMap() {
+		Map<String, Image> imageMap = new HashMap<>();
+		
+		for (Entry<String, Class<? extends Tower>> towerEntry : towerMap.entrySet()) {
+			try {
+				Constructor<?> cons = towerEntry.getValue().getConstructor();
+				Tower tower = (Tower)cons.newInstance();
+				imageMap.put(towerEntry.getKey(), tower.getImage());
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+					InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		return imageMap;
 	}
 	
 	/**

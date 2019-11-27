@@ -2,9 +2,9 @@ package view;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 import controller.TDController;
 import javafx.application.Application;
@@ -19,6 +19,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -103,13 +104,14 @@ public class TDView extends Application implements Observer {
 		towerPane.setPadding(new Insets(5, 5, 5, 5));
 		towerPane.setVgap(5);
 		towerPane.setHgap(5);
-		Set<String> towers = controller.getTowerNames();
+		Map<String, Image> towerImageMap = controller.getTowerImageMap();
 		
 		int i = 0;
 		int j = 0;
-		for (String tower : towers) {
+		for (Map.Entry<String, Image> entry : towerImageMap.entrySet()) {
 			Button button = new Button();
-			button.setOnAction(new TowerButton(tower)); // fix tower images later
+			button.setOnAction(new TowerButton(entry.getKey()));
+			button.setGraphic(new ImageView(entry.getValue()));
 			towerPane.add(button, j, i);
 			
 			j++;
@@ -124,12 +126,12 @@ public class TDView extends Application implements Observer {
 		
 		HBox hpBox = new HBox();
 		Label hpLabel = new Label("HP: ");
-		health = new Text(Integer.toString(1000)); // needs to be player health!
+		health = new Text(Integer.toString(Player.STARTING_HEALTH));
 		hpBox.getChildren().addAll(hpLabel, health);
 		
 		HBox moneyBox = new HBox();
 		Label moneyLabel = new Label("Gold: ");
-		money = new Text(Integer.toString(1000)); // player starting money!
+		money = new Text(Integer.toString(Player.STARTING_MONEY));
 		moneyBox.getChildren().addAll(moneyLabel, money);
 		
 		statsBox.getChildren().addAll(hpBox, moneyBox);
