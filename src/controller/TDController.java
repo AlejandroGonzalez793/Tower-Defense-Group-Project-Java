@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.geom.Line2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javafx.scene.image.Image;
+import javafx.scene.shape.Line;
 import model.GameState;
 import model.Player;
 import model.Stage;
@@ -74,11 +76,12 @@ public class TDController {
 	}
 	
 	public boolean canPlaceTower(int x, int y) {
-		List<int[]> path = stage.getPoints();
+		List<Line> path = stage.getLines();
 		int pathWidth = stage.getPathWidth() / 2;
 		
-		for (int[] pathPos : path) {
-			if (Math.abs(x - pathPos[0]) < pathWidth && Math.abs(y - pathPos[1]) < pathWidth) {
+		for (Line line : path) {
+			if (Line2D.ptLineDist(line.getStartX(), line.getStartY(), 
+					line.getEndX(), line.getEndY(), x, y) < pathWidth) {
 				return false;
 			}
 		}
