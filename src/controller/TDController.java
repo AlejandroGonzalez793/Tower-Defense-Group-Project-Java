@@ -76,8 +76,10 @@ public class TDController {
 	public void addTower(int x, int y) {
 		// TODO: Do something if no selected tower
 		if (selectedTower != null) {
-			selectedTower.setX(x);
-			selectedTower.setY(y);
+			int shiftedX = x - (selectedTower.getWidth() / 2);
+			int shiftedY = y - (selectedTower.getHeight() / 2);
+			selectedTower.setX(shiftedX);
+			selectedTower.setY(shiftedY);
 			
 			player.setMoney(player.getMoney() - selectedTower.getCost());
 			gameState.addTower(selectedTower);
