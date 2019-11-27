@@ -2,7 +2,6 @@ package controller;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,7 @@ import java.util.Set;
 import javafx.scene.image.Image;
 import model.GameState;
 import model.Player;
+import model.Stage;
 import model.Tower;
 
 
@@ -29,6 +29,7 @@ import model.Tower;
  */
 public class TDController {
 	private Player player;
+	private Stage stage;
 	private GameState gameState;
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
@@ -36,6 +37,7 @@ public class TDController {
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
 		this.gameState = gameState;
+		this.stage = new Stage();
 		this.selectedTower = null;
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
@@ -69,6 +71,18 @@ public class TDController {
 	public boolean canPurchaseTower(String name) {
 		selectedTower = getTowerByName(name);
 		return selectedTower.getCost() <= player.getMoney();
+	}
+	
+	public boolean canPlaceTower(int x, int y) {
+		List<int[]> path = stage.getPoints();
+		int pathWidth = stage.getPathWidth() / 2;
+		
+		for (int[] pathPos : path) {
+			if (Math.abs(x - pathPos[0]) < pathWidth && Math.abs(y - pathPos[1]) < pathWidth) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**

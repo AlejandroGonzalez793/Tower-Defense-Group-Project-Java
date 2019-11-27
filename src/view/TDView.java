@@ -52,9 +52,14 @@ public class TDView extends Application implements Observer {
 		createLayout();
 		
 		canvas.setOnMouseClicked(e -> {
-			controller.addTower((int) e.getX(), (int) e.getY());
-			towerPane.setDisable(false);
-			canvas.setDisable(true);
+			System.out.println("X: " + e.getX());
+			System.out.println("Y: " + e.getY());
+			
+			if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
+				controller.addTower((int) e.getX(), (int) e.getY());
+				towerPane.setDisable(false);
+				canvas.setDisable(true);
+			}
 		});
 		
 		primaryStage.setTitle("Tower Defense");
