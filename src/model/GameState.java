@@ -89,7 +89,7 @@ public class GameState extends Observable {
 	public void addTower(Tower tower) {
 		towers.add(tower);
 		setChanged();
-		notifyObservers();
+		notifyObservers(this);
 	}
 	
 	public void setRound(int round) {

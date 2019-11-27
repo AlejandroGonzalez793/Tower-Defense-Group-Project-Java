@@ -1,9 +1,7 @@
 package view;
 
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -21,20 +19,17 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.GameState;
 import model.Player;
 import model.Tower;
 
-public class TDView extends Application implements Observer{
+public class TDView extends Application implements Observer {
 	private BorderPane root;
 	private Canvas canvas;
 	private GraphicsContext gc;
@@ -42,12 +37,9 @@ public class TDView extends Application implements Observer{
 	
 	private Text money;
 	private Text health;
-	
 	private GridPane towerPane;
 	
-	
 	private static final String IMAGE_MAP_PATH = "resources/images/maps/";
-	private static final String TOWER_IMAGE_PATH = "resources/images/towers/";
 	private static final int TOWER_ROWS = 2;
 
 	@Override
@@ -58,11 +50,32 @@ public class TDView extends Application implements Observer{
 		createMap();
 		createLayout();
 		
+		canvas.setOnMouseClicked(e -> {
+			controller.addTower((int) e.getX(), (int) e.getY());
+			towerPane.setDisable(false);
+			canvas.setDisable(true);
+		});
 		
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
 		primaryStage.show();
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if (arg instanceof GameState) {
+			GameState gameState = (GameState)arg;
+			createMap();
+			for (Tower tower : gameState.getTowers()) {
+				gc.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
+						tower.getWidth(), tower.getHeight());
+			}
+		} else if (arg instanceof Player) {
+			Player player = (Player)arg;
+			money.setText(Integer.toString(player.getMoney()));
+			health.setText(Integer.toString(player.getHealth()));
+		}
 	}
 
 	public void createMap() {
@@ -75,10 +88,6 @@ public class TDView extends Application implements Observer{
 			input = new FileInputStream(IMAGE_MAP_PATH + "TDMap2.png");
 			Image image = new Image(input);
 			gc.drawImage(image, 0, 0, 800, 650);
-			
-			canvas.setOnMouseClicked(e ->{
-				controller.addTower((int) e.getX(), (int) e.getY());
-			});
 		} catch (FileNotFoundException e) {
 			System.out.println("Your image could not be found.");
 			e.printStackTrace();
@@ -88,7 +97,6 @@ public class TDView extends Application implements Observer{
 	}
 	
 	public void createLayout() {
-		
 		// Create side bar
 		BorderPane sidebarPane = new BorderPane();
 		towerPane = new GridPane();
@@ -137,20 +145,6 @@ public class TDView extends Application implements Observer{
 		root.setRight(sidebarPane);
 	}
 	
-   
-	
-	
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// Need to re-draw everything in the view
-		// arg will be the GameState object 
-		createMap(); // canvas
-		// projectiles
-		// enemies
-		// towers
-		
-	}
 	/**
 	 * The TowerButton class is the event handler class that will check if the 
 	 * player can buy a tower, then they can place it on the map. If they can't 
