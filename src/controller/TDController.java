@@ -69,7 +69,7 @@ public class TDController {
 	
 	/**
 	 * Adds the current selected tower to the tower list and 
-	 * subtracts the toer's cost from the player's money.
+	 * subtracts the tower's cost from the player's money.
 	 * 
 	 * @param tower the Tower to add
 	 */
@@ -80,7 +80,7 @@ public class TDController {
 			selectedTower.setY(y);
 			
 			player.setMoney(player.getMoney() - selectedTower.getCost());
-			gameState.getTowers().add(selectedTower);
+			gameState.addTower(selectedTower);
 			selectedTower = null;
 		}
 	}

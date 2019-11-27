@@ -86,6 +86,12 @@ public class GameState extends Observable {
 		return round;
 	}
 	
+	public void addTower(Tower tower) {
+		towers.add(tower);
+		setChanged();
+		notifyObservers();
+	}
+	
 	public void setRound(int round) {
 		this.round = round;
 	}
