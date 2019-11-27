@@ -1,11 +1,17 @@
 package view;
 
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
+import controller.TDController;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -22,22 +28,29 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.GameState;
+import model.Player;
+import model.Tower;
 
 public class TDView extends Application implements Observer{
 	private BorderPane root;
 	private Canvas canvas;
 	private GraphicsContext gc;
+	private TDController controller;
 	
 	private Text money;
 	private Text health;
 	
 	private GridPane towerPane;
 	
+	
 	private static final String IMAGE_MAP_PATH = "resources/images/maps/";
 	private static final String TOWER_IMAGE_PATH = "resources/images/towers/";
+	private static final int TOWER_ROWS = 2;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		controller = new TDController(new Player(this), new GameState(this));
 		root = new BorderPane();
 		canvas = new Canvas();
 		createMap();
@@ -73,13 +86,29 @@ public class TDView extends Application implements Observer{
 	}
 	
 	public void createLayout() {
+		
+		// Create side bar
 		BorderPane sidebarPane = new BorderPane();
 		towerPane = new GridPane();
 		towerPane.setPadding(new Insets(5, 5, 5, 5));
 		towerPane.setVgap(5);
 		towerPane.setHgap(5);
+		Set<String> towers = controller.getTowerNames();
 		
-		// need to place towers here!!!
+		int i = 0;
+		int j = 0;
+		for (String tower : towers) {
+			Button button = new Button();
+			button.setOnAction(new TowerButton(tower));
+			button.setGraphic(getTowerImage(tower.getImageName()));
+			towerPane.add(button, j, i);
+			
+			j++;
+			if (j == TOWER_ROWS) {
+				j = 0;
+				i++;
+			}
+		}
 		
 		VBox statsBox = new VBox();
 		statsBox.setSpacing(5);
@@ -121,7 +150,36 @@ public class TDView extends Application implements Observer{
 		// towers
 		
 	}
-	
-
-
+	/**
+	 * The TowerButton class is the event handler class that will check if the 
+	 * player can buy a tower, then they can place it on the map. If they can't 
+	 * buy the tower, then they won't be able to place anything.
+	 */
+	class TowerButton implements EventHandler<ActionEvent> {
+		private String tower;
+		
+		public TowerButton(String tower) {
+			this.tower = tower;
+		}
+		
+		/**
+		 * The handle method handles the event for when the tower button
+		 * is clicked. It sets the selected tower to the current tower if
+		 * the player can buy it.
+		 * 
+		 * @param e The ActionEvent object.
+		 */
+		public void handle(ActionEvent e) {		
+			if (controller.addTower()) {
+				towerPane.setDisable(true);
+				canvas.setDisable(false);
+			} else {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText(null);
+				alert.setContentText("Can't buy this tower");
+				alert.showAndWait();
+			}
+		}
+	}
 }
