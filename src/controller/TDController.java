@@ -26,11 +26,13 @@ import model.Tower;
 public class TDController {
 	private Player player;
 	private GameState gameState;
+	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
 	
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
 		this.gameState = gameState;
+		this.selectedTower = null;
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
 		towerMap.put("Tower", Tower.class);
@@ -54,22 +56,33 @@ public class TDController {
 	}
 	
 	/**
-	 * Adds a tower to the current list of towers and subtracts
-	 * the money from the player
+	 * Determines if the player can purchase a tower 
+	 * specified by its name
+	 * 
+	 * @param name the name of the tower
+	 * @return true if the tower can be purchased, false otherwise
+	 */
+	public boolean canPurchaseTower(String name) {
+		selectedTower = getTowerByName(name);
+		return selectedTower.getCost() <= player.getMoney();
+	}
+	
+	/**
+	 * Adds the current selected tower to the tower list and 
+	 * subtracts the toer's cost from the player's money.
 	 * 
 	 * @param tower the Tower to add
 	 */
-	public boolean addTower(int x, int y, String name) {
-		Tower tower = getTowerByName(name);
-		tower.setX(x);
-		tower.setY(y);
-
-		if (tower.getCost() <= player.getMoney()) {
-			player.setMoney(player.getMoney() - tower.getCost());
-			gameState.getTowers().add(tower);
-			return true;
+	public void addTower(int x, int y) {
+		// TODO: Do something if no selected tower
+		if (selectedTower != null) {
+			selectedTower.setX(x);
+			selectedTower.setY(y);
+			
+			player.setMoney(player.getMoney() - selectedTower.getCost());
+			gameState.getTowers().add(selectedTower);
+			selectedTower = null;
 		}
-		return false;
 	}
 	
 	/**
