@@ -18,6 +18,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -25,6 +28,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.GameState;
 import model.Player;
@@ -35,6 +39,8 @@ public class TDView extends Application implements Observer {
 	private Canvas canvas;
 	private GraphicsContext gc;
 	private TDController controller;
+	private TDMainMenu mainMenu;
+	private String mapFileName;
 	
 	private Text money;
 	private Text health;
@@ -45,23 +51,35 @@ public class TDView extends Application implements Observer {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		controller = new TDController(new Player(this), new GameState(this));
+		mainMenu = new TDMainMenu();
+    	mainMenu.setTitle("Tower Defense");
+    	mainMenu.initModality(Modality.APPLICATION_MODAL);
+    	mainMenu.setResizable(false);
+		mainMenu.showAndWait();
+		
+		if (mainMenu.getMapImage() == null) {
+			System.exit(1);
+		}
+		
+		mapFileName = mainMenu.getMapImage();
+		
 		root = new BorderPane();
-		canvas = new Canvas();
-		createMap();
-		createLayout();
 		
-		canvas.setOnMouseClicked(e -> {
-			System.out.println("X: " + e.getX());
-			System.out.println("Y: " + e.getY());
-			
-			if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
-				controller.addTower((int) e.getX(), (int) e.getY());
-				towerPane.setDisable(false);
-				canvas.setDisable(true);
-			}
-		});
+		MenuBar menuBar = new MenuBar();
+		Menu menu = new Menu("Stage Select");
+		MenuItem stageOneItem = new MenuItem("Stage 1");
+		stageOneItem.setOnAction(new StageButton("TDMap2.png"));
+		MenuItem stageTwoItem = new MenuItem("Stage 2");
+		stageTwoItem.setOnAction(new StageButton("TDMap1.png"));
+		MenuItem stageThreeItem = new MenuItem("Stage 3");
+		stageThreeItem.setOnAction(new StageButton("TDMap2.png"));
 		
+		menu.getItems().addAll(stageOneItem, stageTwoItem, stageThreeItem);
+		menuBar.getMenus().add(menu);
+		
+		root.setTop(menuBar);
+		
+		newGame();
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
@@ -83,6 +101,25 @@ public class TDView extends Application implements Observer {
 			health.setText(Integer.toString(player.getHealth()));
 		}
 	}
+	
+	public void newGame()
+	{
+		controller = new TDController(new Player(this), new GameState(this));
+		canvas = new Canvas();
+		createMap();
+		createLayout();
+		
+		canvas.setOnMouseClicked(e -> {
+			System.out.println("X: " + e.getX());
+			System.out.println("Y: " + e.getY());
+			
+			if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
+				controller.addTower((int) e.getX(), (int) e.getY());
+				towerPane.setDisable(false);
+				canvas.setDisable(true);
+			}
+		});
+	}
 
 	public void createMap() {
 		FileInputStream input;
@@ -91,7 +128,7 @@ public class TDView extends Application implements Observer {
 		try {
 			canvas.setHeight(650); // will be number of pixels in background photo
 			canvas.setWidth(800); // will be number of pixels in background photo
-			input = new FileInputStream(IMAGE_MAP_PATH + "TDMap2.png");
+			input = new FileInputStream(IMAGE_MAP_PATH + mapFileName);
 			Image image = new Image(input);
 			gc.drawImage(image, 0, 0, 800, 650);
 		} catch (FileNotFoundException e) {
@@ -182,6 +219,19 @@ public class TDView extends Application implements Observer {
 				alert.setContentText("Can't buy this tower");
 				alert.showAndWait();
 			}
+		}
+	}
+	
+	class StageButton implements EventHandler<ActionEvent> {
+		private String mapFile;
+		
+		public StageButton(String mapFile) {
+			this.mapFile = mapFile;
+		}
+		
+		public void handle(ActionEvent e) {	
+			mapFileName = mapFile;
+			newGame();
 		}
 	}
 }
