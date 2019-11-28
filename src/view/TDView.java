@@ -40,6 +40,9 @@ public class TDView extends Application implements Observer {
 	private Text health;
 	private GridPane towerPane;
 	
+	private Button sellButton;
+	private Boolean sellingTowers = false;
+	
 	private static final String IMAGE_MAP_PATH = "resources/images/maps/";
 	private static final int TOWER_ROWS = 2;
 
@@ -55,10 +58,18 @@ public class TDView extends Application implements Observer {
 			System.out.println("X: " + e.getX());
 			System.out.println("Y: " + e.getY());
 			
-			if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
-				controller.addTower((int) e.getX(), (int) e.getY());
-				towerPane.setDisable(false);
-				canvas.setDisable(true);
+			if (!sellingTowers) {
+				if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
+					controller.addTower((int) e.getX(), (int) e.getY());
+					towerPane.setDisable(false);
+					canvas.setDisable(true);
+				}
+			}
+			else
+			{
+				if (controller.canSellTower((int)e.getX(), (int)e.getY())) {
+					controller.deleteTower();
+				}
 			}
 		});
 		
@@ -142,8 +153,39 @@ public class TDView extends Application implements Observer {
 		statsBox.getChildren().addAll(hpBox, moneyBox);
 		
 		VBox controlBox = new VBox();
+		controlBox.setSpacing(5);
+		
+		HBox sellBox = new HBox();
+		sellButton = new Button("Sell Towers");
+		sellButton.setOnAction(new EventHandler<ActionEvent>()
+		{
+			@Override
+			public void handle(ActionEvent event) 
+			{
+				if (!sellingTowers)
+				{
+					towerPane.setDisable(true);
+					canvas.setDisable(false);
+					sellingTowers = true;
+					sellButton.setText("Buy Towers");
+				}
+				else
+				{
+					towerPane.setDisable(false);
+					canvas.setDisable(true);
+					sellingTowers = false;
+					sellButton.setText("Sell Towers");
+				}// end if
+			}// end handle
+		});// end eventHandler
+		
+		sellBox.getChildren().add(sellButton);
+		
+		HBox waveBox = new HBox();
 		Button newWaveButton = new Button("New Wave >>");
-		controlBox.getChildren().add(newWaveButton);
+		waveBox.getChildren().add(newWaveButton);
+		
+		controlBox.getChildren().addAll(sellButton, waveBox);
 		
 		sidebarPane.setTop(statsBox);
 		sidebarPane.setCenter(towerPane);
