@@ -11,7 +11,6 @@ import java.util.Set;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import model.Enemy;
-import model.Entity;
 import model.GameState;
 import model.Player;
 import model.Projectile;
@@ -211,6 +210,15 @@ public class TDController {
 		return towerMap.keySet();
 	}
 	
+	/**
+	 * Adds a "path tile" to the game state. Used for keeping track of which portions
+	 * of the map are going to be used as the path for enemies to take
+	 * 
+	 * @param x top left x coordinate of the tile
+	 * @param y top left y coordinate of the tile
+	 * @param width width of the tile in pixels
+	 * @param height height of the tile in pixels
+	 */
 	public void addPathTile(int x, int y, int width, int height) {
 		gameState.addPath(new Rectangle(x, y, width, height));
 	}

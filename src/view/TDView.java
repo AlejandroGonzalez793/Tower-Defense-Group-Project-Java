@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -31,6 +32,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.GameState;
@@ -57,7 +60,7 @@ public class TDView extends Application implements Observer {
 	private Boolean sellingTowers = false;
 	
 	private static final String IMAGE_PATH = "resources/images/";
-	private static final String MAP_PATH = "resources/maps/";
+	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 2;
 	private static final char FREE_CHAR = '*';
 	private static final char ROAD_CHAR = '-';
@@ -86,8 +89,26 @@ public class TDView extends Application implements Observer {
 		stageTwoItem.setOnAction(new StageButton("map2.td"));
 		MenuItem stageThreeItem = new MenuItem("Stage 3");
 		stageThreeItem.setOnAction(new StageButton("map3.td"));
+		MenuItem selectMapItem = new MenuItem("Select Map");
+		selectMapItem.setOnAction(e -> {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Map File");
+			FileChooser.ExtensionFilter mapFilter = new ExtensionFilter(
+					"Map Files (*.td)", "*.td");
+			FileChooser.ExtensionFilter allFilter = new ExtensionFilter(
+					"All Files", "*.*");
+			fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+			fileChooser.getExtensionFilters().addAll(mapFilter, allFilter);
+			File file = fileChooser.showOpenDialog(primaryStage);
+			if (file != null) {
+				mapFileName = file.getPath();
+				newGame();
+			}
+			primaryStage.sizeToScene();
+			primaryStage.centerOnScreen();
+		});
 		
-		menu.getItems().addAll(stageOneItem, stageTwoItem, stageThreeItem);
+		menu.getItems().addAll(stageOneItem, stageTwoItem, stageThreeItem, selectMapItem);
 		menuBar.getMenus().add(menu);
 		
 		root.setTop(menuBar);
@@ -149,6 +170,7 @@ public class TDView extends Application implements Observer {
 	public void createMap() {
 		backgroundCanvas = new Canvas();
 		drawingCanvas = new Canvas();
+		gamePane = new Pane(backgroundCanvas, drawingCanvas);
 		backgroundGC = backgroundCanvas.getGraphicsContext2D();
 		drawingGC = drawingCanvas.getGraphicsContext2D();
 		
@@ -156,15 +178,23 @@ public class TDView extends Application implements Observer {
 		Image grass = null;
 		Image road = null;
 		try {
-			input = new Scanner(new File(MAP_PATH + mapFileName));
+			input = new Scanner(new File(mapFileName));
 			grass = new Image(new FileInputStream(IMAGE_PATH + "Grass.png"));
 			road = new Image(new FileInputStream(IMAGE_PATH + "Road.png"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return;
+		} 
+		
+		try {
+			backgroundCanvas.setWidth(input.nextInt() * grass.getWidth());
+			backgroundCanvas.setHeight(input.nextInt() * grass.getHeight());
+		} catch (NoSuchElementException e) {
+			System.err.println("Invalid map format");
+			if (input != null) input.close();
+			return;
 		}
 		
-		backgroundCanvas.setWidth(input.nextInt() * grass.getWidth());
-		backgroundCanvas.setHeight(input.nextInt() * grass.getHeight());
 		drawingCanvas.setWidth(backgroundCanvas.getWidth());
 		drawingCanvas.setHeight(backgroundCanvas.getHeight());
 		
@@ -184,7 +214,7 @@ public class TDView extends Application implements Observer {
 			row++;
 		}
 
-		gamePane = new Pane(backgroundCanvas, drawingCanvas);
+		input.close();
 		root.setCenter(gamePane);
 	}
 	
@@ -305,7 +335,7 @@ public class TDView extends Application implements Observer {
 		}
 		
 		public void handle(ActionEvent e) {	
-			mapFileName = mapFile;
+			mapFileName = MAP_PATH + mapFile;
 			newGame();
 		}
 	}
