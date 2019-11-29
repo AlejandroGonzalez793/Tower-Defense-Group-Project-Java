@@ -1,6 +1,5 @@
 package controller;
 
-import java.awt.geom.Line2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -10,10 +9,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javafx.scene.image.Image;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import model.GameState;
 import model.Player;
-import model.Stage;
 import model.Tower;
 
 
@@ -31,7 +29,6 @@ import model.Tower;
  */
 public class TDController {
 	private Player player;
-	private Stage stage;
 	private GameState gameState;
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
@@ -39,7 +36,6 @@ public class TDController {
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
 		this.gameState = gameState;
-		this.stage = new Stage();
 		this.selectedTower = null;
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
@@ -76,12 +72,12 @@ public class TDController {
 	}
 	
 	public boolean canPlaceTower(int x, int y) {
-		List<Line> path = stage.getLines();
-		int pathWidth = stage.getPathWidth() / 2;
+		List<Rectangle> path = gameState.getPath();
+		int shiftedX = x - (selectedTower.getWidth() / 2);
+		int shiftedY = y - (selectedTower.getHeight() / 2);
 		
-		for (Line line : path) {
-			if (Line2D.ptLineDist(line.getStartX(), line.getStartY(), 
-					line.getEndX(), line.getEndY(), x, y) < pathWidth) {
+		for (Rectangle rect : path) {
+			if (rect.intersects(shiftedX, shiftedY, Tower.DEFAULT_WIDTH, Tower.DEFAULT_HEIGHT)) {
 				return false;
 			}
 		}
@@ -166,5 +162,9 @@ public class TDController {
 	 */
 	public Set<String> getTowerNames() {
 		return towerMap.keySet();
+	}
+	
+	public void addPathTile(int x, int y, int width, int height) {
+		gameState.addPath(new Rectangle(x, y, width, height));
 	}
 }

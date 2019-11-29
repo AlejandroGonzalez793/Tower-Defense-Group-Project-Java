@@ -12,35 +12,24 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class TDMainMenu extends Stage{
+public class TDMainMenu extends Stage {
 	private BorderPane menuPane = new BorderPane();
 	private String choosenMap;
 	private VBox stageBox;
 	
 	public TDMainMenu() {
 		Button startBtn = new Button("Start");
-		startBtn.setMinWidth(80.0);
-		startBtn.setPrefWidth(80.0);
-		startBtn.setMaxWidth(80.0);
-		startBtn.setOnAction(new StageButton("TDMap2.png"));
+		startBtn.setOnAction(new StageButton("map1.td"));
 		
 		Button stageBtn = new Button("Stage Select");
-		stageBtn.setMinWidth(100.0);
-		stageBtn.setPrefWidth(100.0);
-		stageBtn.setMaxWidth(100.0);
-		stageBtn.setOnAction(new EventHandler<ActionEvent>()
-		{
+		stageBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				stageBox.setVisible(true);
 			}
 	    });
 		Button exitBtn = new Button("Exit");
-		exitBtn.setMinWidth(80.0);
-		exitBtn.setPrefWidth(80.0);
-		exitBtn.setMaxWidth(80.0);
-		exitBtn.setOnAction(new EventHandler<ActionEvent>()
-		{
+		exitBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				System.exit(1);		
@@ -48,11 +37,11 @@ public class TDMainMenu extends Stage{
 	    });	
 		
 		Button stageOneBtn = new Button("Stage 1");
-		stageOneBtn.setOnAction(new StageButton("TDMap2.png"));
+		stageOneBtn.setOnAction(new StageButton("map1.td"));
 		Button stageTwoBtn = new Button("Stage 2");
-		stageTwoBtn.setOnAction(new StageButton("TDMap1.png"));
+		stageTwoBtn.setOnAction(new StageButton("map2.td"));
 		Button stageThreeBtn = new Button("Stage 3");
-		stageThreeBtn.setOnAction(new StageButton("TDMap2.png"));
+		stageThreeBtn.setOnAction(new StageButton("map3.td"));
 		
 		VBox menuBox = new VBox(startBtn, stageBtn, exitBtn);
 		menuBox.setAlignment(Pos.CENTER);
@@ -66,16 +55,15 @@ public class TDMainMenu extends Stage{
 		hBox.setSpacing(15);
 		
 		BorderPane.setAlignment(hBox, Pos.CENTER);
-		BorderPane.setMargin(hBox, new Insets(50,0,100,185)); 
+		BorderPane.setMargin(hBox, new Insets(50, 0, 100, 185)); 
 		
 		menuPane.setBottom(hBox);
 		Scene scene = new Scene(menuPane, 450, 450);
 		this.setScene(scene);
 		System.out.println("Menu Created");
-	}// end TDMainMenu constructor
+	}
 	
-	public String getMapImage()
-	{
+	public String getMapImage() {
 		return choosenMap;
 	}
 	
@@ -94,4 +82,4 @@ public class TDMainMenu extends Stage{
 		}
 	}
 	
-}// end TDMainMenu class
+} 

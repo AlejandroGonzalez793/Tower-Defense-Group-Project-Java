@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javafx.scene.shape.Rectangle;
+
 
 /**
  * Contains the game state for the current game. Holds lists of all of the
@@ -19,6 +21,7 @@ public class GameState extends Observable {
 	private List<Tower> towers;
 	private List<Enemy> enemies;
 	private List<Projectile> projectiles;
+	private List<Rectangle> path;
 	private int ticks;
 	private int round;
 	
@@ -26,6 +29,7 @@ public class GameState extends Observable {
 		this.towers = new ArrayList<>();
 		this.enemies = new ArrayList<>();
 		this.projectiles = new ArrayList<>();
+		this.path = new ArrayList<>();
 		
 		if (o != null) {
 			addObserver(o);
@@ -107,4 +111,12 @@ public class GameState extends Observable {
 	public List<Projectile> getProjectiles() {
 		return projectiles;
 	}
+	
+	public List<Rectangle> getPath() {
+		return path;
+	}
+	
+	public void addPath(Rectangle rect) { 
+		path.add(rect); 
+	} 
 }

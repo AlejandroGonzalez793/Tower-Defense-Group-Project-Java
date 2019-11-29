@@ -1,10 +1,12 @@
 package view;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
 
 import controller.TDController;
 import javafx.application.Application;
@@ -26,6 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -36,8 +39,11 @@ import model.Tower;
 
 public class TDView extends Application implements Observer {
 	private BorderPane root;
-	private Canvas canvas;
-	private GraphicsContext gc;
+	private Pane gamePane;
+	private Canvas backgroundCanvas;
+	private Canvas drawingCanvas;
+	private GraphicsContext backgroundGC;
+	private GraphicsContext drawingGC;
 	private TDController controller;
 	private TDMainMenu mainMenu;
 	private String mapFileName;
@@ -46,8 +52,11 @@ public class TDView extends Application implements Observer {
 	private Text health;
 	private GridPane towerPane;
 	
-	private static final String IMAGE_MAP_PATH = "resources/images/maps/";
+	private static final String MAP_PATH = "resources/maps/";
+	private static final String IMAGE_PATH = "resources/images/";
 	private static final int TOWER_ROWS = 2;
+	private static final char FREE_CHAR = '*';
+	private static final char ROAD_CHAR = '-';
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -68,11 +77,11 @@ public class TDView extends Application implements Observer {
 		MenuBar menuBar = new MenuBar();
 		Menu menu = new Menu("Stage Select");
 		MenuItem stageOneItem = new MenuItem("Stage 1");
-		stageOneItem.setOnAction(new StageButton("TDMap2.png"));
+		stageOneItem.setOnAction(new StageButton("map1.td"));
 		MenuItem stageTwoItem = new MenuItem("Stage 2");
-		stageTwoItem.setOnAction(new StageButton("TDMap1.png"));
+		stageTwoItem.setOnAction(new StageButton("map2.td"));
 		MenuItem stageThreeItem = new MenuItem("Stage 3");
-		stageThreeItem.setOnAction(new StageButton("TDMap2.png"));
+		stageThreeItem.setOnAction(new StageButton("map3.td"));
 		
 		menu.getItems().addAll(stageOneItem, stageTwoItem, stageThreeItem);
 		menuBar.getMenus().add(menu);
@@ -90,9 +99,8 @@ public class TDView extends Application implements Observer {
 	public void update(Observable o, Object arg) {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
-			createMap();
 			for (Tower tower : gameState.getTowers()) {
-				gc.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
+				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
 						tower.getWidth(), tower.getHeight());
 			}
 		} else if (arg instanceof Player) {
@@ -102,41 +110,63 @@ public class TDView extends Application implements Observer {
 		}
 	}
 	
-	public void newGame()
-	{
+	public void newGame() {
 		controller = new TDController(new Player(this), new GameState(this));
-		canvas = new Canvas();
 		createMap();
 		createLayout();
 		
-		canvas.setOnMouseClicked(e -> {
+		gamePane.setOnMouseClicked(e -> {
 			System.out.println("X: " + e.getX());
 			System.out.println("Y: " + e.getY());
 			
 			if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
 				controller.addTower((int) e.getX(), (int) e.getY());
 				towerPane.setDisable(false);
-				canvas.setDisable(true);
+				gamePane.setDisable(true);
 			}
 		});
 	}
 
 	public void createMap() {
-		FileInputStream input;
+		backgroundCanvas = new Canvas();
+		drawingCanvas = new Canvas();
+		backgroundGC = backgroundCanvas.getGraphicsContext2D();
+		drawingGC = drawingCanvas.getGraphicsContext2D();
 		
-		gc = canvas.getGraphicsContext2D();
+		Scanner input = null;
+		Image grass = null;
+		Image road = null;
 		try {
-			canvas.setHeight(650); // will be number of pixels in background photo
-			canvas.setWidth(800); // will be number of pixels in background photo
-			input = new FileInputStream(IMAGE_MAP_PATH + mapFileName);
-			Image image = new Image(input);
-			gc.drawImage(image, 0, 0, 800, 650);
+			input = new Scanner(new File(MAP_PATH + mapFileName));
+			grass = new Image(new FileInputStream(IMAGE_PATH + "Grass.png"));
+			road = new Image(new FileInputStream(IMAGE_PATH + "Road.png"));
 		} catch (FileNotFoundException e) {
-			System.out.println("Your image could not be found.");
 			e.printStackTrace();
 		}
 		
-		root.setCenter(canvas);
+		backgroundCanvas.setWidth(input.nextInt() * grass.getWidth());
+		backgroundCanvas.setHeight(input.nextInt() * grass.getHeight());
+		drawingCanvas.setWidth(backgroundCanvas.getWidth());
+		drawingCanvas.setHeight(backgroundCanvas.getHeight());
+		
+		int row = 0;
+		while (input.hasNextLine()) {
+			String line = input.nextLine();
+			for (int col = 0; col < line.length(); col++) {
+				char currChar = line.charAt(col);
+				if (currChar == FREE_CHAR) {
+					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());
+				} else {
+					backgroundGC.drawImage(road, col * grass.getWidth(), row * grass.getHeight());
+					controller.addPathTile((int)(col * road.getWidth()), (int)(row * road.getHeight()), 
+							(int)road.getWidth(), (int)road.getHeight());
+				}
+			}
+			row++;
+		}
+
+		gamePane = new Pane(backgroundCanvas, drawingCanvas);
+		root.setCenter(gamePane);
 	}
 	
 	public void createLayout() {
@@ -194,7 +224,7 @@ public class TDView extends Application implements Observer {
 	 * player can buy a tower, then they can place it on the map. If they can't 
 	 * buy the tower, then they won't be able to place anything.
 	 */
-	class TowerButton implements EventHandler<ActionEvent> {
+	private class TowerButton implements EventHandler<ActionEvent> {
 		private String tower;
 		
 		public TowerButton(String tower) {
@@ -211,7 +241,7 @@ public class TDView extends Application implements Observer {
 		public void handle(ActionEvent e) {		
 			if (controller.canPurchaseTower(this.tower)) {
 				towerPane.setDisable(true);
-				canvas.setDisable(false);
+				gamePane.setDisable(false);
 			} else {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error");
@@ -222,7 +252,7 @@ public class TDView extends Application implements Observer {
 		}
 	}
 	
-	class StageButton implements EventHandler<ActionEvent> {
+	private class StageButton implements EventHandler<ActionEvent> {
 		private String mapFile;
 		
 		public StageButton(String mapFile) {
