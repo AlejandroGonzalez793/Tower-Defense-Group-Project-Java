@@ -52,8 +52,11 @@ public class TDView extends Application implements Observer {
 	private Text health;
 	private GridPane towerPane;
 	
-	private static final String MAP_PATH = "resources/maps/";
+	private Button sellButton;
+	private Boolean sellingTowers = false;
+	
 	private static final String IMAGE_PATH = "resources/images/";
+	private static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 2;
 	private static final char FREE_CHAR = '*';
 	private static final char ROAD_CHAR = '-';
@@ -99,6 +102,7 @@ public class TDView extends Application implements Observer {
 	public void update(Observable o, Object arg) {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
+			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
 			for (Tower tower : gameState.getTowers()) {
 				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
 						tower.getWidth(), tower.getHeight());
@@ -119,11 +123,17 @@ public class TDView extends Application implements Observer {
 			System.out.println("X: " + e.getX());
 			System.out.println("Y: " + e.getY());
 			
-			if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
-				controller.addTower((int) e.getX(), (int) e.getY());
-				towerPane.setDisable(false);
-				gamePane.setDisable(true);
-			}
+            if (!sellingTowers) {
+                if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
+				    controller.addTower((int) e.getX(), (int) e.getY());
+				    towerPane.setDisable(false);
+                    gamePane.setDisable(true);
+                }
+            } else {
+            	if (controller.sellTower((int)e.getX(), (int)e.getY())) {
+            		// TODO: Do Something
+            	}
+            }
 		});
 	}
 
@@ -209,8 +219,34 @@ public class TDView extends Application implements Observer {
 		statsBox.getChildren().addAll(hpBox, moneyBox);
 		
 		VBox controlBox = new VBox();
+		controlBox.setSpacing(5);
+		
+		HBox sellBox = new HBox();
+		sellButton = new Button("Sell Towers");
+		sellButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (!sellingTowers) {
+					towerPane.setDisable(true);
+					gamePane.setDisable(false);
+					sellingTowers = true;
+					sellButton.setText("Buy Towers");
+				} else {
+					towerPane.setDisable(false);
+					gamePane.setDisable(true);
+					sellingTowers = false;
+					sellButton.setText("Sell Towers");
+				}
+			}
+		});
+		
+		sellBox.getChildren().add(sellButton);
+		
+		HBox waveBox = new HBox();
 		Button newWaveButton = new Button("New Wave >>");
-		controlBox.getChildren().add(newWaveButton);
+		waveBox.getChildren().add(newWaveButton);
+		
+		controlBox.getChildren().addAll(sellButton, waveBox);
 		
 		sidebarPane.setTop(statsBox);
 		sidebarPane.setCenter(towerPane);

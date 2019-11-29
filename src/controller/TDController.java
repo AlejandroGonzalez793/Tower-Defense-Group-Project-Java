@@ -10,8 +10,11 @@ import java.util.Set;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import model.Enemy;
+import model.Entity;
 import model.GameState;
 import model.Player;
+import model.Projectile;
 import model.Tower;
 
 
@@ -76,12 +79,36 @@ public class TDController {
 		int shiftedX = x - (selectedTower.getWidth() / 2);
 		int shiftedY = y - (selectedTower.getHeight() / 2);
 		
+		// Check if tower collides with path
 		for (Rectangle rect : path) {
-			if (rect.intersects(shiftedX, shiftedY, Tower.DEFAULT_WIDTH, Tower.DEFAULT_HEIGHT)) {
+			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
+				return false;
+			}
+		}
+		
+		// Check if tower collides with another tower
+		for (Tower tower : gameState.getTowers()) {
+			Rectangle rect = new Rectangle(tower.getX(), tower.getY(), tower.getWidth(), tower.getHeight());
+			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
 				return false;
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Check bullet collisions with enemies.
+	 * 
+	 * @param bullet object to be checked with a collision.
+	 * @return True or false depending if a collision was made or not.
+	 */
+	public boolean checkBulletCollision(Projectile bullet) {
+		for (Enemy enemy : gameState.getEnemies()) {
+			if (gameState.getCollision(bullet, enemy)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -102,6 +129,26 @@ public class TDController {
 			gameState.addTower(selectedTower);
 			selectedTower = null;
 		}
+	}
+	
+	/**
+	 * This method checks if the user clicked on a tower. If a tower was clicked on,
+	 * then sell it back to the player and reference the selected tower.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return True or false depending if a tower was sold back or not.
+	 */
+	public boolean sellTower(int x, int y) {				
+		for (Tower tower : gameState.getTowers()) {			
+			if (x > tower.getX() && x < tower.getX() + tower.getWidth() && 
+					y > tower.getY() && y < tower.getY() + tower.getHeight()) {
+				player.setMoney(player.getMoney() + (int)(tower.getCost() * Tower.SELLBACK_FACTOR));
+				gameState.removeTower(tower);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

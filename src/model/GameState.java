@@ -96,6 +96,12 @@ public class GameState extends Observable {
 		notifyObservers(this);
 	}
 	
+	public void removeTower(Tower tower) {
+		towers.remove(tower);
+		setChanged();
+		notifyObservers(this);
+	}
+	
 	public void setRound(int round) {
 		this.round = round;
 	}
