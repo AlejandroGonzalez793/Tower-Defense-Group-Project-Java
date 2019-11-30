@@ -41,6 +41,7 @@ import model.Player;
 import model.Tower;
 
 public class TDView extends Application implements Observer {
+	private Stage primaryStage;
 	private BorderPane root;
 	private Pane gamePane;
 	private Canvas backgroundCanvas;
@@ -62,10 +63,11 @@ public class TDView extends Application implements Observer {
 	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 2;
 	private static final char FREE_CHAR = '*';
-	private static final char ROAD_CHAR = '-';
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		this.primaryStage = primaryStage;
+		
 		mainMenu = new TDMainMenu();
     	mainMenu.setTitle("Tower Defense");
     	mainMenu.initModality(Modality.APPLICATION_MODAL);
@@ -103,8 +105,6 @@ public class TDView extends Application implements Observer {
 				mapFileName = file.getPath();
 				newGame();
 			}
-			primaryStage.sizeToScene();
-			primaryStage.centerOnScreen();
 		});
 		
 		menu.getItems().addAll(stageOneItem, stageTwoItem, stageThreeItem, selectMapItem);
@@ -156,6 +156,8 @@ public class TDView extends Application implements Observer {
             	}
             }
 		});
+		primaryStage.sizeToScene();
+		primaryStage.centerOnScreen();
 	}
 
 	public void createMap() {
