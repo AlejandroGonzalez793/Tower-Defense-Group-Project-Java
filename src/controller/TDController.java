@@ -34,11 +34,14 @@ public class TDController {
 	private GameState gameState;
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
+	private boolean playing;
+	public static final int TICK_SPEED = 100;
 	
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
 		this.gameState = gameState;
 		this.selectedTower = null;
+		this.playing = false;
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
 		towerMap.put("Tower", Tower.class);
@@ -221,5 +224,29 @@ public class TDController {
 	 */
 	public void addPathTile(int x, int y, int width, int height) {
 		gameState.addPath(new Rectangle(x, y, width, height));
+	}
+	
+	public void startGame() {
+		Thread thread = new Thread(() -> {
+			while (playing) {
+				tick();
+				
+				try {
+					Thread.sleep(TICK_SPEED);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		thread.start();
+	}
+	
+	public void newWave() {
+		Enemy enemy = new Enemy(0, 25, 30, 30, 10, 0);
+		Enemy enemy2 = new Enemy(0, 25, 30, 30, 0, 5);
+		gameState.getEnemies().add(enemy);
+		gameState.getEnemies().add(enemy2);
+		playing = true;
+		startGame();
 	}
 }

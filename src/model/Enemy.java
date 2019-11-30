@@ -18,6 +18,10 @@ public class Enemy extends Entity {
 		this.health = health;
 	}
 	
+	public Enemy(int x, int y, int width, int height, int dx, int dy) {
+		this(x, y, width, height, dx, dy, DEFAULT_HEALTH);
+	}
+	
 	public Enemy(int x, int y, int width, int height) {
 		this(x, y, width, height, 5, 5, DEFAULT_HEALTH);
 	}
