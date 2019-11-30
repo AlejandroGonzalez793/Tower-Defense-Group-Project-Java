@@ -180,6 +180,7 @@ public class TDView extends Application implements Observer {
 		try {
 			backgroundCanvas.setWidth(input.nextInt() * grass.getWidth());
 			backgroundCanvas.setHeight(input.nextInt() * grass.getHeight());
+			input.nextLine();
 		} catch (NoSuchElementException e) {
 			System.err.println("Invalid map format");
 			if (input != null) input.close();
