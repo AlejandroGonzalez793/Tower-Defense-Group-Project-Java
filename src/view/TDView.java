@@ -15,6 +15,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -321,6 +322,8 @@ public class TDView extends Application implements Observer {
 		public void handle(ActionEvent e) {		
 			if (ecoController.validPurchase(tower)) {
 				selectedTower = tower;
+				Image image = new Image("file:resources/images/towers/tower1.png");
+				canvas.setCursor(new ImageCursor(image));
 				towerPane.setDisable(true);
 				canvas.setDisable(false);
 			} else {
