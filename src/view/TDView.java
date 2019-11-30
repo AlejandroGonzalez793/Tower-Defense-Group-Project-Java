@@ -33,6 +33,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -322,7 +323,8 @@ public class TDView extends Application implements Observer {
 		public void handle(ActionEvent e) {		
 			if (ecoController.validPurchase(tower)) {
 				selectedTower = tower;
-				Image image = new Image("file:resources/images/towers/tower1.png");
+				Image image = new Image("file:" + TOWER_IMAGE_PATH + selectedTower.getImageName());
+				Circle circle = new Circle(selectedTower.getRadius());
 				canvas.setCursor(new ImageCursor(image));
 				towerPane.setDisable(true);
 				canvas.setDisable(false);
