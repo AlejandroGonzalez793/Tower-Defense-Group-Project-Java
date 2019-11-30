@@ -51,7 +51,6 @@ public class TDView extends Application implements Observer {
 	private TDController controller;
 	private TDMainMenu mainMenu;
 	private String mapFileName;
-	private Stage primary;
 	
 	private Text money;
 	private Text health;
@@ -70,9 +69,9 @@ public class TDView extends Application implements Observer {
 		this.primaryStage = primaryStage;
 		
 		mainMenu = new TDMainMenu();
-    	mainMenu.setTitle("Tower Defense");
-    	mainMenu.initModality(Modality.APPLICATION_MODAL);
-    	mainMenu.setResizable(false);
+		mainMenu.setTitle("Tower Defense");
+		mainMenu.initModality(Modality.APPLICATION_MODAL);
+		mainMenu.setResizable(false);
 		mainMenu.showAndWait();
 		
 		if (mainMenu.getMapImage() == null) {
@@ -113,12 +112,11 @@ public class TDView extends Application implements Observer {
 		
 		root.setTop(menuBar);
 		
-		primary = primaryStage;
 		newGame();
-		primary.setTitle("Tower Defense");
-		primary.setScene(new Scene(root));
-		primary.setResizable(false);
-		primary.show();
+		primaryStage.setTitle("Tower Defense");
+		primaryStage.setScene(new Scene(root));
+		primaryStage.setResizable(false);
+		primaryStage.show();
 	}
 
 	@Override
@@ -157,13 +155,11 @@ public class TDView extends Application implements Observer {
             		// TODO: Do Something
             	}
             }
-		});		
+        });		
 		gamePane.setDisable(true);
 		
-		primary.sizeToScene();
-		primary.centerOnScreen();
-		primary.setMinHeight(100);
-		primary.setMinWidth(100);
+		primaryStage.setMinHeight(100);
+		primaryStage.setMinWidth(100);
 		primaryStage.sizeToScene();
 		primaryStage.centerOnScreen();
 	}
