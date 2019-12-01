@@ -10,8 +10,12 @@ import java.util.Set;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import model.CheapTower;
 import model.Enemy;
+import model.ExpensiveTower;
 import model.GameState;
+import model.MultiShotTower;
+import model.OneShotTower;
 import model.Player;
 import model.Projectile;
 import model.Tower;
@@ -44,7 +48,11 @@ public class TDController {
 		this.playing = false;
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
+		towerMap.put("CheapTower", CheapTower.class);
 		towerMap.put("Tower", Tower.class);
+		towerMap.put("ExpensiveTower", ExpensiveTower.class);
+		towerMap.put("MultiShotTower", MultiShotTower.class);
+		towerMap.put("OneShotTower", OneShotTower.class);
 	}
 	
 	/**
@@ -194,6 +202,7 @@ public class TDController {
 			try {
 				Constructor<?> cons = towerEntry.getValue().getConstructor();
 				Tower tower = (Tower)cons.newInstance();
+				//Image newImage = tower.getImage().getScaledInstance(Tower.DEFAULT_WIDTH, Tower.DEFAULT_HEIGHT, Image.SCALE_DEFAULT);
 				imageMap.put(towerEntry.getKey(), tower.getImage());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 					InvocationTargetException | NoSuchMethodException | SecurityException e) {

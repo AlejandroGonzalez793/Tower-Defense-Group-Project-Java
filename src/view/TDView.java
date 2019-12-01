@@ -242,7 +242,10 @@ public class TDView extends Application implements Observer {
 		for (Map.Entry<String, Image> entry : towerImageMap.entrySet()) {
 			Button button = new Button();
 			button.setOnAction(new TowerButton(entry.getKey()));
-			button.setGraphic(new ImageView(entry.getValue()));
+			ImageView imageView = new ImageView(entry.getValue());
+			imageView.setFitWidth(50);
+			imageView.setFitHeight(50);
+			button.setGraphic(imageView);
 			towerPane.add(button, j, i);
 			
 			j++;
