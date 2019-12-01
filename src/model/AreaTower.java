@@ -39,6 +39,6 @@ public class AreaTower extends Tower{
 	
 	@Override
 	public Projectile getProjectile() {
-		return new Projectile(x, y);
+		return new AreaBullet(x, y);
 	}
 }

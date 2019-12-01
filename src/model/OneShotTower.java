@@ -39,6 +39,6 @@ public class OneShotTower extends Tower{
 	
 	@Override
 	public Projectile getProjectile() {
-		return new Projectile(x, y);
+		return new OneShotBullet(x, y);
 	}
 }
