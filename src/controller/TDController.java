@@ -10,14 +10,17 @@ import java.util.Set;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import model.AreaTower;
 import model.CheapTower;
 import model.Enemy;
 import model.ExpensiveTower;
 import model.GameState;
 import model.MultiShotTower;
 import model.OneShotTower;
+import model.PiercingTower;
 import model.Player;
 import model.Projectile;
+import model.RapidTower;
 import model.Tower;
 
 
@@ -52,6 +55,9 @@ public class TDController {
 		towerMap.put("Tower", Tower.class);
 		towerMap.put("ExpensiveTower", ExpensiveTower.class);
 		towerMap.put("MultiShotTower", MultiShotTower.class);
+		towerMap.put("RapidTower", RapidTower.class);
+		towerMap.put("AreaTower", AreaTower.class);
+		towerMap.put("PiercingTower", PiercingTower.class);
 		towerMap.put("OneShotTower", OneShotTower.class);
 	}
 	

@@ -28,7 +28,7 @@ public class OneShotTower extends Tower{
 	}
 	
 	public OneShotTower() {
-		this(0, 0, DEFAULT_WIDTH + 25, DEFAULT_HEIGHT + 25, DEFAULT_RADIUS + 100, DEFAULT_RATE + 9, DEFAULT_COST + 950);
+		this(0, 0, DEFAULT_WIDTH + 25, DEFAULT_HEIGHT + 25, DEFAULT_RADIUS + 100, DEFAULT_RATE + 9, DEFAULT_COST + 450);
 		try {
 			Image image = new Image(new FileInputStream("resources/images/towers/one_shot_tower.png"));
 			setImage(image);
