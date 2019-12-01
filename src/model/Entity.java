@@ -38,6 +38,7 @@ public abstract class Entity {
 		
 		try {
 			image = new Image(new FileInputStream("resources/images/towers/default_tower.png"));
+			//image = new Image(new FileInputStream("resources/images/Thicc_Yoshi.gif"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

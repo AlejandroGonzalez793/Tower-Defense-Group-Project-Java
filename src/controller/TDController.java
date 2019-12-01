@@ -11,16 +11,22 @@ import java.util.Set;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import model.AreaTower;
+import model.Balloon;
 import model.CheapTower;
+import model.Drifblim;
 import model.Enemy;
 import model.ExpensiveTower;
 import model.GameState;
+import model.GreenPlane;
+import model.HotAirBalloon;
 import model.MultiShotTower;
 import model.OneShotTower;
 import model.PiercingTower;
 import model.Player;
 import model.Projectile;
+import model.Pterosaur;
 import model.RapidTower;
+import model.RedHelicopter;
 import model.Tower;
 
 
@@ -257,10 +263,20 @@ public class TDController {
 	}
 	
 	public void newWave() {
-		Enemy enemy = new Enemy(0, 25, 30, 30, 10, 0);
-		Enemy enemy2 = new Enemy(0, 25, 30, 30, 0, 5);
+		//Enemy enemy = new Enemy(0, 25, 30, 30, 10, 0);
+		//Enemy enemy2 = new Enemy(0, 25, 30, 30, 0, 5);
+		Enemy enemy = new Pterosaur(0, 25, 30, 30, 10, 0);
+	    Enemy enemy2 = new GreenPlane(0, 25, 30, 30, 0, 5);
+	    Enemy enemy3 = new RedHelicopter(0, 25, 30, 30, 5, 5);
+	    Enemy enemy4 = new Balloon(0, 25, 30, 30, 2, 3);
+	    Enemy enemy5 = new HotAirBalloon(0, 25, 30, 30, 3, 2);
+	    Enemy enemy6 = new Drifblim(0, 25, 30, 30, 2, 2);
 		gameState.getEnemies().add(enemy);
 		gameState.getEnemies().add(enemy2);
+		gameState.getEnemies().add(enemy3);
+		gameState.getEnemies().add(enemy4);
+		gameState.getEnemies().add(enemy5);
+		gameState.getEnemies().add(enemy6);
 		playing = true;
 		startGame();
 	}
