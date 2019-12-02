@@ -286,9 +286,6 @@ public class TDController {
 		gameState.getEnemies().add(enemy4);
 		gameState.getEnemies().add(enemy5);
 		gameState.getEnemies().add(enemy6);
-		for (Tower tower : gameState.getTowers()) {
-			gameState.getProjectiles().add(tower.getProjectile());
-		}
 		playing = true;
 		startGame();
 	}

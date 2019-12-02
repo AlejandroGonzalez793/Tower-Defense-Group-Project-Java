@@ -9,6 +9,7 @@ public class Projectile extends Entity {
 	public static final int DEFAULT_POWER = 1;
 	public static final int DEFAULT_WIDTH = 10;
 	public static final int DEFAULT_HEIGHT = 10;
+	public static final int RADIUS = 30;
 	
 	private int power;
 	
@@ -46,5 +47,9 @@ public class Projectile extends Entity {
 
 	public int getPower() {
 		return power;
+	}
+	
+	public int getRadius() {
+		return RADIUS;
 	}
 }

@@ -136,6 +136,7 @@ public class TDView extends Application implements Observer {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
 			for (Projectile proj : gameState.getProjectiles()) {
+			    computeDist(proj.getRadius(), proj.getX(), proj.getY());
 				drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
 						proj.getWidth(), proj.getHeight());
 			}
@@ -158,6 +159,13 @@ public class TDView extends Application implements Observer {
 		}
 	}
 	
+	public void computeDist(int radius, int x1, int y1) {
+		// TODO Auto-generated method stub
+		// need to get the starting x and y from the projectile or the x and y from the tower
+		//Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1))
+		
+	}
+
 	public void newGame() {
 		controller = new TDController(new Player(this), new GameState(this));
 		createMap();
