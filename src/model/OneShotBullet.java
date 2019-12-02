@@ -7,6 +7,8 @@ import javafx.scene.image.Image;
 
 public class OneShotBullet extends Projectile{
 	
+	private static final int RADIUS = 50;
+	
 	public OneShotBullet(int x, int y, int width, int height, int dx, int dy, int power) {
 		super(x, y, width, height, dx, dy, power);
 		try {
@@ -35,6 +37,10 @@ public class OneShotBullet extends Projectile{
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int getRadius() {
+		return RADIUS;
 	}
 
 }

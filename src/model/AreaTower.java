@@ -41,5 +41,4 @@ public class AreaTower extends Tower{
 	public Projectile getProjectile() {
 		return new AreaBullet(x, y);
 	}
-	
 }
