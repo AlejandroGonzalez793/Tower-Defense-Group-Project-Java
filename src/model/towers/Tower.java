@@ -1,4 +1,7 @@
-package model;
+package model.towers;
+
+import model.Entity;
+import model.projectiles.Projectile;
 
 /**
  * A minimal template for the different Towers that can be drawn and used
