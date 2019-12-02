@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import model.AreaTower;
@@ -265,18 +266,17 @@ public class TDController {
 	 * {@value #TICK_SPEED} milliseconds.
 	 */
 	public void startGame() {
-		Thread thread = new Thread(() -> {
-			while (playing) {
-				tick();
-				
-				try {
-					Thread.sleep(TICK_SPEED);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+		AnimationTimer at = new AnimationTimer() {
+			private long lastUpdate = 0;
+			@Override
+			public void handle(long now) {
+				if (playing && now - lastUpdate >= TICK_SPEED * 1000000) {
+					lastUpdate = now;
+					tick();
 				}
 			}
-		});
-		thread.start();
+		};
+		at.start();
 	}
 	
 	/**
