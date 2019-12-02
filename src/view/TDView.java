@@ -66,7 +66,7 @@ public class TDView extends Application implements Observer {
 	
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
-	private static final int TOWER_ROWS = 2;
+	private static final int TOWER_ROWS = 3;
 	private static final String START_CHAR = "+";
 	private static final String END_CHAR = "=";
 	private static final String ROAD_CHAR = "-";
@@ -320,6 +320,41 @@ public class TDView extends Application implements Observer {
 		VBox controlBox = new VBox();
 		controlBox.setSpacing(5);
 		
+		HBox gameSpeedBox = new HBox();
+		Button slowButton = new Button("slow...");
+		slowButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				controller.slowDown();
+			}
+		});
+		
+		Button normalButton = new Button("Normal");
+		normalButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				controller.regularSpeed();
+			}
+		});
+		
+		Button fastButton = new Button("FAST!");
+		fastButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				controller.speedUp();
+			}
+		});
+		
+		Button pauseButton = new Button("Pause");
+		pauseButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				controller.pause();
+			}
+		});
+		
+		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton);
+		
 		HBox sellBox = new HBox();
 		sellButton = new Button("Sell Towers");
 		sellButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -348,7 +383,7 @@ public class TDView extends Application implements Observer {
 		});
 		waveBox.getChildren().add(newWaveButton);
 		
-		controlBox.getChildren().addAll(sellButton, waveBox);
+		controlBox.getChildren().addAll(gameSpeedBox, sellButton, waveBox);
 		
 		sidebarPane.setTop(statsBox);
 		sidebarPane.setCenter(towerPane);
