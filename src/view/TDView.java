@@ -34,7 +34,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -68,7 +67,6 @@ public class TDView extends Application implements Observer {
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 2;
-	private static final String FREE_CHAR = "*";
 	private static final String START_CHAR = "+";
 	private static final String END_CHAR = "=";
 	private static final String ROAD_CHAR = "-";
@@ -224,7 +222,6 @@ public class TDView extends Application implements Observer {
 		drawingCanvas.setWidth(backgroundCanvas.getWidth());
 		drawingCanvas.setHeight(backgroundCanvas.getHeight());
 		
-		
 		int currRow = 0;
 		int currCol = 0;
 		int row = 0;
@@ -243,6 +240,9 @@ public class TDView extends Application implements Observer {
 			row++;
 		}
 		
+		// Get path by starting at the start position and checking the surrounding
+		// positions for another road tile. Once one is found, move to that new
+		// position and repeat until the end of the path is found
 		String curr = tempBoard[currRow][currCol];
 		while (!curr.equals(END_CHAR)) {
 			backgroundGC.drawImage(road, currCol * grass.getWidth(), currRow * grass.getHeight());

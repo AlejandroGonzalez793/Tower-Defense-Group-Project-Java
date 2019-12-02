@@ -259,6 +259,11 @@ public class TDController {
 		return selectedTower.getImage();
     }
     
+	/**
+	 * Creates a new thread that runs while the games is in progress. Calls the
+	 * tick method to update all of the objects on the screen every
+	 * {@value #TICK_SPEED} milliseconds.
+	 */
 	public void startGame() {
 		Thread thread = new Thread(() -> {
 			while (playing) {
@@ -274,6 +279,9 @@ public class TDController {
 		thread.start();
 	}
 	
+	/**
+	 * Creates a new wave and starts the game loop
+	 */
 	public void newWave() {
 		Rectangle start = gameState.getStart().getRectangle();
 		int x = (int)start.getX();
@@ -291,9 +299,6 @@ public class TDController {
 		gameState.addEnemy(enemy4);
 		gameState.addEnemy(enemy5);
 		gameState.addEnemy(enemy6);
-		for (Tower tower : gameState.getTowers()) {
-			gameState.getProjectiles().add(tower.getProjectile());
-		}
 		playing = true;
 		startGame();
 	}
