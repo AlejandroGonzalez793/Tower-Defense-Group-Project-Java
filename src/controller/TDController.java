@@ -273,7 +273,7 @@ public class TDController {
 				if (playing && now - lastUpdate >= TICK_SPEED * 1000000) {
 					lastUpdate = now;
 					tick();
-                }
+				}
 			}
 		};
 		at.start();
