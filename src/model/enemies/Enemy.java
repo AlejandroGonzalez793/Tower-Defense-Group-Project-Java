@@ -16,21 +16,24 @@ import model.Node;
 public class Enemy extends Entity {	
 	public static final int DEFAULT_HEALTH = 5;
 	public static final int DEFAULT_SPEED = 5;
+	public static final int DEFAULT_POWER = 1;
 	private int health;
+	private int power;
 	private Node currNode;
 	
-	public Enemy(int x, int y, int width, int height, int health, int speed) {
+	public Enemy(int x, int y, int width, int height, int health, int speed, int power) {
 		super(x, y, width, height, speed);
 		this.health = health;
+		this.power = power;
 		this.currNode = new Node(new Rectangle(x, y, width, height));
 	}
 	
-	public Enemy(int x, int y, int width, int height, int speed) {
-		this(x, y, width, height, speed, DEFAULT_HEALTH);
+	public Enemy(int x, int y, int width, int height, int speed, int power) {
+		this(x, y, width, height, speed, DEFAULT_HEALTH, DEFAULT_POWER);
 	}
 	
 	public Enemy(int x, int y, int width, int height) {
-		this(x, y, width, height, DEFAULT_SPEED, DEFAULT_HEALTH);
+		this(x, y, width, height, DEFAULT_SPEED, DEFAULT_HEALTH, DEFAULT_POWER);
 	}
 	
 	public int getHealth() {
@@ -39,6 +42,14 @@ public class Enemy extends Entity {
 	
 	public void setHealth(int health) {
 		this.health = health;
+	}
+	
+	public int getPower() {
+		return power;
+	}
+
+	public void setPower(int power) {
+		this.power = power;
 	}
 	
 	public void setNode(Node node) {
@@ -77,4 +88,5 @@ public class Enemy extends Entity {
 	public Node getNode() {
 		return currNode;
 	}
+	
 }

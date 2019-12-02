@@ -296,6 +296,12 @@ public class TDController {
 			public void handle(long now) {
 				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
 					lastUpdate = now;
+					Enemy enemy = gameState.enemyContact();
+					if (enemy != null)
+					{
+						player.setHealth(player.getHealth() - enemy.getPower());
+						gameState.removeEnemy(enemy);
+					}
 					tick();
 				}
 			}
