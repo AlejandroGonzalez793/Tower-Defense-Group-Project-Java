@@ -15,6 +15,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -32,6 +34,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -40,6 +43,7 @@ import javafx.stage.Stage;
 import model.Enemy;
 import model.GameState;
 import model.Player;
+import model.Projectile;
 import model.Tower;
 
 public class TDView extends Application implements Observer {
@@ -134,6 +138,11 @@ public class TDView extends Application implements Observer {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
+			for (Projectile proj : gameState.getProjectiles()) {
+				drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
+						proj.getWidth(), proj.getHeight());
+			}
+			
 			for (Enemy enemy : gameState.getEnemies()) {
 				drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 
 						enemy.getWidth(), enemy.getHeight());
@@ -143,6 +152,8 @@ public class TDView extends Application implements Observer {
 				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
 						tower.getWidth(), tower.getHeight());
 			}
+			
+			
 		} else if (arg instanceof Player) {
 			Player player = (Player)arg;
 			money.setText(Integer.toString(player.getMoney()));
@@ -161,6 +172,7 @@ public class TDView extends Application implements Observer {
 				    controller.addTower((int) e.getX(), (int) e.getY());
 				    towerPane.setDisable(false);
                     gamePane.setDisable(true);
+                    gamePane.setCursor(Cursor.DEFAULT);
                 }
             } else {
             	if (controller.sellTower((int)e.getX(), (int)e.getY())) {
@@ -366,6 +378,8 @@ public class TDView extends Application implements Observer {
 		 */
 		public void handle(ActionEvent e) {		
 			if (controller.canPurchaseTower(this.tower)) {
+				Image image = controller.getSelectedTowerImage();
+				gamePane.setCursor(new ImageCursor(image));
 				towerPane.setDisable(true);
 				gamePane.setDisable(false);
 			} else {

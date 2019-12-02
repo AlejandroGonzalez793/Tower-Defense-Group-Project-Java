@@ -7,7 +7,8 @@ import javafx.scene.image.Image;
 
 public class WeakBullet extends Projectile {
 	private static final int SPEED = 10;
-	
+	private static final int RADIUS = 50;
+    
 	public WeakBullet(int x, int y, int width, int height, int speed, int power) {
 		super(x, y, width, height, speed, power);
 		try {
@@ -23,6 +24,10 @@ public class WeakBullet extends Projectile {
 	
 	public WeakBullet(int x, int y) {
 		this(x, y, DEFAULT_WIDTH-34, DEFAULT_HEIGHT-40, SPEED, DEFAULT_POWER);
+	}
+	
+	public int getRadius() {
+		return RADIUS;
 	}
 
 }

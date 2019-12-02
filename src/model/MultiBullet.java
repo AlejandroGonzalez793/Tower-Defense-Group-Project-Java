@@ -7,7 +7,8 @@ import javafx.scene.image.Image;
 
 public class MultiBullet extends Projectile {
 	private static final int SPEED = 10;
-	
+	private static final int RADIUS = 50;
+    
 	public MultiBullet(int x, int y, int width, int height, int speed, int power) {
 		super(x, y, width, height, speed, power);
 		try {
@@ -24,6 +25,10 @@ public class MultiBullet extends Projectile {
 	
 	public MultiBullet(int x, int y) {
 		this(x, y, DEFAULT_WIDTH-34, DEFAULT_HEIGHT-34, SPEED, DEFAULT_POWER+3);
+	}
+	
+	public int getRadius() {
+		return RADIUS;
 	}
 
 }

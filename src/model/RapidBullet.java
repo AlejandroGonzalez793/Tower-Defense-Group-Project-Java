@@ -7,7 +7,8 @@ import javafx.scene.image.Image;
 
 public class RapidBullet extends Projectile {
 	private static final int SPEED = 10;
-	
+	private static final int RADIUS = 50;
+    
 	public RapidBullet(int x, int y, int width, int height, int speed, int power) {
 		super(x, y, width, height, speed, power);
 		try {
@@ -24,6 +25,10 @@ public class RapidBullet extends Projectile {
 	
 	public RapidBullet(int x, int y) {
 		this(x, y, DEFAULT_WIDTH-46, DEFAULT_HEIGHT-46, SPEED, DEFAULT_POWER+1);
+	}
+	
+	public int getRadius() {
+		return RADIUS;
 	}
 
 }
