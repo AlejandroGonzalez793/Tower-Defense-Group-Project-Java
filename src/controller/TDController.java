@@ -3,7 +3,6 @@ package controller;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -20,6 +19,7 @@ import model.GameState;
 import model.GreenPlane;
 import model.HotAirBalloon;
 import model.MultiShotTower;
+import model.Node;
 import model.OneShotTower;
 import model.PiercingTower;
 import model.Player;
@@ -97,15 +97,18 @@ public class TDController {
 	}
 	
 	public boolean canPlaceTower(int x, int y) {
-		List<Rectangle> path = gameState.getPath();
 		int shiftedX = x - (selectedTower.getWidth() / 2);
 		int shiftedY = y - (selectedTower.getHeight() / 2);
 		
 		// Check if tower collides with path
-		for (Rectangle rect : path) {
+		Node node = gameState.getStart();
+		while (node != null) {
+			Rectangle rect = node.getRectangle();
 			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
 				return false;
 			}
+			
+			node = node.getNext();
 		}
 		
 		// Check if tower collides with another tower
@@ -244,9 +247,18 @@ public class TDController {
 	 * @param height height of the tile in pixels
 	 */
 	public void addPathTile(int x, int y, int width, int height) {
-		gameState.addPath(new Rectangle(x, y, width, height));
+		gameState.addNode(new Node(new Rectangle(x, y, width, height)));
 	}
 	
+	/**
+	 * Gets the image to use for the currently selected tower.
+	 * 
+	 * @return the currently selected tower's Image.
+	 */
+	public Image getSelectedTowerImage() {
+		return selectedTower.getImage();
+    }
+    
 	public void startGame() {
 		Thread thread = new Thread(() -> {
 			while (playing) {
@@ -263,20 +275,22 @@ public class TDController {
 	}
 	
 	public void newWave() {
-		//Enemy enemy = new Enemy(0, 25, 30, 30, 10, 0);
-		//Enemy enemy2 = new Enemy(0, 25, 30, 30, 0, 5);
-		Enemy enemy = new Pterosaur(0, 25, 30, 30, 10, 0);
-	    Enemy enemy2 = new GreenPlane(0, 25, 30, 30, 0, 5);
-	    Enemy enemy3 = new RedHelicopter(0, 25, 30, 30, 5, 5);
-	    Enemy enemy4 = new Balloon(0, 25, 30, 30, 2, 3);
-	    Enemy enemy5 = new HotAirBalloon(0, 25, 30, 30, 3, 2);
-	    Enemy enemy6 = new Drifblim(0, 25, 30, 30, 2, 2);
-		gameState.getEnemies().add(enemy);
-		gameState.getEnemies().add(enemy2);
-		gameState.getEnemies().add(enemy3);
-		gameState.getEnemies().add(enemy4);
-		gameState.getEnemies().add(enemy5);
-		gameState.getEnemies().add(enemy6);
+		Rectangle start = gameState.getStart().getRectangle();
+		int x = (int)start.getX();
+		int y = (int)start.getY();
+		
+		Enemy enemy = new Pterosaur(x, y);
+	    Enemy enemy2 = new GreenPlane(x, y);
+	    Enemy enemy3 = new RedHelicopter(x, y);
+	    Enemy enemy4 = new Balloon(x, y);
+	    Enemy enemy5 = new HotAirBalloon(x, y);
+	    Enemy enemy6 = new Drifblim(x, y);
+		gameState.addEnemy(enemy);
+		gameState.addEnemy(enemy2);
+		gameState.addEnemy(enemy3);
+		gameState.addEnemy(enemy4);
+		gameState.addEnemy(enemy5);
+		gameState.addEnemy(enemy6);
 		playing = true;
 		startGame();
 	}

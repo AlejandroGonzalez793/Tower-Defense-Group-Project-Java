@@ -21,7 +21,7 @@ public class GameState extends Observable {
 	private List<Tower> towers;
 	private List<Enemy> enemies;
 	private List<Projectile> projectiles;
-	private List<Rectangle> path;
+	private Node start;
 	private int ticks;
 	private int round;
 	
@@ -29,7 +29,6 @@ public class GameState extends Observable {
 		this.towers = new ArrayList<>();
 		this.enemies = new ArrayList<>();
 		this.projectiles = new ArrayList<>();
-		this.path = new ArrayList<>();
 		
 		if (o != null) {
 			addObserver(o);
@@ -44,7 +43,16 @@ public class GameState extends Observable {
 		}
 		
 		for (Enemy enemy : enemies) {
-			enemy.update();
+			Node node = enemy.getNode();
+			if (node != null) {
+				Rectangle rect = node.getRectangle();
+				if (enemy.getX() > rect.getX() + rect.getWidth() || enemy.getX() < rect.getX() - rect.getWidth()) {
+					enemy.incrementNode();
+				} else if (enemy.getY() > rect.getY() + rect.getHeight() || enemy.getY() < rect.getY() - rect.getHeight()) {
+					enemy.incrementNode();
+				}
+				enemy.update();
+			}
 		}
 		
 		for (Projectile projectile : projectiles) {
@@ -118,11 +126,30 @@ public class GameState extends Observable {
 		return projectiles;
 	}
 	
-	public List<Rectangle> getPath() {
-		return path;
+	public void setStart(Node start) {
+		this.start = start;
 	}
 	
-	public void addPath(Rectangle rect) { 
-		path.add(rect); 
-	} 
+	public Node getStart() {
+		return start;
+	}
+	
+	public void addEnemy(Enemy enemy) {
+		enemy.setNode(start);
+		enemies.add(enemy);
+	}
+	
+	public void addNode(Node node) {
+		if (start == null) {
+			start = node;
+			return;
+		}
+		
+		Node curr = start;
+		while (curr.getNext() != null) {
+			curr = curr.getNext();
+		}
+		
+		curr.setNext(node);
+	}
 }

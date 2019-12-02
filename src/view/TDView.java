@@ -64,7 +64,10 @@ public class TDView extends Application implements Observer {
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 2;
-	private static final char FREE_CHAR = '*';
+	private static final String FREE_CHAR = "*";
+	private static final String START_CHAR = "+";
+	private static final String END_CHAR = "=";
+	private static final String ROAD_CHAR = "-";
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -153,9 +156,6 @@ public class TDView extends Application implements Observer {
 		createLayout();
 		
 		gamePane.setOnMouseClicked(e -> {
-			System.out.println("X: " + e.getX());
-			System.out.println("Y: " + e.getY());
-			
             if (!sellingTowers) {
                 if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
 				    controller.addTower((int) e.getX(), (int) e.getY());
@@ -195,10 +195,14 @@ public class TDView extends Application implements Observer {
 			return;
 		} 
 		
+		int cols;
+		int rows;
 		try {
-			backgroundCanvas.setWidth(input.nextInt() * grass.getWidth());
-			backgroundCanvas.setHeight(input.nextInt() * grass.getHeight());
-			input.nextLine();
+			cols = input.nextInt();
+			rows = input.nextInt();
+			backgroundCanvas.setWidth(cols * grass.getWidth());
+			backgroundCanvas.setHeight(rows * grass.getHeight());
+			input.nextLine(); // consume newline
 		} catch (NoSuchElementException e) {
 			System.err.println("Invalid map format");
 			if (input != null) input.close();
@@ -208,21 +212,52 @@ public class TDView extends Application implements Observer {
 		drawingCanvas.setWidth(backgroundCanvas.getWidth());
 		drawingCanvas.setHeight(backgroundCanvas.getHeight());
 		
+		
+		int currRow = 0;
+		int currCol = 0;
 		int row = 0;
+		String[][] tempBoard = new String[rows][cols];
 		while (input.hasNextLine()) {
 			String line = input.nextLine();
-			for (int col = 0; col < line.length(); col++) {
-				char currChar = line.charAt(col);
-				if (currChar == FREE_CHAR) {
-					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());
+			tempBoard[row] = line.split("");
+			for (int col = 0; col < tempBoard[row].length; col++) {
+				if (tempBoard[row][col].equals(START_CHAR)) {
+					currRow = row;
+					currCol = col;
 				} else {
-					backgroundGC.drawImage(road, col * grass.getWidth(), row * grass.getHeight());
-					controller.addPathTile((int)(col * road.getWidth()), (int)(row * road.getHeight()), 
-							(int)road.getWidth(), (int)road.getHeight());
+					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());
 				}
 			}
 			row++;
 		}
+		
+		String curr = tempBoard[currRow][currCol];
+		while (!curr.equals(END_CHAR)) {
+			backgroundGC.drawImage(road, currCol * grass.getWidth(), currRow * grass.getHeight());
+			controller.addPathTile((int)(currCol * road.getWidth()), (int)(currRow * road.getHeight()), 
+					(int)road.getWidth(), (int)road.getHeight());
+			
+			tempBoard[currRow][currCol] = "x";
+			if (currRow + 1 < rows && (tempBoard[currRow + 1][currCol].equals(ROAD_CHAR) 
+					|| tempBoard[currRow + 1][currCol].equals(END_CHAR))) {
+				currRow = currRow + 1;
+			} else if (currCol + 1 < cols && (tempBoard[currRow][currCol + 1].equals(ROAD_CHAR) ||
+					tempBoard[currRow][currCol + 1].equals(END_CHAR))) {
+				currCol = currCol + 1;
+			} else if (currRow - 1 >= 0 && (tempBoard[currRow - 1][currCol].equals(ROAD_CHAR) ||
+					tempBoard[currRow - 1][currCol].equals(END_CHAR))) {
+				currRow = currRow - 1;
+			} else if (currCol - 1 >= 0 && (tempBoard[currRow][currCol - 1].equals(ROAD_CHAR) ||
+					tempBoard[currRow][currCol - 1].equals(END_CHAR))) {
+				currCol = currCol - 1;
+			}
+			curr = tempBoard[currRow][currCol];
+		}
+		
+		// Add end tile
+		backgroundGC.drawImage(road, currCol * grass.getWidth(), currRow * grass.getHeight());
+		controller.addPathTile((int)(currCol * road.getWidth()), (int)(currRow * road.getHeight()), 
+				(int)road.getWidth(), (int)road.getHeight());
 
 		input.close();
 		root.setCenter(gamePane);
