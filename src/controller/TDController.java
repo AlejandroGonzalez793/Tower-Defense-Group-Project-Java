@@ -49,6 +49,7 @@ public class TDController {
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
 	private boolean playing;
+	private double animationSpeed = 1.0;
 	public static final int TICK_SPEED = 100;
 	
 	public TDController(Player player, GameState gameState) {
@@ -259,6 +260,29 @@ public class TDController {
 	public Image getSelectedTowerImage() {
 		return selectedTower.getImage();
     }
+	
+	public void speedUp() {
+		animationSpeed = 0.5;
+	}
+	
+	public void regularSpeed() {
+		animationSpeed = 1.0;
+	}
+	
+	public void slowDown() {
+		animationSpeed = 2.0;
+	}
+	
+	public void pause() {
+		if(playing)
+		{
+			playing = false;
+		}
+		else
+		{
+			playing = true;
+		}
+	}
     
 	/**
 	 * Creates a new thread that runs while the games is in progress. Calls the
@@ -270,8 +294,14 @@ public class TDController {
 			private long lastUpdate = 0;
 			@Override
 			public void handle(long now) {
-				if (playing && now - lastUpdate >= TICK_SPEED * 1000000) {
+				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
 					lastUpdate = now;
+					Enemy enemy = gameState.enemyContact();
+					if (enemy != null)
+					{
+						player.setHealth(player.getHealth() - enemy.getPower());
+						gameState.removeEnemy(enemy);
+					}
 					tick();
 				}
 			}
