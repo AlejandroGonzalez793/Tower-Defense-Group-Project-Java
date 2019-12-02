@@ -26,7 +26,7 @@ public abstract class Entity {
 	private int height; // height in pixels
 	private int dx; // x velocity
 	private int dy; // y velocity
-	private static Image image;
+	protected Image image;
 	
 	public Entity(int x, int y, int width, int height, int dx, int dy) {
 		this.x = x;
@@ -38,6 +38,7 @@ public abstract class Entity {
 		
 		try {
 			image = new Image(new FileInputStream("resources/images/towers/default_tower.png"));
+			//image = new Image(new FileInputStream("resources/images/Thicc_Yoshi.gif"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -105,6 +106,6 @@ public abstract class Entity {
 	}
 	
 	public void setImage(Image image) {
-		Entity.image = image;
+		this.image = image;
 	}
 }

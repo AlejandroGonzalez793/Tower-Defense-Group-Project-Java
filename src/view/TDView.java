@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import controller.TDController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -38,6 +39,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Enemy;
 import model.GameState;
 import model.Player;
 import model.Tower;
@@ -79,6 +81,11 @@ public class TDView extends Application implements Observer {
 		if (mainMenu.getMapImage() == null) {
 			System.exit(1);
 		}
+		
+		primaryStage.setOnCloseRequest(e -> {
+		    Platform.exit();
+		    System.exit(0);
+		});
 		
 		mapFileName = mainMenu.getMapImage();
 		
@@ -126,6 +133,11 @@ public class TDView extends Application implements Observer {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
+			for (Enemy enemy : gameState.getEnemies()) {
+				drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 
+						enemy.getWidth(), enemy.getHeight());
+			}
+			
 			for (Tower tower : gameState.getTowers()) {
 				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
 						tower.getWidth(), tower.getHeight());
@@ -233,7 +245,10 @@ public class TDView extends Application implements Observer {
 		for (Map.Entry<String, Image> entry : towerImageMap.entrySet()) {
 			Button button = new Button();
 			button.setOnAction(new TowerButton(entry.getKey()));
-			button.setGraphic(new ImageView(entry.getValue()));
+			ImageView imageView = new ImageView(entry.getValue());
+			imageView.setFitWidth(50);
+			imageView.setFitHeight(50);
+			button.setGraphic(imageView);
 			towerPane.add(button, j, i);
 			
 			j++;
@@ -284,6 +299,9 @@ public class TDView extends Application implements Observer {
 		
 		HBox waveBox = new HBox();
 		Button newWaveButton = new Button("New Wave >>");
+		newWaveButton.setOnAction(e -> {
+			controller.newWave();
+		});
 		waveBox.getChildren().add(newWaveButton);
 		
 		controlBox.getChildren().addAll(sellButton, waveBox);

@@ -10,10 +10,23 @@ import java.util.Set;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import model.AreaTower;
+import model.Balloon;
+import model.CheapTower;
+import model.Drifblim;
 import model.Enemy;
+import model.ExpensiveTower;
 import model.GameState;
+import model.GreenPlane;
+import model.HotAirBalloon;
+import model.MultiShotTower;
+import model.OneShotTower;
+import model.PiercingTower;
 import model.Player;
 import model.Projectile;
+import model.Pterosaur;
+import model.RapidTower;
+import model.RedHelicopter;
 import model.Tower;
 
 
@@ -34,14 +47,24 @@ public class TDController {
 	private GameState gameState;
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
+	private boolean playing;
+	public static final int TICK_SPEED = 100;
 	
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
 		this.gameState = gameState;
 		this.selectedTower = null;
+		this.playing = false;
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
+		towerMap.put("CheapTower", CheapTower.class);
 		towerMap.put("Tower", Tower.class);
+		towerMap.put("ExpensiveTower", ExpensiveTower.class);
+		towerMap.put("MultiShotTower", MultiShotTower.class);
+		towerMap.put("RapidTower", RapidTower.class);
+		towerMap.put("AreaTower", AreaTower.class);
+		towerMap.put("PiercingTower", PiercingTower.class);
+		towerMap.put("OneShotTower", OneShotTower.class);
 	}
 	
 	/**
@@ -191,6 +214,7 @@ public class TDController {
 			try {
 				Constructor<?> cons = towerEntry.getValue().getConstructor();
 				Tower tower = (Tower)cons.newInstance();
+				//Image newImage = tower.getImage().getScaledInstance(Tower.DEFAULT_WIDTH, Tower.DEFAULT_HEIGHT, Image.SCALE_DEFAULT);
 				imageMap.put(towerEntry.getKey(), tower.getImage());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 					InvocationTargetException | NoSuchMethodException | SecurityException e) {
@@ -230,5 +254,39 @@ public class TDController {
 	 */
 	public Image getSelectedTowerImage() {
 		return selectedTower.getImage();
+	}
+	
+	public void startGame() {
+		Thread thread = new Thread(() -> {
+			while (playing) {
+				tick();
+				
+				try {
+					Thread.sleep(TICK_SPEED);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		thread.start();
+	}
+	
+	public void newWave() {
+		//Enemy enemy = new Enemy(0, 25, 30, 30, 10, 0);
+		//Enemy enemy2 = new Enemy(0, 25, 30, 30, 0, 5);
+		Enemy enemy = new Pterosaur(0, 25, 30, 30, 10, 0);
+	    Enemy enemy2 = new GreenPlane(0, 25, 30, 30, 0, 5);
+	    Enemy enemy3 = new RedHelicopter(0, 25, 30, 30, 5, 5);
+	    Enemy enemy4 = new Balloon(0, 25, 30, 30, 2, 3);
+	    Enemy enemy5 = new HotAirBalloon(0, 25, 30, 30, 3, 2);
+	    Enemy enemy6 = new Drifblim(0, 25, 30, 30, 2, 2);
+		gameState.getEnemies().add(enemy);
+		gameState.getEnemies().add(enemy2);
+		gameState.getEnemies().add(enemy3);
+		gameState.getEnemies().add(enemy4);
+		gameState.getEnemies().add(enemy5);
+		gameState.getEnemies().add(enemy6);
+		playing = true;
+		startGame();
 	}
 }
