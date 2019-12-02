@@ -1,5 +1,7 @@
 package model;
 
+import javafx.scene.shape.Rectangle;
+
 /**
  * A minimal template for the different Enemies that can be used and drawn 
  * in the game.
@@ -11,15 +13,22 @@ package model;
  */
 public class Enemy extends Entity {	
 	public static final int DEFAULT_HEALTH = 5;
+	public static final int DEFAULT_SPEED = 5;
 	private int health;
+	private Node currNode;
 	
-	public Enemy(int x, int y, int width, int height, int dx, int dy, int health) {
-		super(x, y, width, height, dx, dy);
+	public Enemy(int x, int y, int width, int height, int health, int speed) {
+		super(x, y, width, height, speed);
 		this.health = health;
+		this.currNode = new Node(new Rectangle(x, y, width, height));
+	}
+	
+	public Enemy(int x, int y, int width, int height, int speed) {
+		this(x, y, width, height, speed, DEFAULT_HEALTH);
 	}
 	
 	public Enemy(int x, int y, int width, int height) {
-		this(x, y, width, height, 5, 5, DEFAULT_HEALTH);
+		this(x, y, width, height, DEFAULT_SPEED, DEFAULT_HEALTH);
 	}
 	
 	public int getHealth() {
@@ -28,5 +37,42 @@ public class Enemy extends Entity {
 	
 	public void setHealth(int health) {
 		this.health = health;
+	}
+	
+	public void setNode(Node node) {
+		this.currNode = node;
+		setDirection();
+	}
+	
+	public void incrementNode() {
+		this.currNode = currNode.getNext();
+		setDirection();
+	}
+	
+	private void setDirection() {
+		if (currNode != null && currNode.getNext() != null) {
+			Node next = currNode.getNext();
+			Rectangle currRect = currNode.getRectangle();
+			Rectangle nextRect = next.getRectangle();
+			if (nextRect.getX() > currRect.getX()) {
+				dx = speed;
+			} else if (currRect.getX() == nextRect.getX()) {
+				dx = 0;
+			} else {
+				dx = -speed;
+			}
+			
+			if (nextRect.getY() > currRect.getY()) {
+				dy = speed;
+			} else if (currRect.getY() == nextRect.getY()) {
+				dy = 0;
+			} else {
+				dy = -speed;
+			}
+		}
+	}
+	
+	public Node getNode() {
+		return currNode;
 	}
 }

@@ -3,17 +3,30 @@ package controller;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import model.AreaTower;
+import model.Balloon;
+import model.CheapTower;
+import model.Drifblim;
 import model.Enemy;
+import model.ExpensiveTower;
 import model.GameState;
+import model.GreenPlane;
+import model.HotAirBalloon;
+import model.MultiShotTower;
+import model.Node;
+import model.OneShotTower;
+import model.PiercingTower;
 import model.Player;
 import model.Projectile;
+import model.Pterosaur;
+import model.RapidTower;
+import model.RedHelicopter;
 import model.Tower;
 
 
@@ -34,14 +47,24 @@ public class TDController {
 	private GameState gameState;
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
+	private boolean playing;
+	public static final int TICK_SPEED = 100;
 	
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
 		this.gameState = gameState;
 		this.selectedTower = null;
+		this.playing = false;
 		
 		this.towerMap = new HashMap<String, Class<? extends Tower>>();
+		towerMap.put("CheapTower", CheapTower.class);
 		towerMap.put("Tower", Tower.class);
+		towerMap.put("ExpensiveTower", ExpensiveTower.class);
+		towerMap.put("MultiShotTower", MultiShotTower.class);
+		towerMap.put("RapidTower", RapidTower.class);
+		towerMap.put("AreaTower", AreaTower.class);
+		towerMap.put("PiercingTower", PiercingTower.class);
+		towerMap.put("OneShotTower", OneShotTower.class);
 	}
 	
 	/**
@@ -74,15 +97,18 @@ public class TDController {
 	}
 	
 	public boolean canPlaceTower(int x, int y) {
-		List<Rectangle> path = gameState.getPath();
 		int shiftedX = x - (selectedTower.getWidth() / 2);
 		int shiftedY = y - (selectedTower.getHeight() / 2);
 		
 		// Check if tower collides with path
-		for (Rectangle rect : path) {
+		Node node = gameState.getStart();
+		while (node != null) {
+			Rectangle rect = node.getRectangle();
 			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
 				return false;
 			}
+			
+			node = node.getNext();
 		}
 		
 		// Check if tower collides with another tower
@@ -191,6 +217,7 @@ public class TDController {
 			try {
 				Constructor<?> cons = towerEntry.getValue().getConstructor();
 				Tower tower = (Tower)cons.newInstance();
+				//Image newImage = tower.getImage().getScaledInstance(Tower.DEFAULT_WIDTH, Tower.DEFAULT_HEIGHT, Image.SCALE_DEFAULT);
 				imageMap.put(towerEntry.getKey(), tower.getImage());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 					InvocationTargetException | NoSuchMethodException | SecurityException e) {
@@ -220,7 +247,7 @@ public class TDController {
 	 * @param height height of the tile in pixels
 	 */
 	public void addPathTile(int x, int y, int width, int height) {
-		gameState.addPath(new Rectangle(x, y, width, height));
+		gameState.addNode(new Node(new Rectangle(x, y, width, height)));
 	}
 	
 	/**
@@ -230,5 +257,49 @@ public class TDController {
 	 */
 	public Image getSelectedTowerImage() {
 		return selectedTower.getImage();
+    }
+    
+	/**
+	 * Creates a new thread that runs while the games is in progress. Calls the
+	 * tick method to update all of the objects on the screen every
+	 * {@value #TICK_SPEED} milliseconds.
+	 */
+	public void startGame() {
+		Thread thread = new Thread(() -> {
+			while (playing) {
+				tick();
+				
+				try {
+					Thread.sleep(TICK_SPEED);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		thread.start();
+	}
+	
+	/**
+	 * Creates a new wave and starts the game loop
+	 */
+	public void newWave() {
+		Rectangle start = gameState.getStart().getRectangle();
+		int x = (int)start.getX();
+		int y = (int)start.getY();
+		
+		Enemy enemy = new Pterosaur(x, y);
+	    Enemy enemy2 = new GreenPlane(x, y);
+	    Enemy enemy3 = new RedHelicopter(x, y);
+	    Enemy enemy4 = new Balloon(x, y);
+	    Enemy enemy5 = new HotAirBalloon(x, y);
+	    Enemy enemy6 = new Drifblim(x, y);
+		gameState.addEnemy(enemy);
+		gameState.addEnemy(enemy2);
+		gameState.addEnemy(enemy3);
+		gameState.addEnemy(enemy4);
+		gameState.addEnemy(enemy5);
+		gameState.addEnemy(enemy6);
+		playing = true;
+		startGame();
 	}
 }

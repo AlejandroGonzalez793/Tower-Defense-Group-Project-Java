@@ -22,29 +22,31 @@ public abstract class Entity {
 	
 	protected int x; // x coord of top left corner
 	protected int y; // y coord of top left corner
+	protected int dx; // x velocity
+	protected int dy; // y velocity
+	protected int speed;
+	protected Image image;
+	
 	private int width; // width in pixels
 	private int height; // height in pixels
-	private int dx; // x velocity
-	private int dy; // y velocity
-	private static Image image;
 	
-	public Entity(int x, int y, int width, int height, int dx, int dy) {
+	public Entity(int x, int y, int width, int height, int speed) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.dx = dx;
-		this.dy = dy;
+		this.speed = speed;
 		
 		try {
 			image = new Image(new FileInputStream("resources/images/towers/default_tower.png"));
+			//image = new Image(new FileInputStream("resources/images/Thicc_Yoshi.gif"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public Entity(int x, int y, int width, int height) {
-		this(x, y, width, height, 0, 0);
+		this(x, y, width, height, 0);
 	}
 	
 	public void update() {
@@ -105,6 +107,14 @@ public abstract class Entity {
 	}
 	
 	public void setImage(Image image) {
-		Entity.image = image;
+		this.image = image;
+	}
+	
+	public int getSpeed() {
+		return speed;
+	}
+	
+	public void setSpeed(int speed) {
+		this.speed = speed;
 	}
 }

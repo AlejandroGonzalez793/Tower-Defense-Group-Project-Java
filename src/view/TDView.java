@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import controller.TDController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -38,8 +39,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Enemy;
 import model.GameState;
 import model.Player;
+import model.Projectile;
 import model.Tower;
 
 public class TDView extends Application implements Observer {
@@ -64,7 +67,9 @@ public class TDView extends Application implements Observer {
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 2;
-	private static final char FREE_CHAR = '*';
+	private static final String START_CHAR = "+";
+	private static final String END_CHAR = "=";
+	private static final String ROAD_CHAR = "-";
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -79,6 +84,11 @@ public class TDView extends Application implements Observer {
 		if (mainMenu.getMapImage() == null) {
 			System.exit(1);
 		}
+		
+		primaryStage.setOnCloseRequest(e -> {
+		    Platform.exit();
+		    System.exit(0);
+		});
 		
 		mapFileName = mainMenu.getMapImage();
 		
@@ -126,10 +136,22 @@ public class TDView extends Application implements Observer {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
+			for (Projectile proj : gameState.getProjectiles()) {
+				drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
+						proj.getWidth(), proj.getHeight());
+			}
+			
+			for (Enemy enemy : gameState.getEnemies()) {
+				drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 
+						enemy.getWidth(), enemy.getHeight());
+			}
+			
 			for (Tower tower : gameState.getTowers()) {
 				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
 						tower.getWidth(), tower.getHeight());
 			}
+			
+			
 		} else if (arg instanceof Player) {
 			Player player = (Player)arg;
 			money.setText(Integer.toString(player.getMoney()));
@@ -143,9 +165,6 @@ public class TDView extends Application implements Observer {
 		createLayout();
 		
 		gamePane.setOnMouseClicked(e -> {
-			System.out.println("X: " + e.getX());
-			System.out.println("Y: " + e.getY());
-			
             if (!sellingTowers) {
                 if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
 				    controller.addTower((int) e.getX(), (int) e.getY());
@@ -186,10 +205,14 @@ public class TDView extends Application implements Observer {
 			return;
 		} 
 		
+		int cols;
+		int rows;
 		try {
-			backgroundCanvas.setWidth(input.nextInt() * grass.getWidth());
-			backgroundCanvas.setHeight(input.nextInt() * grass.getHeight());
-			input.nextLine();
+			cols = input.nextInt();
+			rows = input.nextInt();
+			backgroundCanvas.setWidth(cols * grass.getWidth());
+			backgroundCanvas.setHeight(rows * grass.getHeight());
+			input.nextLine(); // consume newline
 		} catch (NoSuchElementException e) {
 			System.err.println("Invalid map format");
 			if (input != null) input.close();
@@ -199,21 +222,54 @@ public class TDView extends Application implements Observer {
 		drawingCanvas.setWidth(backgroundCanvas.getWidth());
 		drawingCanvas.setHeight(backgroundCanvas.getHeight());
 		
+		int currRow = 0;
+		int currCol = 0;
 		int row = 0;
+		String[][] tempBoard = new String[rows][cols];
 		while (input.hasNextLine()) {
 			String line = input.nextLine();
-			for (int col = 0; col < line.length(); col++) {
-				char currChar = line.charAt(col);
-				if (currChar == FREE_CHAR) {
-					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());
+			tempBoard[row] = line.split("");
+			for (int col = 0; col < tempBoard[row].length; col++) {
+				if (tempBoard[row][col].equals(START_CHAR)) {
+					currRow = row;
+					currCol = col;
 				} else {
-					backgroundGC.drawImage(road, col * grass.getWidth(), row * grass.getHeight());
-					controller.addPathTile((int)(col * road.getWidth()), (int)(row * road.getHeight()), 
-							(int)road.getWidth(), (int)road.getHeight());
+					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());
 				}
 			}
 			row++;
 		}
+		
+		// Get path by starting at the start position and checking the surrounding
+		// positions for another road tile. Once one is found, move to that new
+		// position and repeat until the end of the path is found
+		String curr = tempBoard[currRow][currCol];
+		while (!curr.equals(END_CHAR)) {
+			backgroundGC.drawImage(road, currCol * grass.getWidth(), currRow * grass.getHeight());
+			controller.addPathTile((int)(currCol * road.getWidth()), (int)(currRow * road.getHeight()), 
+					(int)road.getWidth(), (int)road.getHeight());
+			
+			tempBoard[currRow][currCol] = "x";
+			if (currRow + 1 < rows && (tempBoard[currRow + 1][currCol].equals(ROAD_CHAR) 
+					|| tempBoard[currRow + 1][currCol].equals(END_CHAR))) {
+				currRow = currRow + 1;
+			} else if (currCol + 1 < cols && (tempBoard[currRow][currCol + 1].equals(ROAD_CHAR) ||
+					tempBoard[currRow][currCol + 1].equals(END_CHAR))) {
+				currCol = currCol + 1;
+			} else if (currRow - 1 >= 0 && (tempBoard[currRow - 1][currCol].equals(ROAD_CHAR) ||
+					tempBoard[currRow - 1][currCol].equals(END_CHAR))) {
+				currRow = currRow - 1;
+			} else if (currCol - 1 >= 0 && (tempBoard[currRow][currCol - 1].equals(ROAD_CHAR) ||
+					tempBoard[currRow][currCol - 1].equals(END_CHAR))) {
+				currCol = currCol - 1;
+			}
+			curr = tempBoard[currRow][currCol];
+		}
+		
+		// Add end tile
+		backgroundGC.drawImage(road, currCol * grass.getWidth(), currRow * grass.getHeight());
+		controller.addPathTile((int)(currCol * road.getWidth()), (int)(currRow * road.getHeight()), 
+				(int)road.getWidth(), (int)road.getHeight());
 
 		input.close();
 		root.setCenter(gamePane);
@@ -233,7 +289,10 @@ public class TDView extends Application implements Observer {
 		for (Map.Entry<String, Image> entry : towerImageMap.entrySet()) {
 			Button button = new Button();
 			button.setOnAction(new TowerButton(entry.getKey()));
-			button.setGraphic(new ImageView(entry.getValue()));
+			ImageView imageView = new ImageView(entry.getValue());
+			imageView.setFitWidth(50);
+			imageView.setFitHeight(50);
+			button.setGraphic(imageView);
 			towerPane.add(button, j, i);
 			
 			j++;
@@ -284,6 +343,9 @@ public class TDView extends Application implements Observer {
 		
 		HBox waveBox = new HBox();
 		Button newWaveButton = new Button("New Wave >>");
+		newWaveButton.setOnAction(e -> {
+			controller.newWave();
+		});
 		waveBox.getChildren().add(newWaveButton);
 		
 		controlBox.getChildren().addAll(sellButton, waveBox);
