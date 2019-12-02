@@ -32,7 +32,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -315,9 +314,8 @@ public class TDView extends Application implements Observer {
 		 */
 		public void handle(ActionEvent e) {		
 			if (controller.canPurchaseTower(this.tower)) {
-				Image image = new Image("file:" + TOWER_IMAGE_PATH + selectedTower.getImageName());
-				Circle circle = new Circle(selectedTower.getRadius());
-				canvas.setCursor(new ImageCursor(image));
+				Image image = controller.getSelectedTowerImage();
+				drawingCanvas.setCursor(new ImageCursor(image));
 				towerPane.setDisable(true);
 				gamePane.setDisable(false);
 			} else {
