@@ -9,25 +9,25 @@ import java.util.Set;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
-import model.AreaTower;
-import model.Balloon;
-import model.CheapTower;
-import model.Drifblim;
-import model.Enemy;
-import model.ExpensiveTower;
 import model.GameState;
-import model.GreenPlane;
-import model.HotAirBalloon;
-import model.MultiShotTower;
 import model.Node;
-import model.OneShotTower;
-import model.PiercingTower;
 import model.Player;
-import model.Projectile;
-import model.Pterosaur;
-import model.RapidTower;
-import model.RedHelicopter;
-import model.Tower;
+import model.enemies.Balloon;
+import model.enemies.Drifblim;
+import model.enemies.Enemy;
+import model.enemies.GreenPlane;
+import model.enemies.HotAirBalloon;
+import model.enemies.Pterosaur;
+import model.enemies.RedHelicopter;
+import model.projectiles.AreaTower;
+import model.projectiles.Projectile;
+import model.towers.CheapTower;
+import model.towers.ExpensiveTower;
+import model.towers.MultiShotTower;
+import model.towers.OneShotTower;
+import model.towers.PiercingTower;
+import model.towers.RapidTower;
+import model.towers.Tower;
 
 
 /**

@@ -6,6 +6,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javafx.scene.shape.Rectangle;
+import model.enemies.Enemy;
+import model.projectiles.Projectile;
+import model.towers.Tower;
 
 
 /**

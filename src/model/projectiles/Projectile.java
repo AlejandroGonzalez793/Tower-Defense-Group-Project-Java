@@ -1,9 +1,10 @@
-package model;
+package model.projectiles;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import javafx.scene.image.Image;
+import model.Entity;
 
 public class Projectile extends Entity {
 	public static final int DEFAULT_POWER = 1;

@@ -1,9 +1,11 @@
-package model;
+package model.towers;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import javafx.scene.image.Image;
+import model.projectiles.MultiBullet;
+import model.projectiles.Projectile;
 
 public class MultiShotTower extends Tower{
 	
