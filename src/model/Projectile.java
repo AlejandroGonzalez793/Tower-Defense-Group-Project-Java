@@ -16,8 +16,8 @@ public class Projectile extends Entity {
 		super(x, y, width, height, dx, dy);
 		this.power = power;
 		try {
-			Image image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
-			setImage(image);
+			image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
+			//this.setImage(image);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -26,8 +26,8 @@ public class Projectile extends Entity {
 	public Projectile(int x, int y, int width, int height) {
 		this(x, y, width, height, 10, 10, DEFAULT_POWER);
 		try {
-			Image image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
-			setImage(image);
+			image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
+			//this.setImage(image);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -37,8 +37,8 @@ public class Projectile extends Entity {
 		// TODO: start dx and dy as 0 and then set them later
 		this(x, y, DEFAULT_WIDTH/2, DEFAULT_HEIGHT/2, 10, 10, DEFAULT_POWER);
 		try {
-			Image image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
-			setImage(image);
+			image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
+			//this.setImage(image);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

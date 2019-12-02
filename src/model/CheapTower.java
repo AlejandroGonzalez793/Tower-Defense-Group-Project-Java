@@ -10,8 +10,8 @@ public class CheapTower extends Tower{
 	public CheapTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
 		try {
-			Image image = new Image(new FileInputStream("resources/images/towers/cheap_tower.png"));
-			setImage(image);
+			image = new Image(new FileInputStream("resources/images/towers/cheap_tower.png"));
+			//this.setImage(image);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -20,8 +20,8 @@ public class CheapTower extends Tower{
 	public CheapTower(int x, int y, int width, int height) {
 		this(x, y, width, height, 150, 10, 1000);
 		try {
-			Image image = new Image(new FileInputStream("resources/images/towers/cheap_tower.png"));
-			setImage(image);
+			image = new Image(new FileInputStream("resources/images/towers/cheap_tower.png"));
+			//this.setImage(image);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -30,8 +30,8 @@ public class CheapTower extends Tower{
 	public CheapTower() {
 		this(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_RADIUS, DEFAULT_RATE, DEFAULT_COST - 25);
 		try {
-			Image image = new Image(new FileInputStream("resources/images/towers/cheap_tower.png"));
-			setImage(image);
+			image = new Image(new FileInputStream("resources/images/towers/cheap_tower.png"));
+			//this.setImage(image);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
