@@ -2,14 +2,16 @@ package controller;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 import model.Enemy;
-import model.Entity;
+import model.GameState;
 import model.Player;
 import model.Projectile;
 import model.Tower;
@@ -29,16 +31,25 @@ import model.Tower;
  */
 public class TDController {
 	private Player player;
-	private List<Tower> towers;
-	private List<Enemy> enemies;
-	private List<Projectile> projectiles;
-	private String TOWER_PACKAGE = "model.";
+	private GameState gameState;
+	private Tower selectedTower;
+	private Map<String, Class<? extends Tower>> towerMap;
 	
-	public TDController(Player player) {
+	public TDController(Player player, GameState gameState) {
 		this.player = player;
-		this.towers = new ArrayList<>();
-		this.enemies = new ArrayList<>();
-		this.projectiles = new ArrayList<>();
+		this.gameState = gameState;
+		this.selectedTower = null;
+		
+		this.towerMap = new HashMap<String, Class<? extends Tower>>();
+		towerMap.put("Tower", Tower.class);
+	}
+	
+	/**
+	 * Calls the tick method in the game state to update the positions
+	 * of all of the entities on the board.
+	 */
+	public void tick() {
+		gameState.tick();
 	}
 	
 	/**
@@ -51,82 +62,92 @@ public class TDController {
 	}
 	
 	/**
-	 * Subtracts a set amount from the player's health
+	 * Determines if the player can purchase a tower 
+	 * specified by its name
 	 * 
-	 * @param amount the amount of health to subtract
+	 * @param name the name of the tower
+	 * @return true if the tower can be purchased, false otherwise
 	 */
-	public void subtractHealth(int amount) {
-		player.setHealth(player.getHealth() - amount);
+	public boolean canPurchaseTower(String name) {
+		selectedTower = getTowerByName(name);
+		return selectedTower.getCost() <= player.getMoney();
+	}
+	
+	public boolean canPlaceTower(int x, int y) {
+		List<Rectangle> path = gameState.getPath();
+		int shiftedX = x - (selectedTower.getWidth() / 2);
+		int shiftedY = y - (selectedTower.getHeight() / 2);
+		
+		// Check if tower collides with path
+		for (Rectangle rect : path) {
+			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
+				return false;
+			}
+		}
+		
+		// Check if tower collides with another tower
+		for (Tower tower : gameState.getTowers()) {
+			Rectangle rect = new Rectangle(tower.getX(), tower.getY(), tower.getWidth(), tower.getHeight());
+			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
-	 * Adds a tower to the current list of towers
+	 * Check bullet collisions with enemies.
+	 * 
+	 * @param bullet object to be checked with a collision.
+	 * @return True or false depending if a collision was made or not.
+	 */
+	public boolean checkBulletCollision(Projectile bullet) {
+		for (Enemy enemy : gameState.getEnemies()) {
+			if (gameState.getCollision(bullet, enemy)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Adds the current selected tower to the tower list and 
+	 * subtracts the tower's cost from the player's money.
 	 * 
 	 * @param tower the Tower to add
 	 */
-	public void addTower(Tower tower) {
-		towers.add(tower);
+	public void addTower(int x, int y) {
+		// TODO: Do something if no selected tower
+		if (selectedTower != null) {
+			int shiftedX = x - (selectedTower.getWidth() / 2);
+			int shiftedY = y - (selectedTower.getHeight() / 2);
+			selectedTower.setX(shiftedX);
+			selectedTower.setY(shiftedY);
+			
+			player.setMoney(player.getMoney() - selectedTower.getCost());
+			gameState.addTower(selectedTower);
+			selectedTower = null;
+		}
 	}
 	
 	/**
-	 * Adds an enemy to the current list of enemies
+	 * This method checks if the user clicked on a tower. If a tower was clicked on,
+	 * then sell it back to the player and reference the selected tower.
 	 * 
-	 * @param enemy the Enemy to add
+	 * @param x
+	 * @param y
+	 * @return True or false depending if a tower was sold back or not.
 	 */
-	public void addEnemy(Enemy enemy) {
-		enemies.add(enemy);
-	}
-	
-	/**
-	 * Figures out if there is a collision on the board and updates the models
-	 * accordingly.
-	 * 
-	 * TODO: Make this not garbage
-	 */
-	public void finalAllCollisions() {
-		for (Projectile projectile : projectiles) {
-			for (Enemy enemy : enemies) {
-				if (getCollision(projectile, enemy)) {
-					enemy.setHealth(enemy.getHealth() - projectile.getPower());
-				}
+	public boolean sellTower(int x, int y) {				
+		for (Tower tower : gameState.getTowers()) {			
+			if (x > tower.getX() && x < tower.getX() + tower.getWidth() && 
+					y > tower.getY() && y < tower.getY() + tower.getHeight()) {
+				player.setMoney(player.getMoney() + (int)(tower.getCost() * Tower.SELLBACK_FACTOR));
+				gameState.removeTower(tower);
+				return true;
 			}
 		}
-	}
-	
-	/**
-	 * Determines if there is a collision between two entities.
-	 * 
-	 * @param e1 the first Entity to check
-	 * @param e2 the second Entity to check
-	 * @return true if the two entities are colliding, false otherwise
-	 */
-	public boolean getCollision(Entity e1, Entity e2) {
-		return e1.getX() < e2.getX() + e2.getWidth() &&
-				e1.getX() + e1.getWidth() > e2.getX() &&
-				e1.getY() < e2.getY() + e2.getHeight() &&
-				e1.getY() + e1.getHeight() > e2.getY();
-	}
-	
-	/**
-	 * Gets an instance of a random tower specified by the TowerType enum
-	 * 
-	 * @return a random Tower
-	 */
-	public Tower getRandomTower() {
-		Object object;
-		try { 
-			TowerType type = TowerType.randomTower();
-			Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
-			object = cons.newInstance(0, 0, 50, 50, 50);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-				InvocationTargetException | NoSuchMethodException | SecurityException |
-				ClassNotFoundException e) {
-			e.printStackTrace();
-			object = new Tower(0, 0, 50, 50, 50);
-		}
-		
-		return (Tower) object;
+		return false;
 	}
 	
 	/**
@@ -137,79 +158,68 @@ public class TDController {
 	 * @param name the name of the tower to get
 	 * @return A Tower object
 	 */
-	public Tower getTowerByName(String name) {
+	private Tower getTowerByName(String name) {
+		Class<?> c = towerMap.get(name);
+
+		if (c == null) {
+			return new Tower();
+		}
+		
 		Object object;
 		try { 
-			TowerType type = TowerType.valueOf(name);
-			Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-			Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
-			object = cons.newInstance(0, 0, 50, 50, 50);
+			Constructor<?> cons = c.getConstructor();
+			object = cons.newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-				InvocationTargetException | NoSuchMethodException | SecurityException |
-				ClassNotFoundException e) {
+				InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
-			object = new Tower(0, 0, 50, 50, 50);
+			object = new Tower();
 		}
 		
 		return (Tower) object;
 	}
 	
 	/**
-	 * Gets all of the towers in the TowerType name.
+	 * Gets a map of all of the tower names to its associated image.
 	 * 
-	 * @return a List of all of the possible Tower objects
+	 * @return A Map of String to Image with the key being the tower's name and
+	 * the value being the tower's Image
 	 */
-	public List<Tower> getAllTowers() {
-		List<TowerType> towerTypes = Arrays.asList(TowerType.values());
-		List<Tower> towers = new ArrayList<>();
+	public Map<String, Image> getTowerImageMap() {
+		Map<String, Image> imageMap = new HashMap<>();
 		
-		for (TowerType type : towerTypes) {
+		for (Entry<String, Class<? extends Tower>> towerEntry : towerMap.entrySet()) {
 			try {
-				Class<?> c = Class.forName(TOWER_PACKAGE + type.getName());
-				Constructor<?> cons = c.getConstructor(int.class, int.class, int.class, int.class, int.class);
-				Object object = cons.newInstance(0, 0, 50, 50, 50);
-				towers.add((Tower)object);
+				Constructor<?> cons = towerEntry.getValue().getConstructor();
+				Tower tower = (Tower)cons.newInstance();
+				imageMap.put(towerEntry.getKey(), tower.getImage());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-					InvocationTargetException | NoSuchMethodException | SecurityException |
-					ClassNotFoundException e) {
+					InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}
 		}
-		return towers;
+		return imageMap;
 	}
 	
 	/**
-	 * The setTowerCoordinates method sets the coordinates of the
-	 * tower placement.
+	 * Returns a set of all of the possible tower names that can be
+	 * added to the board.
 	 * 
-	 * @param tower A tower object that was placed.
-	 * @param x The tower's x coordinate.
-	 * @param y The tower's Y coordinate.
+	 * @return A Set containing the names of all of the towers available
 	 */
-	public void setTowerCoordinates(Tower tower, int x, int y) {
-		tower.setX(x);
-		tower.setY(y);
+	public Set<String> getTowerNames() {
+		return towerMap.keySet();
 	}
 	
-	public enum TowerType {
-		CheapTower("CheapTower"), ExpensiveTower("ExpensiveTower");
-		
-		private String name;
-		
-		private static final List<TowerType> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
-		private static final int SIZE = VALUES.size();
-		private static final Random RANDOM = new Random();
-		
-		private TowerType(String name) {
-			this.name = name;
-		}
-		
-		public String getName() {
-			return name;
-		}
-		
-		public static TowerType randomTower()  {
-			return VALUES.get(RANDOM.nextInt(SIZE));
-		}
+	/**
+	 * Adds a "path tile" to the game state. Used for keeping track of which portions
+	 * of the map are going to be used as the path for enemies to take
+	 * 
+	 * @param x top left x coordinate of the tile
+	 * @param y top left y coordinate of the tile
+	 * @param width width of the tile in pixels
+	 * @param height height of the tile in pixels
+	 */
+	public void addPathTile(int x, int y, int width, int height) {
+		gameState.addPath(new Rectangle(x, y, width, height));
 	}
 }
