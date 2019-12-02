@@ -222,4 +222,13 @@ public class TDController {
 	public void addPathTile(int x, int y, int width, int height) {
 		gameState.addPath(new Rectangle(x, y, width, height));
 	}
+	
+	/**
+	 * Gets the image to use for the currently selected tower.
+	 * 
+	 * @return the currently selected tower's Image.
+	 */
+	public Image getSelectedTowerImage() {
+		return selectedTower.getImage();
+	}
 }

@@ -14,6 +14,8 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -149,6 +151,7 @@ public class TDView extends Application implements Observer {
 				    controller.addTower((int) e.getX(), (int) e.getY());
 				    towerPane.setDisable(false);
                     gamePane.setDisable(true);
+                    gamePane.setCursor(Cursor.DEFAULT);
                 }
             } else {
             	if (controller.sellTower((int)e.getX(), (int)e.getY())) {
@@ -313,6 +316,8 @@ public class TDView extends Application implements Observer {
 		 */
 		public void handle(ActionEvent e) {		
 			if (controller.canPurchaseTower(this.tower)) {
+				Image image = controller.getSelectedTowerImage();
+				gamePane.setCursor(new ImageCursor(image));
 				towerPane.setDisable(true);
 				gamePane.setDisable(false);
 			} else {
