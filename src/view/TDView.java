@@ -42,6 +42,7 @@ import javafx.stage.Stage;
 import model.Enemy;
 import model.GameState;
 import model.Player;
+import model.Projectile;
 import model.Tower;
 
 public class TDView extends Application implements Observer {
@@ -133,6 +134,11 @@ public class TDView extends Application implements Observer {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
+			for (Projectile proj : gameState.getProjectiles()) {
+				drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
+						proj.getWidth(), proj.getHeight());
+			}
+			
 			for (Enemy enemy : gameState.getEnemies()) {
 				drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 
 						enemy.getWidth(), enemy.getHeight());
@@ -142,6 +148,8 @@ public class TDView extends Application implements Observer {
 				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
 						tower.getWidth(), tower.getHeight());
 			}
+			
+			
 		} else if (arg instanceof Player) {
 			Player player = (Player)arg;
 			money.setText(Integer.toString(player.getMoney()));
