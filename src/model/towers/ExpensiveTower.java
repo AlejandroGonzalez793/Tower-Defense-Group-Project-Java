@@ -1,9 +1,11 @@
-package model;
+package model.towers;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import javafx.scene.image.Image;
+import model.projectiles.Projectile;
+import model.projectiles.StrongBullet;
 
 public class ExpensiveTower extends Tower{
 

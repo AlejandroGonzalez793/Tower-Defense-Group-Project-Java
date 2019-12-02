@@ -1,6 +1,8 @@
-package model;
+package model.enemies;
 
 import javafx.scene.shape.Rectangle;
+import model.Entity;
+import model.Node;
 
 /**
  * A minimal template for the different Enemies that can be used and drawn 

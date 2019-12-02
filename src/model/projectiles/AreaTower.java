@@ -1,9 +1,10 @@
-package model;
+package model.projectiles;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import javafx.scene.image.Image;
+import model.towers.Tower;
 
 public class AreaTower extends Tower{
 

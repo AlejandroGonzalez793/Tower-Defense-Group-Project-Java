@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import model.Enemy;
 import model.GameState;
-import model.Projectile;
+import model.enemies.Enemy;
+import model.projectiles.Projectile;
 
 public class TDTests {
 	

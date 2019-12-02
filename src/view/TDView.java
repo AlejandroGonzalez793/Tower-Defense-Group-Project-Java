@@ -39,11 +39,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Enemy;
 import model.GameState;
 import model.Player;
-import model.Projectile;
-import model.Tower;
+import model.enemies.Enemy;
+import model.projectiles.Projectile;
+import model.towers.Tower;
 
 public class TDView extends Application implements Observer {
 	private Stage primaryStage;
