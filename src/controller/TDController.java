@@ -50,7 +50,7 @@ public class TDController {
 	private Map<String, Class<? extends Tower>> towerMap;
 	private boolean playing;
 	private double animationSpeed = 1.0;
-	public static final int TICK_SPEED = 100;
+	public static final int TICK_SPEED = 40;
 	
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
@@ -179,6 +179,16 @@ public class TDController {
 	}
 	
 	/**
+	 * This method returns the cost of a tower object by its associated name.
+	 * 
+	 * @param towerName A string that is the name of the tower object.
+	 * @return The cost of the specified tower object.
+	 */
+	public int getTowerCost(String towerName) {
+		return getTowerByName(towerName).getCost();
+	}
+	
+	/**
 	 * Gets a specific tower by name by doing a lookup in the TowerType enum and then
 	 * getting and instance of the class through reflection. If a tower of the 
 	 * specified name is not found, the default tower is returned instead.
@@ -186,7 +196,7 @@ public class TDController {
 	 * @param name the name of the tower to get
 	 * @return A Tower object
 	 */
-	private Tower getTowerByName(String name) {
+	public Tower getTowerByName(String name) {
 		Class<?> c = towerMap.get(name);
 
 		if (c == null) {
