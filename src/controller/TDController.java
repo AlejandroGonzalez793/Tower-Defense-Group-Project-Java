@@ -284,14 +284,7 @@ public class TDController {
 	}
 	
 	public void pause() {
-		if(playing)
-		{
-			playing = false;
-		}
-		else
-		{
-			playing = true;
-		}
+		playing = !playing;
 	}
     
 	/**
