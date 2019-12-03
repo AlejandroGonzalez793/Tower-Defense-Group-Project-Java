@@ -6,7 +6,10 @@ import java.io.FileNotFoundException;
 import javafx.scene.image.Image;
 
 public class RapidBullet extends Projectile {
+	private static final int WIDTH = 4;
+	private static final int HEIGHT = 4;
 	private static final int SPEED = 10;
+	private static final int POWER = 2;
 	private static final int RADIUS = 50;
     
 	public RapidBullet(int x, int y, int width, int height, int speed, int power) {
@@ -20,11 +23,11 @@ public class RapidBullet extends Projectile {
 	}
 	
 	public RapidBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, DEFAULT_POWER+1);
+		this(x, y, width, height, SPEED, POWER);
 	}
 	
 	public RapidBullet(int x, int y) {
-		this(x, y, DEFAULT_WIDTH-46, DEFAULT_HEIGHT-46, SPEED, DEFAULT_POWER+1);
+		this(x, y, WIDTH, HEIGHT, SPEED, POWER);
 	}
 	
 	public int getRadius() {

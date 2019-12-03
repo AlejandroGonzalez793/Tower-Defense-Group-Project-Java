@@ -66,7 +66,7 @@ public class TDView extends Application implements Observer {
 	
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
-	private static final int TOWER_ROWS = 2;
+	private static final int TOWER_ROWS = 3;
 	private static final String START_CHAR = "+";
 	private static final String END_CHAR = "=";
 	private static final String ROAD_CHAR = "-";
@@ -287,13 +287,22 @@ public class TDView extends Application implements Observer {
 		int i = 0;
 		int j = 0;
 		for (Map.Entry<String, Image> entry : towerImageMap.entrySet()) {
+			
+			VBox towerBox = new VBox();
+			
 			Button button = new Button();
 			button.setOnAction(new TowerButton(entry.getKey()));
 			ImageView imageView = new ImageView(entry.getValue());
 			imageView.setFitWidth(50);
 			imageView.setFitHeight(50);
 			button.setGraphic(imageView);
-			towerPane.add(button, j, i);
+			
+			Label towerName = new Label(entry.getKey());
+			Label towerPrice = new Label("Cost: " + Integer.toString(controller.getTowerCost(entry.getKey())));
+			
+			towerBox.getChildren().addAll(button, towerName, towerPrice);
+			
+			towerPane.add(towerBox, j, i);
 			
 			j++;
 			if (j == TOWER_ROWS) {
@@ -319,6 +328,29 @@ public class TDView extends Application implements Observer {
 		
 		VBox controlBox = new VBox();
 		controlBox.setSpacing(5);
+		
+		HBox gameSpeedBox = new HBox();
+		Button slowButton = new Button("slow...");
+		slowButton.setOnAction(e -> {
+			controller.slowDown();
+		});
+		
+		Button normalButton = new Button("Normal");
+		normalButton.setOnAction(e -> {
+			controller.regularSpeed();
+		});
+		
+		Button fastButton = new Button("FAST!");
+		fastButton.setOnAction(e -> {
+			controller.speedUp();
+		});
+		
+		Button pauseButton = new Button("Pause");
+		pauseButton.setOnAction(e -> {
+			controller.pause();
+		});
+		
+		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton);
 		
 		HBox sellBox = new HBox();
 		sellButton = new Button("Sell Towers");
@@ -348,7 +380,7 @@ public class TDView extends Application implements Observer {
 		});
 		waveBox.getChildren().add(newWaveButton);
 		
-		controlBox.getChildren().addAll(sellButton, waveBox);
+		controlBox.getChildren().addAll(gameSpeedBox, sellButton, waveBox);
 		
 		sidebarPane.setTop(statsBox);
 		sidebarPane.setCenter(towerPane);

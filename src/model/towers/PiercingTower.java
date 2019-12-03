@@ -8,6 +8,11 @@ import model.projectiles.PiercingBullet;
 import model.projectiles.Projectile;
 
 public class PiercingTower extends Tower{
+	private static final int WIDTH = 50;
+	private static final int HEIGHT = 50;
+	private static final int RADIUS = 100;
+	private static final int RATE = 8;
+	private static final int COST = 250;
 
 	public PiercingTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
@@ -30,7 +35,7 @@ public class PiercingTower extends Tower{
 	}
 	
 	public PiercingTower() {
-		this(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_RADIUS + 50, DEFAULT_RATE + 7, DEFAULT_COST + 200);
+		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 		try {
 			image = new Image(new FileInputStream("resources/images/Thicc_Yoshi.gif"));
 			//this.setImage(image);

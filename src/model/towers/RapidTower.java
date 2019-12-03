@@ -8,6 +8,11 @@ import model.projectiles.Projectile;
 import model.projectiles.RapidBullet;
 
 public class RapidTower extends Tower{
+	private static final int WIDTH = 35;
+	private static final int HEIGHT = 50;
+	private static final int RADIUS = 100;
+	private static final int RATE = 20;
+	private static final int COST = 300;
 
 	public RapidTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
@@ -30,7 +35,7 @@ public class RapidTower extends Tower{
 	}
 	
 	public RapidTower() {
-		this(0, 0, DEFAULT_WIDTH - 15, DEFAULT_HEIGHT, DEFAULT_RADIUS + 50, DEFAULT_RATE + 19, DEFAULT_COST + 250);
+		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 		try {
 			image = new Image(new FileInputStream("resources/images/towers/rapid_tower.png"));
 			//this.setImage(image);

@@ -49,7 +49,8 @@ public class TDController {
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
 	private boolean playing;
-	public static final int TICK_SPEED = 100;
+	private double animationSpeed = 1.0;
+	public static final int TICK_SPEED = 40;
 	
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
@@ -178,6 +179,16 @@ public class TDController {
 	}
 	
 	/**
+	 * This method returns the cost of a tower object by its associated name.
+	 * 
+	 * @param towerName A string that is the name of the tower object.
+	 * @return The cost of the specified tower object.
+	 */
+	public int getTowerCost(String towerName) {
+		return getTowerByName(towerName).getCost();
+	}
+	
+	/**
 	 * Gets a specific tower by name by doing a lookup in the TowerType enum and then
 	 * getting and instance of the class through reflection. If a tower of the 
 	 * specified name is not found, the default tower is returned instead.
@@ -259,6 +270,22 @@ public class TDController {
 	public Image getSelectedTowerImage() {
 		return selectedTower.getImage();
     }
+	
+	public void speedUp() {
+		animationSpeed = 0.5;
+	}
+	
+	public void regularSpeed() {
+		animationSpeed = 1.0;
+	}
+	
+	public void slowDown() {
+		animationSpeed = 2.0;
+	}
+	
+	public void pause() {
+		playing = !playing;
+	}
     
 	/**
 	 * Creates a new thread that runs while the games is in progress. Calls the
@@ -270,8 +297,14 @@ public class TDController {
 			private long lastUpdate = 0;
 			@Override
 			public void handle(long now) {
-				if (playing && now - lastUpdate >= TICK_SPEED * 1000000) {
+				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
 					lastUpdate = now;
+					Enemy enemy = gameState.enemyContact();
+					if (enemy != null)
+					{
+						player.setHealth(player.getHealth() - enemy.getPower());
+						gameState.removeEnemy(enemy);
+					}
 					tick();
 				}
 			}

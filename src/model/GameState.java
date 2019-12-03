@@ -142,6 +142,12 @@ public class GameState extends Observable {
 		enemies.add(enemy);
 	}
 	
+	public void removeEnemy(Enemy enemy) {
+		enemies.remove(enemy);
+		setChanged();
+		notifyObservers(this);
+	}
+	
 	public void addNode(Node node) {
 		if (start == null) {
 			start = node;
@@ -154,5 +160,24 @@ public class GameState extends Observable {
 		}
 		
 		curr.setNext(node);
+	}
+	
+	public Enemy enemyContact() {
+		if (start == null) {
+			return null;
+		}
+		
+		Node curr = start;
+		while (curr.getNext() != null) {
+			curr = curr.getNext();
+		}
+		
+		for (Enemy enemy : enemies) {
+			Node node = enemy.getNode();
+			if (node == curr) {
+				return enemy;
+			} 
+		}
+		return null;
 	}
 }

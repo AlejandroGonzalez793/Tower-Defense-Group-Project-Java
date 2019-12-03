@@ -6,10 +6,13 @@ import java.io.FileNotFoundException;
 import javafx.scene.image.Image;
 
 public class Balloon extends Enemy {
+	private static final int HEALTH = 5;
 	private static final int SPEED = 1;
+	private static final int POWER = 1;
+	private static final int GOLD = 10;
 	
-	public Balloon(int x, int y, int width, int height, int health, int speed) {
-		super(x, y, width, height, health, speed);
+	public Balloon(int x, int y, int width, int height, int health, int speed, int power, int gold) {
+		super(x, y, width, height, health, speed, power, gold);
 		try {
 			image = new Image(new FileInputStream("resources/images/enemies/balloon_purple.gif"));
 		} catch (FileNotFoundException e) {
@@ -17,12 +20,12 @@ public class Balloon extends Enemy {
 		}
 	}
 	
-	public Balloon(int x, int y, int width, int height, int speed) {
-		this(x, y, width, height, DEFAULT_HEALTH, SPEED);
+	public Balloon(int x, int y, int width, int height, int speed, int power) {
+		this(x, y, width, height, HEALTH, SPEED, POWER, GOLD);
 	}
 	
 	public Balloon(int x, int y) {
-		this(x, y, 50, 50, DEFAULT_HEALTH, SPEED);
+		this(x, y, 50, 50, HEALTH, SPEED, POWER, GOLD);
 	}
 
 }
