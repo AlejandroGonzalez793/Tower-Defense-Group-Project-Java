@@ -179,6 +179,16 @@ public class TDController {
 	}
 	
 	/**
+	 * This method returns the cost of a tower object by its associated name.
+	 * 
+	 * @param towerName A string that is the name of the tower object.
+	 * @return The cost of the specified tower object.
+	 */
+	public int getTowerCost(String towerName) {
+		return getTowerByName(towerName).getCost();
+	}
+	
+	/**
 	 * Gets a specific tower by name by doing a lookup in the TowerType enum and then
 	 * getting and instance of the class through reflection. If a tower of the 
 	 * specified name is not found, the default tower is returned instead.

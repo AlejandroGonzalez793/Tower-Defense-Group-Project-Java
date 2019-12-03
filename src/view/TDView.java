@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
-import java.util.Set;
 
 import controller.TDController;
 import javafx.application.Application;
@@ -298,10 +297,8 @@ public class TDView extends Application implements Observer {
 			imageView.setFitHeight(50);
 			button.setGraphic(imageView);
 			
-			Tower towerObject = controller.getTowerByName(entry.getKey());
-			
 			Label towerName = new Label(entry.getKey());
-			Label towerPrice = new Label("Cost: " + Integer.toString(towerObject.getCost()));
+			Label towerPrice = new Label("Cost: " + Integer.toString(controller.getTowerCost(entry.getKey())));
 			
 			towerBox.getChildren().addAll(button, towerName, towerPrice);
 			
