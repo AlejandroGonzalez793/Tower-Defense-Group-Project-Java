@@ -10,7 +10,7 @@ public class AreaBullet extends Projectile {
 	private static final int HEIGHT = 28;
 	private static final int SPEED = 10;
 	private static final int POWER = 2;
-	private static final int RADIUS = 50;
+	private static final int RADIUS = 1500;
     
 	public AreaBullet(int x, int y, int width, int height, int speed, int power) {
 		super(x, y, width, height, speed, power);

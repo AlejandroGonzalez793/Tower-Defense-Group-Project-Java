@@ -145,10 +145,14 @@ public class TDView extends Application implements Observer {
 					// decrement enemy health or...
 					// some explosion animation
 					hits.add(proj);
-				} else {
+				} else if (proj.getDistance() >= proj.getRadius()){
+					hits.add(proj);
+				}
+				else {
 					drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
 							proj.getWidth(), proj.getHeight());
 				}
+				proj.setDistance();
 			}
 			
 			for (Enemy enemy : gameState.getEnemies()) {

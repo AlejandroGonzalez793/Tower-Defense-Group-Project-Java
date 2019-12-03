@@ -11,9 +11,10 @@ public class Projectile extends Entity {
 	public static final int DEFAULT_WIDTH = 10;
 	public static final int DEFAULT_HEIGHT = 10;
 	public static final int DEFAULT_SPEED = 10;
-	public static final int DEFAULT_RADIUS = 50;
+	public static final int DEFAULT_RADIUS = 1500;
 	
 	private int power;
+	private int distance;
 	
 	public Projectile(int x, int y, int width, int height, int speed, int power) {
 		super(x, y, width, height, speed);
@@ -44,7 +45,15 @@ public class Projectile extends Entity {
 	
 	@Override
 	public void update() {
-		x += speed;
-		y += speed;
+		x += DEFAULT_SPEED;
+		y += DEFAULT_SPEED;
+	}
+	
+	public int getDistance() {
+		return distance;
+	}
+	
+	public void setDistance() {
+		distance += speed;
 	}
 }
