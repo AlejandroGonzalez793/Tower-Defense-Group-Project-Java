@@ -8,6 +8,11 @@ import model.projectiles.Projectile;
 import model.projectiles.WeakBullet;
 
 public class CheapTower extends Tower{
+	private static final int WIDTH = 50;
+	private static final int HEIGHT = 50;
+	private static final int RADIUS = 50;
+	private static final int RATE = 1;
+	private static final int COST = 25;
 	
 	public CheapTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
@@ -30,7 +35,7 @@ public class CheapTower extends Tower{
 	}
 	
 	public CheapTower() {
-		this(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_RADIUS, DEFAULT_RATE, DEFAULT_COST - 25);
+		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 		try {
 			image = new Image(new FileInputStream("resources/images/towers/cheap_tower.png"));
 			//this.setImage(image);

@@ -8,6 +8,11 @@ import model.projectiles.OneShotBullet;
 import model.projectiles.Projectile;
 
 public class OneShotTower extends Tower{
+	private static final int WIDTH = 75;
+	private static final int HEIGHT = 75;
+	private static final int RADIUS = 150;
+	private static final int RATE = 10;
+	private static final int COST = 500;
 	
 	public OneShotTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
@@ -30,7 +35,7 @@ public class OneShotTower extends Tower{
 	}
 	
 	public OneShotTower() {
-		this(0, 0, DEFAULT_WIDTH + 25, DEFAULT_HEIGHT + 25, DEFAULT_RADIUS + 100, DEFAULT_RATE + 9, DEFAULT_COST + 450);
+		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 		try {
 			image = new Image(new FileInputStream("resources/images/towers/one_shot_tower.png"));
 			//this.setImage(image);

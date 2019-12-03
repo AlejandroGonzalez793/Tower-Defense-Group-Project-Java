@@ -6,7 +6,10 @@ import java.io.FileNotFoundException;
 import javafx.scene.image.Image;
 
 public class OneShotBullet extends Projectile {
+	private static final int WIDTH = 50;
+	private static final int HEIGHT = 50;
 	private static final int SPEED = 10;
+	private static final int POWER = 1000;
 	private static final int RADIUS = 50;
     
 	public OneShotBullet(int x, int y, int width, int height, int speed, int power) {
@@ -20,11 +23,11 @@ public class OneShotBullet extends Projectile {
 	}
 	
 	public OneShotBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, DEFAULT_POWER+999);
+		this(x, y, width, height, SPEED, POWER);
 	}
 	
 	public OneShotBullet(int x, int y) {
-		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, SPEED, DEFAULT_POWER+999);
+		this(x, y, WIDTH, HEIGHT, SPEED, POWER);
 	}
 	
 	public int getRadius() {
