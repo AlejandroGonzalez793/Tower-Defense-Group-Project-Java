@@ -3,6 +3,8 @@ package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Observable;
@@ -136,14 +138,17 @@ public class TDView extends Application implements Observer {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
-			
+			List<Projectile> hits = new ArrayList<Projectile>();
 			for (Projectile proj : gameState.getProjectiles()) {
 				if (controller.checkBulletCollision(proj)) {
 					// do not redraw bullet
+					// decrement enemy health or...
+					// some explosion animation
+					hits.add(proj);
+				} else {
+					drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
+							proj.getWidth(), proj.getHeight());
 				}
-				
-				drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
-						proj.getWidth(), proj.getHeight());
 			}
 			
 			for (Enemy enemy : gameState.getEnemies()) {
@@ -154,6 +159,10 @@ public class TDView extends Application implements Observer {
 			for (Tower tower : gameState.getTowers()) {
 				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
 						tower.getWidth(), tower.getHeight());
+			}
+			
+			for (Projectile hit : hits) {
+				gameState.getProjectiles().remove(hit);
 			}
 			
 			
