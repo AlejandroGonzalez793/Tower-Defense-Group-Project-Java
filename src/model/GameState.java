@@ -40,11 +40,17 @@ public class GameState extends Observable {
 	
 	public void tick() {
 		for (Tower tower : towers) {
-			if (tower.generateProjectile(ticks)) {
-				projectiles.add(tower.getProjectile());
+			for (Enemy enemy : enemies) {
+				System.out.println(tower.getRadius());
+				System.out.println();
+				if ((enemy.getX() - tower.getX()) * (enemy.getX() - tower.getX()) + 
+						(enemy.getY() - tower.getY()) * (enemy.getY() - tower.getY()) <= tower.getRadius() * tower.getRadius()) {
+					if (tower.generateProjectile(ticks)) {
+						projectiles.add(tower.getProjectile());
+					}
+				}
 			}
 		}
-		
 		for (Enemy enemy : enemies) {
 			Node node = enemy.getNode();
 			if (node != null) {

@@ -14,8 +14,8 @@ import model.projectiles.Projectile;
  */
 public class Tower extends Entity {
 	public static final double SELLBACK_FACTOR = 0.9;
-	public static final int DEFAULT_RATE = 1;
-	public static final int DEFAULT_RADIUS = 50;
+	public static final int DEFAULT_RATE = 5;
+	public static final int DEFAULT_RADIUS = 150;
 	public static final int DEFAULT_WIDTH = 50;
 	public static final int DEFAULT_HEIGHT = 50;
 	public static final int DEFAULT_COST = 50;
@@ -51,7 +51,7 @@ public class Tower extends Entity {
 	}
 	
 	public int getRadius() {
-		return radius;
+		return DEFAULT_RADIUS;
 	}
 	
 	public int getRate() {
@@ -63,9 +63,6 @@ public class Tower extends Entity {
 	}
 	
 	public Projectile getProjectile() {
-		int shiftedX = this.getX() - (this.getWidth());
-		int shiftedY = this.getY() - (this.getHeight());
-		Projectile proj = new Projectile(shiftedX, shiftedY);
-		return proj;
+		return new Projectile(x, y);
 	}
 }

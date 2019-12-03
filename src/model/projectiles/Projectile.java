@@ -11,7 +11,7 @@ public class Projectile extends Entity {
 	public static final int DEFAULT_WIDTH = 10;
 	public static final int DEFAULT_HEIGHT = 10;
 	public static final int DEFAULT_SPEED = 10;
-	public static final int DEFAULT_RADIUS = 1500;
+	public static final int DEFAULT_RADIUS = 15000;
 	
 	private int power;
 	private int distance;
@@ -21,7 +21,6 @@ public class Projectile extends Entity {
 		this.power = power;
 		try {
 			image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
-			//this.setImage(image);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -54,6 +53,6 @@ public class Projectile extends Entity {
 	}
 	
 	public void setDistance() {
-		distance += speed;
+		distance += DEFAULT_SPEED;
 	}
 }

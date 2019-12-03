@@ -8,9 +8,9 @@ import javafx.scene.image.Image;
 public class AreaBullet extends Projectile {
 	private static final int WIDTH = 28;
 	private static final int HEIGHT = 28;
-	private static final int SPEED = 10;
+	private static final int SPEED = 100;
 	private static final int POWER = 2;
-	private static final int RADIUS = 1500;
+	private static final int RADIUS = 100;
     
 	public AreaBullet(int x, int y, int width, int height, int speed, int power) {
 		super(x, y, width, height, speed, power);
