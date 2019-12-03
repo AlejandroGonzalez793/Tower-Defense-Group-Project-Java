@@ -161,8 +161,10 @@ public class TDView extends Application implements Observer {
 	
 	public void newGame() {
 		controller = new TDController(new Player(this), new GameState(this));
+		
 		createMap();
 		createLayout();
+		
 		
 		gamePane.setOnMouseClicked(e -> {
             if (!sellingTowers) {
@@ -184,6 +186,8 @@ public class TDView extends Application implements Observer {
 		primaryStage.setMinWidth(100);
 		primaryStage.sizeToScene();
 		primaryStage.centerOnScreen();
+		drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
+
 	}
 
 	public void createMap() {
