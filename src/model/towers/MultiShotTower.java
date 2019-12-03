@@ -8,6 +8,11 @@ import model.projectiles.MultiBullet;
 import model.projectiles.Projectile;
 
 public class MultiShotTower extends Tower{
+	private static final int WIDTH = 80;
+	private static final int HEIGHT = 150;
+	private static final int RADIUS = 175;
+	private static final int RATE = 5;
+	private static final int COST = 300;
 	
 	public MultiShotTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
@@ -30,7 +35,7 @@ public class MultiShotTower extends Tower{
 	}
 	
 	public MultiShotTower() {
-		this(0, 0, DEFAULT_WIDTH + 30, DEFAULT_HEIGHT + 100, DEFAULT_RADIUS + 125, DEFAULT_RATE + 4, DEFAULT_COST + 250);
+		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 		try {
 			image = new Image(new FileInputStream("resources/images/towers/tall_tower.png"));
 			//this.setImage(image);

@@ -17,23 +17,26 @@ public class Enemy extends Entity {
 	public static final int DEFAULT_HEALTH = 5;
 	public static final int DEFAULT_SPEED = 5;
 	public static final int DEFAULT_POWER = 1;
+	public static final int DEFAULT_GOLD = 10;
 	private int health;
 	private int power;
+	private int gold;
 	private Node currNode;
 	
-	public Enemy(int x, int y, int width, int height, int health, int speed, int power) {
+	public Enemy(int x, int y, int width, int height, int health, int speed, int power, int gold) {
 		super(x, y, width, height, speed);
 		this.health = health;
 		this.power = power;
+		this.setGold(gold);
 		this.currNode = new Node(new Rectangle(x, y, width, height));
 	}
 	
-	public Enemy(int x, int y, int width, int height, int speed, int power) {
-		this(x, y, width, height, speed, DEFAULT_HEALTH, DEFAULT_POWER);
+	public Enemy(int x, int y, int width, int height, int speed, int power, int gold) {
+		this(x, y, width, height, speed, DEFAULT_HEALTH, DEFAULT_POWER, DEFAULT_GOLD);
 	}
 	
 	public Enemy(int x, int y, int width, int height) {
-		this(x, y, width, height, DEFAULT_SPEED, DEFAULT_HEALTH, DEFAULT_POWER);
+		this(x, y, width, height, DEFAULT_SPEED, DEFAULT_HEALTH, DEFAULT_POWER, DEFAULT_GOLD);
 	}
 	
 	public int getHealth() {
@@ -50,6 +53,14 @@ public class Enemy extends Entity {
 
 	public void setPower(int power) {
 		this.power = power;
+	}
+	
+	public int getGold() {
+		return gold;
+	}
+
+	public void setGold(int gold) {
+		this.gold = gold;
 	}
 	
 	public void setNode(Node node) {

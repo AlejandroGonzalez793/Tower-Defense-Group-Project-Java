@@ -44,7 +44,7 @@ public class Projectile extends Entity {
 	
 	@Override
 	public void update() {
-		x += speed + 50;
-		y += speed+ 50;
+		x += speed;
+		y += speed;
 	}
 }
