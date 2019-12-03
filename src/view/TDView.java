@@ -137,7 +137,7 @@ public class TDView extends Application implements Observer {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
 			for (Projectile proj : gameState.getProjectiles()) {
-			    
+				
 				drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
 						proj.getWidth(), proj.getHeight());
 			}

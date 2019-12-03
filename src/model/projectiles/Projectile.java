@@ -31,8 +31,7 @@ public class Projectile extends Entity {
 	}
 	
 	public Projectile(int x, int y) {
-		// TODO: start dx and dy as 0 and then set them later
-		this(x, y, DEFAULT_WIDTH/2, DEFAULT_HEIGHT/2, DEFAULT_SPEED, DEFAULT_POWER);
+		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SPEED, DEFAULT_POWER);
 	}
 
 	public int getPower() {
@@ -41,5 +40,11 @@ public class Projectile extends Entity {
 
 	public int getRadius() {
 		return DEFAULT_RADIUS;
+	}
+	
+	@Override
+	public void update() {
+		x += speed + 50;
+		y += speed+ 50;
 	}
 }
