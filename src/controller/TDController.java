@@ -50,7 +50,7 @@ public class TDController {
 	private Map<String, Class<? extends Tower>> towerMap;
 	private boolean playing;
 	private double animationSpeed = 1.0;
-	public static final int TICK_SPEED = 100;
+	public static final int TICK_SPEED = 40;
 	
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
@@ -186,7 +186,7 @@ public class TDController {
 	 * @param name the name of the tower to get
 	 * @return A Tower object
 	 */
-	private Tower getTowerByName(String name) {
+	public Tower getTowerByName(String name) {
 		Class<?> c = towerMap.get(name);
 
 		if (c == null) {
