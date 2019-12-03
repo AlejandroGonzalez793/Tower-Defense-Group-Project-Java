@@ -136,7 +136,11 @@ public class TDView extends Application implements Observer {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
+			
 			for (Projectile proj : gameState.getProjectiles()) {
+				if (controller.checkBulletCollision(proj)) {
+					// do not redraw bullet
+				}
 				
 				drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
 						proj.getWidth(), proj.getHeight());
