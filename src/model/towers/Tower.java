@@ -65,9 +65,7 @@ public class Tower extends Entity {
 	public Projectile getProjectile() {
 		int shiftedX = this.getX() - (this.getWidth());
 		int shiftedY = this.getY() - (this.getHeight());
-		Projectile proj = new Projectile(50, 50);
-		proj.setX(shiftedX+50);
-		proj.setY(shiftedY + 50);
+		Projectile proj = new Projectile(shiftedX, shiftedY);
 		return proj;
 	}
 }
