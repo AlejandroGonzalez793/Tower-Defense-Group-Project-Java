@@ -55,6 +55,7 @@ public class TDView extends Application implements Observer {
 	private GraphicsContext drawingGC;
 	private TDController controller;
 	private TDMainMenu mainMenu;
+	private TDmicrotransaction microtransMenu;
 	private String mapFileName;
 	
 	private Text money;
@@ -329,6 +330,19 @@ public class TDView extends Application implements Observer {
 		VBox controlBox = new VBox();
 		controlBox.setSpacing(5);
 		
+		Button microButton = new Button("Need more towers?");
+		microButton.setOnAction(e -> {
+			microtransMenu = new TDmicrotransaction();
+			microtransMenu.setTitle("MisurdaSoft");
+			microtransMenu.initModality(Modality.APPLICATION_MODAL);
+			microtransMenu.setResizable(false);
+			microtransMenu.showAndWait();
+			
+			if (microtransMenu.isBought()) {
+				controller.addGold(microtransMenu.getBoughtGold());
+			}
+		});
+		
 		HBox gameSpeedBox = new HBox();
 		Button slowButton = new Button("slow...");
 		slowButton.setOnAction(e -> {
@@ -380,7 +394,7 @@ public class TDView extends Application implements Observer {
 		});
 		waveBox.getChildren().add(newWaveButton);
 		
-		controlBox.getChildren().addAll(gameSpeedBox, sellButton, waveBox);
+		controlBox.getChildren().addAll(microButton, gameSpeedBox, sellButton, waveBox);
 		
 		sidebarPane.setTop(statsBox);
 		sidebarPane.setCenter(towerPane);

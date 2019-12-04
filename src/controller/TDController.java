@@ -188,6 +188,10 @@ public class TDController {
 		return getTowerByName(towerName).getCost();
 	}
 	
+	public void addGold(int gold) {
+		player.setMoney(player.getMoney() + gold);
+	}
+	
 	/**
 	 * Gets a specific tower by name by doing a lookup in the TowerType enum and then
 	 * getting and instance of the class through reflection. If a tower of the 
