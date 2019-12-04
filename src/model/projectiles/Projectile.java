@@ -11,7 +11,7 @@ public class Projectile extends Entity {
 	public static final int DEFAULT_WIDTH = 10;
 	public static final int DEFAULT_HEIGHT = 10;
 	public static final int DEFAULT_SPEED = 10;
-	public static final int DEFAULT_RADIUS = 15000;
+	public static final int DEFAULT_RADIUS = 150;
 	public static Image image;
 	
 	private int power;
@@ -63,10 +63,9 @@ public class Projectile extends Entity {
 	}
 
 	public void update(int dxx, int dyy) {
-		// TODO Auto-generated method stub
-		x +=  DEFAULT_SPEED;
-		y +=  DEFAULT_SPEED;
-		System.out.println(x);
-		System.out.println(y);
+		x = dx;
+		y = dy;
+		System.out.println(dxx);
+		System.out.println(dyy);
 	}
 }
