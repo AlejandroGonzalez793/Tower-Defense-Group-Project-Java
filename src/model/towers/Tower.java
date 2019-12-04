@@ -2,6 +2,7 @@ package model.towers;
 
 import model.Entity;
 import model.projectiles.Projectile;
+import util.ResourceManager;
 
 /**
  * A minimal template for the different Towers that can be drawn and used
@@ -29,6 +30,7 @@ public class Tower extends Entity {
 		this.radius = radius;
 		this.rate = rate;
 		this.cost = cost;
+		image = ResourceManager.getImage("Default");
 	}
 	
 	public Tower(int x, int y, int width, int height) {
