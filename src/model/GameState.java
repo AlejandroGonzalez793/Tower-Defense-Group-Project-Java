@@ -61,11 +61,11 @@ public class GameState extends Observable {
 				enemy.update();
 			}
 		}
-		
-		for (Projectile projectile : projectiles) {
-			projectile.update();
+		for (Enemy enemy : enemies) {
+			for (Projectile projectile : projectiles) {
+				projectile.update();
+			}
 		}
-		
 		ticks++;
 		setChanged();
 		notifyObservers(this);

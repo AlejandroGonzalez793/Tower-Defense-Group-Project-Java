@@ -144,6 +144,7 @@ public class TDView extends Application implements Observer {
 					// do not redraw bullet
 					// decrement enemy health or...
 					// some explosion animation
+					System.out.println("hit");
 					hits.add(proj);
 				} else if (proj.getDistance() >= proj.getRadius()){
 					hits.add(proj);
@@ -175,13 +176,7 @@ public class TDView extends Application implements Observer {
 			money.setText(Integer.toString(player.getMoney()));
 			health.setText(Integer.toString(player.getHealth()));
 		}
-	}
-	
-	public void computeDist(int radius, int x1, int y1) {
-		// TODO Auto-generated method stub
-		// need to get the starting x and y from the projectile or the x and y from the tower
-		//Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1))
-		
+		System.gc();
 	}
 
 	public void newGame() {

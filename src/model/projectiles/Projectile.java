@@ -12,6 +12,7 @@ public class Projectile extends Entity {
 	public static final int DEFAULT_HEIGHT = 10;
 	public static final int DEFAULT_SPEED = 10;
 	public static final int DEFAULT_RADIUS = 15000;
+	public static Image image;
 	
 	private int power;
 	private int distance;
@@ -19,10 +20,8 @@ public class Projectile extends Entity {
 	public Projectile(int x, int y, int width, int height, int speed, int power) {
 		super(x, y, width, height, speed);
 		this.power = power;
-		try {
-			image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		if (image == null) {
+			setImage();
 		}
 	}
 	
@@ -42,7 +41,6 @@ public class Projectile extends Entity {
 		return DEFAULT_RADIUS;
 	}
 	
-	@Override
 	public void update() {
 		x += DEFAULT_SPEED;
 		y += DEFAULT_SPEED;
@@ -54,5 +52,21 @@ public class Projectile extends Entity {
 	
 	public void setDistance() {
 		distance += DEFAULT_SPEED;
+	}
+	
+	public void setImage() {
+		try {
+			image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void update(int dxx, int dyy) {
+		// TODO Auto-generated method stub
+		x +=  DEFAULT_SPEED;
+		y +=  DEFAULT_SPEED;
+		System.out.println(x);
+		System.out.println(y);
 	}
 }
