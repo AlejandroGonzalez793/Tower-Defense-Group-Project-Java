@@ -335,4 +335,16 @@ public class TDController {
 		playing = true;
 		startGame();
 	}
+	
+	/**
+	 * Similar to new wave, just removes all enemies already on the board
+	 */
+	public void clearBoard() {
+		for (Enemy enemy : gameState.getEnemies())
+			gameState.removeEnemy(enemy);
+		for (Tower tower : gameState.getTowers())
+			gameState.removeTower(tower);
+		startGame();
+	}
+	
 }

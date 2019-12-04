@@ -184,6 +184,7 @@ public class TDView extends Application implements Observer {
 		primaryStage.setMinWidth(100);
 		primaryStage.sizeToScene();
 		primaryStage.centerOnScreen();
+		controller.clearBoard();
 	}
 
 	public void createMap() {
