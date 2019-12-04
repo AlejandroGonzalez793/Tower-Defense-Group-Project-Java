@@ -3,6 +3,7 @@ package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Observable;
@@ -34,6 +35,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -74,6 +77,11 @@ public class TDView extends Application implements Observer {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		
+		Media pick = new Media(Paths.get("resources/Slam_of_Fates.mp3").toUri().toString()); //throws here
+        MediaPlayer player = new MediaPlayer(pick);
+        player.play();
+		
 		this.primaryStage = primaryStage;
 		
 		mainMenu = new TDMainMenu();
@@ -130,6 +138,8 @@ public class TDView extends Application implements Observer {
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
 		primaryStage.show();
+		
+		
 	}
 
 	@Override
