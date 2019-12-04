@@ -3,84 +3,107 @@ package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
 
 import controller.TDController;
-import controller.TDTowerEconomyController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Entity;
+import model.GameState;
 import model.Player;
-import model.Tower;
-
+import model.enemies.Enemy;
+import model.projectiles.Projectile;
+import model.towers.Tower;
 
 public class TDView extends Application implements Observer {
-	private TDController mainController;
-	private TDTowerEconomyController ecoController; 
+	private Stage primaryStage;
 	private BorderPane root;
-	private Canvas canvas;
-	private GraphicsContext gc;
-	private char[][] path;
-	private int rows;
-	private int columns;
+	private Pane gamePane;
+	private Canvas backgroundCanvas;
+	private Canvas drawingCanvas;
+	private GraphicsContext backgroundGC;
+	private GraphicsContext drawingGC;
+	private TDController controller;
+	private TDMainMenu mainMenu;
+	private String mapFileName;
 	
 	private Text money;
 	private Text health;
-	
-	private Tower selectedTower;
 	private GridPane towerPane;
 	
-	private static final char FREE_CHAR = '*';
-	private static final char ROAD_CHAR = '-';
-	private static final char TOWER_CHAR = 't';
-	private static final int TOWER_ROWS = 2;
-	private static final String IMAGE_PATH = "resources/images/";
-	private static final String TOWER_IMAGE_PATH = "resources/images/towers/";
-
+	private Button sellButton;
+	private Boolean sellingTowers = false;
 	
+	private static final String IMAGE_PATH = "resources/images/";
+	public static final String MAP_PATH = "resources/maps/";
+	private static final int TOWER_ROWS = 3;
+	private static final String START_CHAR = "+";
+	private static final String END_CHAR = "=";
+	private static final String ROAD_CHAR = "-";
+
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws Exception {
+		this.primaryStage = primaryStage;
+		
+		mainMenu = new TDMainMenu();
+		mainMenu.setTitle("Tower Defense");
+		mainMenu.initModality(Modality.APPLICATION_MODAL);
+		mainMenu.setResizable(false);
+		mainMenu.showAndWait();
+		
+		if (mainMenu.getMapImage() == null) {
+			System.exit(1);
+		}
+		
+		primaryStage.setOnCloseRequest(e -> {
+		    Platform.exit();
+		    System.exit(0);
+		});
+		
+		mapFileName = mainMenu.getMapImage();
+		
 		root = new BorderPane();
-		canvas = new Canvas();
 		
-		// Create menu bar
 		MenuBar menuBar = new MenuBar();
-		Menu menu = new Menu("File");
-		MenuItem newMapItem = new MenuItem("New Map");
-		
-		menu.getItems().add(newMapItem);
-		menuBar.getMenus().add(menu);
-		
-		root.setTop(menuBar);
-		
-		newMapItem.setOnAction(e -> {
+		Menu menu = new Menu("Stage Select");
+		MenuItem stageOneItem = new MenuItem("Stage 1");
+		stageOneItem.setOnAction(new StageButton("map1.td"));
+		MenuItem stageTwoItem = new MenuItem("Stage 2");
+		stageTwoItem.setOnAction(new StageButton("map2.td"));
+		MenuItem stageThreeItem = new MenuItem("Stage 3");
+		stageThreeItem.setOnAction(new StageButton("map3.td"));
+		MenuItem selectMapItem = new MenuItem("Select Map");
+		selectMapItem.setOnAction(e -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open Map File");
 			FileChooser.ExtensionFilter mapFilter = new ExtensionFilter(
@@ -91,73 +114,195 @@ public class TDView extends Application implements Observer {
 			fileChooser.getExtensionFilters().addAll(mapFilter, allFilter);
 			File file = fileChooser.showOpenDialog(primaryStage);
 			if (file != null) {
-				createLayout();
-				gc = createMap(file);
+				mapFileName = file.getPath();
+				newGame();
 			}
-			primaryStage.sizeToScene();
-			primaryStage.centerOnScreen();
 		});
 		
-		primaryStage.setMinHeight(100);
-		primaryStage.setMinWidth(100);
+		menu.getItems().addAll(stageOneItem, stageTwoItem, stageThreeItem, selectMapItem);
+		menuBar.getMenus().add(menu);
+		
+		root.setTop(menuBar);
+		
+		newGame();
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
-		if (arg instanceof Player) {
+		if (arg instanceof GameState) {
+			GameState gameState = (GameState)arg;
+			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
+			for (Projectile proj : gameState.getProjectiles()) {
+				drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
+						proj.getWidth(), proj.getHeight());
+			}
+			
+			for (Enemy enemy : gameState.getEnemies()) {
+				drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 
+						enemy.getWidth(), enemy.getHeight());
+			}
+			
+			for (Tower tower : gameState.getTowers()) {
+				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), 
+						tower.getWidth(), tower.getHeight());
+			}
+			
+			
+		} else if (arg instanceof Player) {
 			Player player = (Player)arg;
 			money.setText(Integer.toString(player.getMoney()));
 			health.setText(Integer.toString(player.getHealth()));
 		}
-		
 	}
 	
-	/**
-	 * Gets an ImageView of a tower image denoted by its file name in the 
-	 * specified path specified by {@link #TOWER_IMAGE_PATH}.
-	 * 
-	 * @param pic the file name of the image to get
-	 * @return an ImageView of the tower image
-	 */
-	private ImageView getTowerImage(String pic) {
-		FileInputStream in = null;
+	public void newGame() {
+		controller = new TDController(new Player(this), new GameState(this));
+		createMap();
+		createLayout();
+		
+		gamePane.setOnMouseClicked(e -> {
+            if (!sellingTowers) {
+                if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
+				    controller.addTower((int) e.getX(), (int) e.getY());
+				    towerPane.setDisable(false);
+                    gamePane.setDisable(true);
+                    gamePane.setCursor(Cursor.DEFAULT);
+                }
+            } else {
+            	if (controller.sellTower((int)e.getX(), (int)e.getY())) {
+            		// TODO: Do Something
+            	}
+            }
+        });		
+		gamePane.setDisable(true);
+		
+		primaryStage.setMinHeight(100);
+		primaryStage.setMinWidth(100);
+		primaryStage.sizeToScene();
+		primaryStage.centerOnScreen();
+	}
+
+	public void createMap() {
+		backgroundCanvas = new Canvas();
+		drawingCanvas = new Canvas();
+		gamePane = new Pane(backgroundCanvas, drawingCanvas);
+		backgroundGC = backgroundCanvas.getGraphicsContext2D();
+		drawingGC = drawingCanvas.getGraphicsContext2D();
+		
+		Scanner input = null;
+		Image grass = null;
+		Image road = null;
 		try {
-			in = new FileInputStream(TOWER_IMAGE_PATH + pic);
+			input = new Scanner(new File(mapFileName));
+			grass = new Image(new FileInputStream(IMAGE_PATH + "Grass.png"));
+			road = new Image(new FileInputStream(IMAGE_PATH + "Road.png"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return;
+		} 
+		
+		int cols;
+		int rows;
+		try {
+			cols = input.nextInt();
+			rows = input.nextInt();
+			backgroundCanvas.setWidth(cols * grass.getWidth());
+			backgroundCanvas.setHeight(rows * grass.getHeight());
+			input.nextLine(); // consume newline
+		} catch (NoSuchElementException e) {
+			System.err.println("Invalid map format");
+			if (input != null) input.close();
+			return;
 		}
-		Image towerImage = new Image(in);
-		return new ImageView(towerImage);
+		
+		drawingCanvas.setWidth(backgroundCanvas.getWidth());
+		drawingCanvas.setHeight(backgroundCanvas.getHeight());
+		
+		int currRow = 0;
+		int currCol = 0;
+		int row = 0;
+		String[][] tempBoard = new String[rows][cols];
+		while (input.hasNextLine()) {
+			String line = input.nextLine();
+			tempBoard[row] = line.split("");
+			for (int col = 0; col < tempBoard[row].length; col++) {
+				if (tempBoard[row][col].equals(START_CHAR)) {
+					currRow = row;
+					currCol = col;
+				} else {
+					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());
+				}
+			}
+			row++;
+		}
+		
+		// Get path by starting at the start position and checking the surrounding
+		// positions for another road tile. Once one is found, move to that new
+		// position and repeat until the end of the path is found
+		String curr = tempBoard[currRow][currCol];
+		while (!curr.equals(END_CHAR)) {
+			backgroundGC.drawImage(road, currCol * grass.getWidth(), currRow * grass.getHeight());
+			controller.addPathTile((int)(currCol * road.getWidth()), (int)(currRow * road.getHeight()), 
+					(int)road.getWidth(), (int)road.getHeight());
+			
+			tempBoard[currRow][currCol] = "x";
+			if (currRow + 1 < rows && (tempBoard[currRow + 1][currCol].equals(ROAD_CHAR) 
+					|| tempBoard[currRow + 1][currCol].equals(END_CHAR))) {
+				currRow = currRow + 1;
+			} else if (currCol + 1 < cols && (tempBoard[currRow][currCol + 1].equals(ROAD_CHAR) ||
+					tempBoard[currRow][currCol + 1].equals(END_CHAR))) {
+				currCol = currCol + 1;
+			} else if (currRow - 1 >= 0 && (tempBoard[currRow - 1][currCol].equals(ROAD_CHAR) ||
+					tempBoard[currRow - 1][currCol].equals(END_CHAR))) {
+				currRow = currRow - 1;
+			} else if (currCol - 1 >= 0 && (tempBoard[currRow][currCol - 1].equals(ROAD_CHAR) ||
+					tempBoard[currRow][currCol - 1].equals(END_CHAR))) {
+				currCol = currCol - 1;
+			}
+			curr = tempBoard[currRow][currCol];
+		}
+		
+		// Add end tile
+		backgroundGC.drawImage(road, currCol * grass.getWidth(), currRow * grass.getHeight());
+		controller.addPathTile((int)(currCol * road.getWidth()), (int)(currRow * road.getHeight()), 
+				(int)road.getWidth(), (int)road.getHeight());
+
+		input.close();
+		root.setCenter(gamePane);
 	}
 	
-	/**
-	 * Creates the player, controllers, and general board layout for the game. 
-	 */
 	public void createLayout() {
-		// TODO: Call a reset method here instead of recreating controller and player
-		Player player = new Player(this);
-		this.mainController = new TDController(player);
-		this.ecoController = new TDTowerEconomyController(player);
-		
 		// Create side bar
 		BorderPane sidebarPane = new BorderPane();
 		towerPane = new GridPane();
 		towerPane.setPadding(new Insets(5, 5, 5, 5));
 		towerPane.setVgap(5);
 		towerPane.setHgap(5);
-		List<Tower> towers = mainController.getAllTowers();
+		Map<String, Image> towerImageMap = controller.getTowerImageMap();
 		
 		int i = 0;
 		int j = 0;
-		for (Tower tower : towers) {
+		for (Map.Entry<String, Image> entry : towerImageMap.entrySet()) {
+			
+			VBox towerBox = new VBox();
+			
 			Button button = new Button();
-			button.setOnAction(new TowerButton(tower));
-			button.setGraphic(getTowerImage(tower.getImageName()));
-			towerPane.add(button, j, i);
+			button.setOnAction(new TowerButton(entry.getKey()));
+			ImageView imageView = new ImageView(entry.getValue());
+			imageView.setFitWidth(50);
+			imageView.setFitHeight(50);
+			button.setGraphic(imageView);
+			
+			Label towerName = new Label(entry.getKey());
+			Label towerPrice = new Label("Cost: " + Integer.toString(controller.getTowerCost(entry.getKey())));
+			
+			towerBox.getChildren().addAll(button, towerName, towerPrice);
+			
+			towerPane.add(towerBox, j, i);
 			
 			j++;
 			if (j == TOWER_ROWS) {
@@ -182,8 +327,60 @@ public class TDView extends Application implements Observer {
 		statsBox.getChildren().addAll(hpBox, moneyBox);
 		
 		VBox controlBox = new VBox();
+		controlBox.setSpacing(5);
+		
+		HBox gameSpeedBox = new HBox();
+		Button slowButton = new Button("slow...");
+		slowButton.setOnAction(e -> {
+			controller.slowDown();
+		});
+		
+		Button normalButton = new Button("Normal");
+		normalButton.setOnAction(e -> {
+			controller.regularSpeed();
+		});
+		
+		Button fastButton = new Button("FAST!");
+		fastButton.setOnAction(e -> {
+			controller.speedUp();
+		});
+		
+		Button pauseButton = new Button("Pause");
+		pauseButton.setOnAction(e -> {
+			controller.pause();
+		});
+		
+		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton);
+		
+		HBox sellBox = new HBox();
+		sellButton = new Button("Sell Towers");
+		sellButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (!sellingTowers) {
+					towerPane.setDisable(true);
+					gamePane.setDisable(false);
+					sellingTowers = true;
+					sellButton.setText("Buy Towers");
+				} else {
+					towerPane.setDisable(false);
+					gamePane.setDisable(true);
+					sellingTowers = false;
+					sellButton.setText("Sell Towers");
+				}
+			}
+		});
+		
+		sellBox.getChildren().add(sellButton);
+		
+		HBox waveBox = new HBox();
 		Button newWaveButton = new Button("New Wave >>");
-		controlBox.getChildren().add(newWaveButton);
+		newWaveButton.setOnAction(e -> {
+			controller.newWave();
+		});
+		waveBox.getChildren().add(newWaveButton);
+		
+		controlBox.getChildren().addAll(gameSpeedBox, sellButton, waveBox);
 		
 		sidebarPane.setTop(statsBox);
 		sidebarPane.setCenter(towerPane);
@@ -193,121 +390,14 @@ public class TDView extends Application implements Observer {
 	}
 	
 	/**
-	 * This method createMap sets up the map that is based off from a text
-	 * file. The green region indicates that a tower can be placed where the 
-	 * brown or visible path shows where enemies will be traveling.
-	 * 
-	 * @param file a File object representing the current map to create
-	 * @return GraphicsContext A GraphicsContext is returned that is the 
-	 * GraphicsContext2D of the canvas. 
-	 */
-	public GraphicsContext createMap(File file) { 
-		// Instantiate event handler.
-		MouseClickedOnCanvas MouseClickedOnCanvasHandler = new MouseClickedOnCanvas();
-		canvas.setOnMouseClicked(MouseClickedOnCanvasHandler); // Associate Canvas with the named EventHandler
-		canvas.setDisable(true);
-		Scanner in = null;
-		try {
-			in = new Scanner(file);
-			columns = Integer.valueOf(in.nextLine());
-			rows = Integer.valueOf(in.nextLine());
-			path = new char[rows][columns];
-			canvas.setHeight(rows * Entity.DEFAULT_HEIGHT);
-			canvas.setWidth(columns * Entity.DEFAULT_WIDTH);
-			gc = canvas.getGraphicsContext2D();
-			int k = 0;
-			while (in.hasNextLine()) {
-				String line = in.nextLine();
-				for (int i = 0; i < line.length(); i ++) {
-					FileInputStream input = null;
-					char tile = line.charAt(i);
-					if (tile == FREE_CHAR) {
-						path[k][i] = tile;
-						input = new FileInputStream(IMAGE_PATH + "Grass.png");
-						Image image = new Image(input); 
-						gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
-								k * Entity.DEFAULT_HEIGHT);
-					} else if (line.charAt(i) == ROAD_CHAR) {
-						path[k][i] = tile;
-						input = new FileInputStream(IMAGE_PATH + "Ground.png");
-						Image image = new Image(input); 
-						gc.drawImage(image, i * Entity.DEFAULT_WIDTH, 
-								k * Entity.DEFAULT_HEIGHT);
-					}
-				}
-				k++;
-			}
-		} catch(FileNotFoundException e) {
-			System.err.println("Could not load tile images");
-			e.printStackTrace();
-		} catch (NumberFormatException | IndexOutOfBoundsException e) {
-			System.err.println("File does not fit correct format");
-			e.printStackTrace();
-		} finally {
-			if (in != null) in.close();
-		}
-		
-		root.setCenter(canvas);
-		return canvas.getGraphicsContext2D();
-	}
-
-	/**
-	 * The MouseClickedOnCanvas class is the event handler for the 
-	 * canvas setOnMouseClicked.
-	 */
-	class MouseClickedOnCanvas implements EventHandler<MouseEvent> {
-		/**
-		 * The handle method handles the event for when the user clicks on the
-		 * map to place a tower.
-		 * 
-		 * @param event The MouseEvent object.
-		 */
-		@Override
-		public void handle(MouseEvent event) {
-			int col = (int)(event.getX() / Entity.DEFAULT_WIDTH) % columns;
-			int row = (int)(event.getY() / Entity.DEFAULT_HEIGHT) % rows;
-			
-			int x = col * Entity.DEFAULT_WIDTH;
-			int y = row * Entity.DEFAULT_HEIGHT;
-			
-			if (path[row][col] == FREE_CHAR) {
-				FileInputStream input = null;
-				try {
-					input = new FileInputStream(TOWER_IMAGE_PATH + selectedTower.getImageName());
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-				
-      		    try {
-      		    	if (input != null) {
-    	      		    Image image = new Image(input);
-    	      		    gc.drawImage(image, x, y, Entity.DEFAULT_WIDTH, Entity.DEFAULT_HEIGHT);
-    					input.close();
-    				}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			
-      		    path[row][col] = TOWER_CHAR;
-      		    ecoController.makePurchase(selectedTower);
-				mainController.setTowerCoordinates(selectedTower, x, y);
-				mainController.addTower(selectedTower);
-      		    selectedTower = null;
-      		    towerPane.setDisable(false);
-				canvas.setDisable(true);
-			}
-		}
-	}
-	
-	/**
 	 * The TowerButton class is the event handler class that will check if the 
 	 * player can buy a tower, then they can place it on the map. If they can't 
 	 * buy the tower, then they won't be able to place anything.
 	 */
-	class TowerButton implements EventHandler<ActionEvent> {
-		private Tower tower;
+	private class TowerButton implements EventHandler<ActionEvent> {
+		private String tower;
 		
-		public TowerButton(Tower tower) {
+		public TowerButton(String tower) {
 			this.tower = tower;
 		}
 		
@@ -319,10 +409,11 @@ public class TDView extends Application implements Observer {
 		 * @param e The ActionEvent object.
 		 */
 		public void handle(ActionEvent e) {		
-			if (ecoController.validPurchase(tower)) {
-				selectedTower = tower;
+			if (controller.canPurchaseTower(this.tower)) {
+				Image image = controller.getSelectedTowerImage();
+				gamePane.setCursor(new ImageCursor(image));
 				towerPane.setDisable(true);
-				canvas.setDisable(false);
+				gamePane.setDisable(false);
 			} else {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error");
@@ -330,6 +421,19 @@ public class TDView extends Application implements Observer {
 				alert.setContentText("Can't buy this tower");
 				alert.showAndWait();
 			}
+		}
+	}
+	
+	private class StageButton implements EventHandler<ActionEvent> {
+		private String mapFile;
+		
+		public StageButton(String mapFile) {
+			this.mapFile = mapFile;
+		}
+		
+		public void handle(ActionEvent e) {	
+			mapFileName = MAP_PATH + mapFile;
+			newGame();
 		}
 	}
 }
