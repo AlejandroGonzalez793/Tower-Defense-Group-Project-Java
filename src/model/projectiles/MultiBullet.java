@@ -10,10 +10,10 @@ public class MultiBullet extends Projectile {
 	private static final int HEIGHT = 16;
 	private static final int SPEED = 10;
 	private static final int POWER = 4;
-	private static final int RADIUS = 50;
+	private static final int RADIUS = 200;
     
-	public MultiBullet(int x, int y, int width, int height, int speed, int power) {
-		super(x, y, width, height, speed, power);
+	public MultiBullet(int x, int y, int width, int height, int speed, int power, int radius) {
+		super(x, y, width, height, speed, power, radius);
 		try {
 			image = new Image(new FileInputStream("resources/images/projectiles/multi_bullet.png"));
 			//this.setImage(image);
@@ -23,15 +23,10 @@ public class MultiBullet extends Projectile {
 	}
 	
 	public MultiBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER);
+		this(x, y, width, height, SPEED, POWER, RADIUS);
 	}
 	
 	public MultiBullet(int x, int y) {
-		this(x, y, WIDTH, HEIGHT, SPEED, POWER);
+		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}
-	
-	public int getRadius() {
-		return RADIUS;
-	}
-
 }

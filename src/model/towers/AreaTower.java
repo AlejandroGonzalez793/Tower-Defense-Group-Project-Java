@@ -8,6 +8,12 @@ import model.projectiles.AreaBullet;
 import model.projectiles.Projectile;
 
 public class AreaTower extends Tower{
+	
+	private static final int WIDTH = 75;
+	private static final int HEIGHT = 75;
+	private static final int RADIUS = 150;
+	private static final int RATE = 10;
+	private static final int COST = 500;
 
 	public AreaTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
@@ -30,7 +36,7 @@ public class AreaTower extends Tower{
 	}
 	
 	public AreaTower() {
-		this(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_RADIUS + 350, DEFAULT_RATE + 2, DEFAULT_COST + 150);
+		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE , COST);
 		try {
 			image = new Image(new FileInputStream("resources/images/towers/area_tower.png"));
 			//this.setImage(image);
@@ -38,7 +44,7 @@ public class AreaTower extends Tower{
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public Projectile getProjectile() {
 		return new AreaBullet(x, y);

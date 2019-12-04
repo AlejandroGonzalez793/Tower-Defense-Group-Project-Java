@@ -12,8 +12,8 @@ public class PiercingBullet extends Projectile {
 	private static final int POWER = 5;
 	private static final int RADIUS = 50;
     
-	public PiercingBullet(int x, int y, int width, int height, int speed, int power) {
-		super(x, y, width, height, speed, power);
+	public PiercingBullet(int x, int y, int width, int height, int speed, int power, int radius) {
+		super(x, y, width, height, speed, power, radius);
 		try {
 			image = new Image(new FileInputStream("resources/images/projectiles/piercing_bullet.png"));
 			//this.setImage(image);
@@ -23,15 +23,10 @@ public class PiercingBullet extends Projectile {
 	}
 	
 	public PiercingBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER);
+		this(x, y, width, height, SPEED, POWER, RADIUS);
 	}
 	
 	public PiercingBullet(int x, int y) {
-		this(x, y, WIDTH, HEIGHT, SPEED, POWER);
+		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}
-	
-	public int getRadius() {
-		return RADIUS;
-	}
-
 }

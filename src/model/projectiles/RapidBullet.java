@@ -10,10 +10,10 @@ public class RapidBullet extends Projectile {
 	private static final int HEIGHT = 4;
 	private static final int SPEED = 10;
 	private static final int POWER = 2;
-	private static final int RADIUS = 50;
+	private static final int RADIUS = 100;
     
-	public RapidBullet(int x, int y, int width, int height, int speed, int power) {
-		super(x, y, width, height, speed, power);
+	public RapidBullet(int x, int y, int width, int height, int speed, int power, int radius) {
+		super(x, y, width, height, speed, power, radius);
 		try {
 			image = new Image(new FileInputStream("resources/images/projectiles/rapid_bullet.png"));
 			//this.setImage(image);
@@ -23,15 +23,10 @@ public class RapidBullet extends Projectile {
 	}
 	
 	public RapidBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER);
+		this(x, y, width, height, SPEED, POWER, RADIUS);
 	}
 	
 	public RapidBullet(int x, int y) {
-		this(x, y, WIDTH, HEIGHT, SPEED, POWER);
+		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}
-	
-	public int getRadius() {
-		return RADIUS;
-	}
-
 }
