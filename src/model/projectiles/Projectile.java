@@ -68,7 +68,7 @@ public class Projectile extends Entity {
 
 	public void update(int dxx, int dyy) {
 		x = dx;
-		y = dy; // issues
+		y = dy; // issues here 
 		System.out.println(dxx);
 		System.out.println(dyy);
 	}
