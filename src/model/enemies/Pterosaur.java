@@ -1,9 +1,6 @@
 package model.enemies;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import javafx.scene.image.Image;
+import util.ResourceManager;
 
 public class Pterosaur extends Enemy {
 	private static final int HEALTH = 15;
@@ -13,11 +10,7 @@ public class Pterosaur extends Enemy {
 	
 	public Pterosaur(int x, int y, int width, int height, int health, int speed, int power, int gold) {
 		super(x, y, width, height, health, speed, power, gold);
-		try {
-			image = new Image(new FileInputStream("resources/images/enemies/pterosaur_small.gif"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		image = ResourceManager.getImage("Pterosaur");
 	}
 	
 	public Pterosaur(int x, int y, int width, int height, int speed, int power) {

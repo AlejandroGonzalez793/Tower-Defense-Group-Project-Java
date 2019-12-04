@@ -1,9 +1,6 @@
 package model.projectiles;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import javafx.scene.image.Image;
+import util.ResourceManager;
 
 public class WeakBullet extends Projectile {
 	private static final int WIDTH = 16;
@@ -11,14 +8,10 @@ public class WeakBullet extends Projectile {
 	private static final int SPEED = 10;
 	private static final int POWER = 1;
 	private static final int RADIUS = 100;
-    
+ 
 	public WeakBullet(int x, int y, int width, int height, int speed, int power, int radius) {
 		super(x, y, width, height, speed, power, radius);
-		try {
-			image = new Image(new FileInputStream("resources/images/projectiles/weak_bullet.png"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		image = ResourceManager.getImage("WeakBullet");
 	}
 	
 	public WeakBullet(int x, int y, int width, int height) {

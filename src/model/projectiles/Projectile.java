@@ -1,10 +1,7 @@
 package model.projectiles;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import javafx.scene.image.Image;
 import model.Entity;
+import util.ResourceManager;
 
 public class Projectile extends Entity {
 	public static final int DEFAULT_POWER = 1;
@@ -12,7 +9,6 @@ public class Projectile extends Entity {
 	public static final int DEFAULT_HEIGHT = 10;
 	public static final int DEFAULT_SPEED = 10;
 	public static final int DEFAULT_RADIUS = 100;
-	public static Image image;
 	
 	private int power;
 	private int radius;
@@ -24,9 +20,7 @@ public class Projectile extends Entity {
 		this.power = power;
 		this.radius = radius;
 		this.speed = speed;
-		if (image == null) {
-			setImage();
-		}
+		image = ResourceManager.getImage("Projectile");
 	}
 	
 	public Projectile(int x, int y, int width, int height) {
@@ -56,14 +50,6 @@ public class Projectile extends Entity {
 	
 	public void setDistance() {
 		distance += speed;
-	}
-	
-	public void setImage() {
-		try {
-			image = new Image(new FileInputStream("resources/images/projectiles/bullet_bill.png"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void update(int dxx, int dyy) {

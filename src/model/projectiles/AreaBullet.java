@@ -1,9 +1,6 @@
 package model.projectiles;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import javafx.scene.image.Image;
+import util.ResourceManager;
 
 public class AreaBullet extends Projectile {
 	private static final int WIDTH = 28;
@@ -14,12 +11,7 @@ public class AreaBullet extends Projectile {
     
 	public AreaBullet(int x, int y, int width, int height, int speed, int power, int radius) {
 		super(x, y, width, height, speed, power, radius);
-		try {
-			image = new Image(new FileInputStream("resources/images/projectiles/area_bullet.png"));
-			//this.setImage(image);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		image = ResourceManager.getImage("AreaBullet");
 	}
 	
 	public AreaBullet(int x, int y, int width, int height) {

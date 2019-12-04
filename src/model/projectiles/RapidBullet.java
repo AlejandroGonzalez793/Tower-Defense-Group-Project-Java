@@ -1,9 +1,6 @@
 package model.projectiles;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import javafx.scene.image.Image;
+import util.ResourceManager;
 
 public class RapidBullet extends Projectile {
 	private static final int WIDTH = 4;
@@ -14,12 +11,7 @@ public class RapidBullet extends Projectile {
     
 	public RapidBullet(int x, int y, int width, int height, int speed, int power, int radius) {
 		super(x, y, width, height, speed, power, radius);
-		try {
-			image = new Image(new FileInputStream("resources/images/projectiles/rapid_bullet.png"));
-			//this.setImage(image);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		image = ResourceManager.getImage("RapidBullet");
 	}
 	
 	public RapidBullet(int x, int y, int width, int height) {
