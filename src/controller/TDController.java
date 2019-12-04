@@ -20,8 +20,8 @@ import model.enemies.GreenPlane;
 import model.enemies.HotAirBalloon;
 import model.enemies.Pterosaur;
 import model.enemies.RedHelicopter;
-import model.projectiles.AreaTower;
 import model.projectiles.Projectile;
+import model.towers.AreaTower;
 import model.towers.CheapTower;
 import model.towers.ExpensiveTower;
 import model.towers.MultiShotTower;
@@ -29,6 +29,7 @@ import model.towers.OneShotTower;
 import model.towers.PiercingTower;
 import model.towers.RapidTower;
 import model.towers.Tower;
+import util.ResourceManager;
 
 
 /**
@@ -67,6 +68,8 @@ public class TDController {
 		towerMap.put("AreaTower", AreaTower.class);
 		towerMap.put("PiercingTower", PiercingTower.class);
 		towerMap.put("OneShotTower", OneShotTower.class);
+		
+		ResourceManager.loadImages();
 	}
 	
 	/**

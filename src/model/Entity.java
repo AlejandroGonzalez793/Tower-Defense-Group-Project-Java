@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import javafx.scene.image.Image;
+import util.ResourceManager;
 
 /**
  * A general abstract Entity class used to represent different objects used
@@ -36,13 +37,6 @@ public abstract class Entity {
 		this.width = width;
 		this.height = height;
 		this.speed = speed;
-		
-		try {
-			image = new Image(new FileInputStream("resources/images/towers/default_tower.png"));
-			//image = new Image(new FileInputStream("resources/images/Thicc_Yoshi.gif"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public Entity(int x, int y, int width, int height) {
@@ -103,6 +97,10 @@ public abstract class Entity {
 	}
 	
 	public Image getImage() {
+		if (image == null) {
+			image = ResourceManager.getImage("Default");
+		}
+		
 		return image;
 	}
 	

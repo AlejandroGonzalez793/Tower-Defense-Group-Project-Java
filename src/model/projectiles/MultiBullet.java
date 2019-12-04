@@ -1,9 +1,6 @@
 package model.projectiles;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import javafx.scene.image.Image;
+import util.ResourceManager;
 
 public class MultiBullet extends Projectile {
 	private static final int WIDTH = 16;
@@ -14,12 +11,7 @@ public class MultiBullet extends Projectile {
     
 	public MultiBullet(int x, int y, int width, int height, int speed, int power) {
 		super(x, y, width, height, speed, power);
-		try {
-			image = new Image(new FileInputStream("resources/images/projectiles/multi_bullet.png"));
-			//this.setImage(image);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		image = ResourceManager.getImage("MultiBullet");
 	}
 	
 	public MultiBullet(int x, int y, int width, int height) {
