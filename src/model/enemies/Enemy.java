@@ -27,7 +27,7 @@ public class Enemy extends Entity {
 		super(x, y, width, height, speed);
 		this.health = health;
 		this.power = power;
-		this.setGold(gold);
+		this.gold = gold;
 		this.currNode = new Node(new Rectangle(x, y, width, height));
 	}
 	

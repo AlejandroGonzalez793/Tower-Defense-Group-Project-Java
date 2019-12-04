@@ -196,7 +196,7 @@ public class TDController {
 	 * @param name the name of the tower to get
 	 * @return A Tower object
 	 */
-	public Tower getTowerByName(String name) {
+	private Tower getTowerByName(String name) {
 		Class<?> c = towerMap.get(name);
 
 		if (c == null) {
@@ -284,14 +284,7 @@ public class TDController {
 	}
 	
 	public void pause() {
-		if(playing)
-		{
-			playing = false;
-		}
-		else
-		{
-			playing = true;
-		}
+		playing = !playing;
 	}
     
 	/**

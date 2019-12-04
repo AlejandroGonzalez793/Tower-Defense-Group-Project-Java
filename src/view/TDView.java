@@ -356,35 +356,23 @@ public class TDView extends Application implements Observer {
 		
 		HBox gameSpeedBox = new HBox();
 		Button slowButton = new Button("slow...");
-		slowButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				controller.slowDown();
-			}
+		slowButton.setOnAction(e -> {
+			controller.slowDown();
 		});
 		
 		Button normalButton = new Button("Normal");
-		normalButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				controller.regularSpeed();
-			}
+		normalButton.setOnAction(e -> {
+			controller.regularSpeed();
 		});
 		
 		Button fastButton = new Button("FAST!");
-		fastButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				controller.speedUp();
-			}
+		fastButton.setOnAction(e -> {
+			controller.speedUp();
 		});
 		
 		Button pauseButton = new Button("Pause");
-		pauseButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				controller.pause();
-			}
+		pauseButton.setOnAction(e -> {
+			controller.pause();
 		});
 		
 		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton);
