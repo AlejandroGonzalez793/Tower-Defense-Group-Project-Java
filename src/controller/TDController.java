@@ -344,6 +344,7 @@ public class TDController {
 			gameState.removeEnemy(enemy);
 		for (Tower tower : gameState.getTowers())
 			gameState.removeTower(tower);
+		playing = true;
 		startGame();
 	}
 	
