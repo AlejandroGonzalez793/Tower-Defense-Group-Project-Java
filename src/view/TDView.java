@@ -201,7 +201,6 @@ public class TDView extends Application implements Observer {
 		primaryStage.setMinWidth(100);
 		primaryStage.sizeToScene();
 		primaryStage.centerOnScreen();
-		controller.clearBoard();
 	}
 
 	public void createMap() {
@@ -451,6 +450,7 @@ public class TDView extends Application implements Observer {
 		
 		public void handle(ActionEvent e) {	
 			mapFileName = MAP_PATH + mapFile;
+			controller.reset();
 			newGame();
 		}
 	}
