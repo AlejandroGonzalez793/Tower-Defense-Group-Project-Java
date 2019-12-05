@@ -25,6 +25,7 @@ public class GameState extends Observable {
 	private List<Enemy> enemies;
 	private List<Projectile> projectiles;
 	private Node start;
+	private Node end;
 	private int ticks;
 	private int round;
 	
@@ -39,16 +40,6 @@ public class GameState extends Observable {
 	}
 	
 	public void tick() {
-		for (Tower tower : towers) {
-			for (Enemy enemy : enemies) {
-				if ((enemy.getX() - tower.getX()) * (enemy.getX() - tower.getX()) + 
-						(enemy.getY() - tower.getY()) * (enemy.getY() - tower.getY()) <= tower.getRadius() * tower.getRadius()) {
-					if (tower.generateProjectile(ticks)) {
-						projectiles.add(tower.getProjectile());
-					}
-				}
-			}
-		}
 		for (Enemy enemy : enemies) {
 			Node node = enemy.getNode();
 			if (node != null) {
@@ -61,11 +52,38 @@ public class GameState extends Observable {
 				enemy.update();
 			}
 		}
-		for (Enemy enemy : enemies) {
-			for (Projectile projectile : projectiles) {
-				projectile.update();
+		
+		for (Tower tower : towers) {
+			for (Enemy enemy : enemies) {				
+				int x = enemy.getX() - tower.getX();
+				int y = enemy.getY() - tower.getY();
+				double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+				if (distance <= tower.getRadius()) {
+					if (tower.generateProjectile(ticks)) {
+						Projectile projectile = tower.getProjectile();
+						int gcd = 1;
+						for(int i = 1; i <= Math.abs(x) && i <= Math.abs(y); i++) {
+							if(x%i==0 && y%i==0) {
+								gcd = i;
+							}
+						}
+						
+						x /= gcd;
+						y /= gcd;
+						
+						projectile.setDx(x);
+						projectile.setDy(y);
+						projectiles.add(projectile);
+						break;
+					}
+				}
 			}
 		}
+		
+		for (Projectile projectile : projectiles) {
+			projectile.update();
+		}
+		
 		ticks++;
 		setChanged();
 		notifyObservers(this);
@@ -164,23 +182,19 @@ public class GameState extends Observable {
 		}
 		
 		curr.setNext(node);
+		end = node;
 	}
 	
 	public Enemy enemyContact() {
-		if (start == null) {
+		if (end == null) {
 			return null;
-		}
-		
-		Node curr = start;
-		while (curr.getNext() != null) {
-			curr = curr.getNext();
 		}
 		
 		for (Enemy enemy : enemies) {
 			Node node = enemy.getNode();
-			if (node == curr) {
+			if (node == end) {
 				return enemy;
-			} 
+			}
 		}
 		return null;
 	}

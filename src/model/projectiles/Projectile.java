@@ -51,11 +51,4 @@ public class Projectile extends Entity {
 	public void setDistance() {
 		distance += speed;
 	}
-
-	public void update(int dxx, int dyy) {
-		x = dx;
-		y = dy; // issues here 
-		System.out.println(dxx);
-		System.out.println(dyy);
-	}
 }
