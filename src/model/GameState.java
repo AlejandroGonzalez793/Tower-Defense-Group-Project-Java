@@ -95,36 +95,6 @@ public class GameState extends Observable {
 		notifyObservers(this);
 	}
 	
-	/**
-	 * Figures out if there is a collision on the board and updates the models
-	 * accordingly.
-	 * 
-	 * TODO: Make this not garbage
-	 */
-	public void finalAllCollisions() {
-		for (Projectile projectile : projectiles) {
-			for (Enemy enemy : enemies) {
-				if (getCollision(projectile, enemy)) {
-					enemy.setHealth(enemy.getHealth() - projectile.getPower());
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Determines if there is a collision between two entities.
-	 * 
-	 * @param e1 the first Entity to check
-	 * @param e2 the second Entity to check
-	 * @return true if the two entities are colliding, false otherwise
-	 */
-	public boolean getCollision(Entity e1, Entity e2) {
-		return e1.getX() < e2.getX() + e2.getWidth() &&
-				e1.getX() + e1.getWidth() > e2.getX() &&
-				e1.getY() < e2.getY() + e2.getHeight() &&
-				e1.getY() + e1.getHeight() > e2.getY();
-	}
-	
 	public int getRound() {
 		return round;
 	}
