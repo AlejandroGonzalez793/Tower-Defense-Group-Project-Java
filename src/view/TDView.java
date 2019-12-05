@@ -67,8 +67,6 @@ public class TDView extends Application implements Observer {
 	private Boolean sellingTowers = false;
 	
 	private Button newWaveButton;
-	private int waveCount = 0;
-	private boolean nextStage = false;
 	
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
@@ -200,9 +198,6 @@ public class TDView extends Application implements Observer {
 			alert.show();
 			*/
 			controller.setGameOver(true);
-			//newWaveButton.setText("Next Stage");
-			//newWaveButton.setDisable(false);
-			//nextStage = true;
 			victoryWindow = new TDStageComplete();
 			victoryWindow.setTitle("Stage Complete!");
 			victoryWindow.initModality(Modality.APPLICATION_MODAL);
@@ -433,33 +428,13 @@ public class TDView extends Application implements Observer {
 		HBox waveBox = new HBox();
 		newWaveButton = new Button("New Wave >>");
 		newWaveButton.setOnAction(e -> {
-			if (waveCount == 0) {
+			if (controller.getWaveNumber() == 0) {
 				controller.newWave();
+				controller.enemyWave();
 				newWaveButton.setDisable(true);
-				waveCount++;
-			} else if (waveCount == 1) {
-				controller.stageOneWave2();
+			} else {
+				controller.enemyWave();
 				newWaveButton.setDisable(true);
-				waveCount++;
-			} else if (waveCount == 2) {
-				controller.stageOneWave3();
-				newWaveButton.setDisable(true);
-				waveCount++;
-			} else if (waveCount == 3) {
-				controller.stageOneWave4();
-				newWaveButton.setDisable(true);
-				waveCount++;
-			} else if (waveCount == 4) {
-				controller.stageOneFinalWave();
-				newWaveButton.setDisable(true);
-				waveCount++;
-			} 	
-			
-			if (nextStage) {
-				nextStage = false;
-				newWaveButton.setText("New Wave >>");
-				// TODO Here will be the setup of the next stage if there is one
-				// or stop if at stage 3
 			}
 		});
 		waveBox.getChildren().add(newWaveButton);

@@ -57,6 +57,7 @@ public class TDController {
 	private boolean finalRound = false;
 	private boolean nextStage = false;
 	private boolean gameOver = false;
+	private int waveNumber = 0;
 	public static final int TICK_SPEED = 40;
 	
 	public TDController(Player player, GameState gameState) {
@@ -387,76 +388,59 @@ public class TDController {
 	 * Creates a new wave and starts the game loop
 	 */
 	public void newWave() {
-		Rectangle start = gameState.getStart().getRectangle();
-		int x = (int)start.getX();
-		int y = (int)start.getY();
-		
-		Enemy enemy = new Pterosaur(x, y);
-	    Enemy enemy2 = new GreenPlane(x, y);
-	    Enemy enemy3 = new RedHelicopter(x, y);
-	    //Enemy enemy4 = new Balloon(x, y);
-	    Enemy enemy5 = new HotAirBalloon(x, y);
-	    Enemy enemy6 = new Drifblim(x, y);
-		gameState.addEnemy(enemy);
-		gameState.addEnemy(enemy2);
-		gameState.addEnemy(enemy3);
-		//gameState.addEnemy(enemy4);
-		gameState.addEnemy(enemy5);
-		gameState.addEnemy(enemy6);
-		
-		//Enemy enemy7 = new Drifblim(x, y);
-		//Enemy enemy8 = new Drifblim(x, y);
-		//Enemy enemy9 = new Drifblim(x, y);
-		//gameState.addEnemy(enemy7);
-		//gameState.addEnemy(enemy8);
-		//gameState.addEnemy(enemy9);
 		playing = true;
 		newRound = false;
 		startGame();
 	}
 	
-	public void stageOneWave2() {
+	public void enemyWave() {
 		Rectangle start = gameState.getStart().getRectangle();
 		int x = (int)start.getX();
 		int y = (int)start.getY();
 		
-		Enemy enemy = new Pterosaur(x, y);
-		gameState.addEnemy(enemy);
-		newRound = false;
+		if (waveNumber == 0) {
+			Enemy enemy = new Pterosaur(x, y);
+		    Enemy enemy2 = new GreenPlane(x, y);
+		    Enemy enemy3 = new RedHelicopter(x, y);
+		    Enemy enemy4 = new Balloon(x, y);
+		    Enemy enemy5 = new HotAirBalloon(x, y);
+		    Enemy enemy6 = new Drifblim(x, y);
+			gameState.addEnemy(enemy);
+			gameState.addEnemy(enemy2);
+			gameState.addEnemy(enemy3);
+			gameState.addEnemy(enemy4);
+			gameState.addEnemy(enemy5);
+			gameState.addEnemy(enemy6);
+			newRound = false;
+			waveNumber++;
+		} else if (waveNumber == 1) {
+			Enemy enemy = new Pterosaur(x, y);
+			gameState.addEnemy(enemy);
+			newRound = false;
+			waveNumber++;
+		} else if (waveNumber == 2) {
+			Enemy enemy = new GreenPlane(x, y);
+			gameState.addEnemy(enemy);
+			newRound = false;
+			waveNumber++;
+		} else if (waveNumber == 3) {
+			Enemy enemy = new RedHelicopter(x, y);
+			gameState.addEnemy(enemy);
+			newRound = false;
+			waveNumber++;
+		} else if (waveNumber == 4) {
+			Enemy enemy = new Pterosaur(x, y);
+			Enemy enemy2 = new Drifblim(x, y);
+			Enemy enemy3 = new GreenPlane(x, y);
+			gameState.addEnemy(enemy);
+			gameState.addEnemy(enemy2);
+			gameState.addEnemy(enemy3);
+			newRound = false;
+			finalRound = true;
+		}
 	}
 	
-	public void stageOneWave3() {
-		Rectangle start = gameState.getStart().getRectangle();
-		int x = (int)start.getX();
-		int y = (int)start.getY();
-		
-		Enemy enemy = new GreenPlane(x, y);
-		gameState.addEnemy(enemy);
-		newRound = false;
-	}
-	
-	public void stageOneWave4() {
-		Rectangle start = gameState.getStart().getRectangle();
-		int x = (int)start.getX();
-		int y = (int)start.getY();
-		
-		Enemy enemy = new RedHelicopter(x, y);
-		gameState.addEnemy(enemy);
-		newRound = false;
-	}
-	
-	public void stageOneFinalWave() {
-		Rectangle start = gameState.getStart().getRectangle();
-		int x = (int)start.getX();
-		int y = (int)start.getY();
-		
-		Enemy enemy = new Pterosaur(x, y);
-		Enemy enemy2 = new Drifblim(x, y);
-		Enemy enemy3 = new GreenPlane(x, y);
-		gameState.addEnemy(enemy);
-		gameState.addEnemy(enemy2);
-		gameState.addEnemy(enemy3);
-		newRound = false;
-		finalRound = true;
+	public int getWaveNumber () {
+		return waveNumber;
 	}
 }
