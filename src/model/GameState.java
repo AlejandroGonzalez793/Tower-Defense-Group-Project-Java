@@ -45,6 +45,7 @@ public class GameState extends Observable {
 						(enemy.getY() - tower.getY()) * (enemy.getY() - tower.getY()) <= tower.getRadius() * tower.getRadius()) {
 					if (tower.generateProjectile(ticks)) {
 						projectiles.add(tower.getProjectile());
+						
 					}
 				}
 			}
@@ -59,11 +60,6 @@ public class GameState extends Observable {
 					enemy.incrementNode();
 				}
 				enemy.update();
-			}
-		}
-		for (Enemy enemy : enemies) {
-			for (Projectile projectile : projectiles) {
-				projectile.update();
 			}
 		}
 		ticks++;

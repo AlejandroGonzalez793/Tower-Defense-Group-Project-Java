@@ -8,7 +8,7 @@ public class AreaTower extends Tower{
 	
 	private static final int WIDTH = 50;
 	private static final int HEIGHT = 50;
-	private static final int RADIUS = 400;
+	private static final int RADIUS = 150;
 	private static final int RATE = 3;
 	private static final int COST = 200;
 
