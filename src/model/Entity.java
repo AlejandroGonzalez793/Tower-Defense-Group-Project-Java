@@ -22,7 +22,7 @@ public abstract class Entity {
 	protected int y; // y coord of top left corner
 	protected double dx; // x velocity
 	protected double dy; // y velocity
-	protected int speed;
+	protected int speed; 
 	protected Image image;
 	
 	private int width; // width in pixels
@@ -40,59 +40,109 @@ public abstract class Entity {
 		this(x, y, width, height, 0);
 	}
 	
+	/**
+	 * Updates the x and y coordinates by adding dx and dy.
+	 */
 	public void update() {
 		x += dx;
 		y += dy;
 	}
 	
+	/**
+	 * Gets the x coordinate of the entity.
+	 * @return x coordinate of the entity
+	 */
 	public int getX() {
 		return x;
 	}
 	
+	/**
+	 * Sets the x coordinate of the entity.
+	 */
 	public void setX(int x) {
 		this.x = x;
 	}
 	
+	/**
+	 * Gets the y coordinate of the entity.
+	 * @return y coordinate of the entity
+	 */
 	public int getY() {
 		return y;
 	}
 	
+	/**
+	 * Sets the y coordinate of the entity.
+	 */
 	public void setY(int y) {
 		this.y = y;
 	}
 	
+	/**
+	 * Gets the width of the entity.
+	 * @return width value of the entity
+	 */
 	public int getWidth() {
 		return width;
 	}
 	
+	/**
+	 * Sets the width of the entity.
+	 */
 	public void setWidth(int width) {
 		this.width = width;
 	}
 	
+	/**
+	 * Gets the height of the entity.
+	 * @return height value of the entity
+	 */
 	public int getHeight() {
 		return height;
 	}
 	
+	/**
+	 * Sets the height of the entity.
+	 */
 	public void setHeight(int height) {
 		this.height = height;
 	}
 	
+	/**
+	 * Gets the dx value of the entity.
+	 * @return dx value of the entity.
+	 */
 	public double getDx() {
 		return dx;
 	}
 	
+	/**
+	 * Sets the dx value of the entity.
+	 */
 	public void setDx(double dx) {
 		this.dx = dx;
 	}
 	
+	
+	/**
+	 * Gets the dy value of the entity.
+	 * @return dy value of the entity.
+	 */
 	public double getDy() {
 		return dy;
 	}
 	
+	/**
+	 * Sets the dy value of the entity.
+	 */
 	public void setDy(double dy) {
 		this.dy = dy;
 	}
 	
+	/**
+	 * Gets the image of the entity from the resource manager.
+	 * @return image of the entity from the resource manager.
+	 */
 	public Image getImage() {
 		if (image == null) {
 			image = ResourceManager.getImage("Default");
@@ -101,14 +151,24 @@ public abstract class Entity {
 		return image;
 	}
 	
+	/**
+	 * Sets the image of the entity from the resource manager.
+	 */
 	public void setImage(Image image) {
 		this.image = image;
 	}
 	
+	/**
+	 * Gets the speed of the entity.
+	 * @return speed of the entity.
+	 */
 	public int getSpeed() {
 		return speed;
 	}
 	
+	/**
+	 * Sets the speed of the entity.
+	 */
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
