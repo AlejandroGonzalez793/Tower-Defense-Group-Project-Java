@@ -25,6 +25,7 @@ public class GameState extends Observable {
 	private List<Enemy> enemies;
 	private List<Projectile> projectiles;
 	private Node start;
+	private Node end;
 	private int ticks;
 	private int round;
 	
@@ -38,13 +39,7 @@ public class GameState extends Observable {
 		}
 	}
 	
-	public void tick() {
-		for (Tower tower : towers) {
-			if (tower.generateProjectile(ticks)) {
-				projectiles.add(tower.getProjectile());
-			}
-		}
-		
+	public void tick() {        
 		for (Enemy enemy : enemies) {
 			Node node = enemy.getNode();
 			if (node != null) {
@@ -58,6 +53,39 @@ public class GameState extends Observable {
 			}
 		}
 		
+		for (Tower tower : towers) {
+			for (Enemy enemy : enemies) {				
+				double x = Math.abs(enemy.getX() - tower.getX());
+				double y = Math.abs(enemy.getY() - tower.getY());
+				double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+				if (distance <= tower.getRadius()) {
+					if (tower.generateProjectile(ticks)) {
+						Projectile projectile = tower.getProjectile();
+						
+						if (x < y) {
+							y /= x;
+							x = 1;
+						} else { 
+							x /= y;
+							y = 1;
+						}
+						
+						if (enemy.getX() < tower.getX()) {
+							x = -x;
+						}
+						
+						if (enemy.getY() < tower.getY()) {
+							y = -y;
+						}
+						projectile.setDx(x);
+						projectile.setDy(y);
+						projectiles.add(projectile);
+						break;
+					}
+				}
+			}
+		}
+		
 		for (Projectile projectile : projectiles) {
 			projectile.update();
 		}
@@ -65,36 +93,6 @@ public class GameState extends Observable {
 		ticks++;
 		setChanged();
 		notifyObservers(this);
-	}
-	
-	/**
-	 * Figures out if there is a collision on the board and updates the models
-	 * accordingly.
-	 * 
-	 * TODO: Make this not garbage
-	 */
-	public void finalAllCollisions() {
-		for (Projectile projectile : projectiles) {
-			for (Enemy enemy : enemies) {
-				if (getCollision(projectile, enemy)) {
-					enemy.setHealth(enemy.getHealth() - projectile.getPower());
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Determines if there is a collision between two entities.
-	 * 
-	 * @param e1 the first Entity to check
-	 * @param e2 the second Entity to check
-	 * @return true if the two entities are colliding, false otherwise
-	 */
-	public boolean getCollision(Entity e1, Entity e2) {
-		return e1.getX() < e2.getX() + e2.getWidth() &&
-				e1.getX() + e1.getWidth() > e2.getX() &&
-				e1.getY() < e2.getY() + e2.getHeight() &&
-				e1.getY() + e1.getHeight() > e2.getY();
 	}
 	
 	public int getRound() {
@@ -113,26 +111,51 @@ public class GameState extends Observable {
 		notifyObservers(this);
 	}
 	
+	/**
+	 * Sets the next round in the game.
+	 * @param round the next round in the game.
+	 */
 	public void setRound(int round) {
 		this.round = round;
 	}
 	
+	/**
+	 * Gets the list of towers in the current GameState.
+	 * @return towers is a list of towers in the current GameState.
+	 */
 	public List<Tower> getTowers() {
 		return towers;
 	}
 	
+	/**
+	 * Gets the list of enemies in the current GameState.
+	 * @return enemies is a list of enemies in the current GameState.
+	 */
 	public List<Enemy> getEnemies() {
 		return enemies;
 	}
 	
+	/**
+	 * Gets the list of projectiles in the current GameState.
+	 * @return towers is a list of projectiles in the current GameState.
+	 */
 	public List<Projectile> getProjectiles() {
 		return projectiles;
 	}
 	
+	/**
+	 * Sets the starting position where the enemies first appear on the board.
+	 * @param start a node that indicates the starting positioning for the enemies.
+	 */
 	public void setStart(Node start) {
 		this.start = start;
 	}
 	
+	/**
+	 * Gets the starting position node where the enemies will first appear on 
+	 * the board.
+	 * @return start a node that indicates the starting positioning for the enemies.
+	 */
 	public Node getStart() {
 		return start;
 	}
@@ -160,23 +183,25 @@ public class GameState extends Observable {
 		}
 		
 		curr.setNext(node);
+		end = node;
 	}
 	
+	/**
+	 * Checks if enemy has gone off the board.
+	 * 
+	 * @return enemy or null is returned to indicate if enemy has gone 
+	 * off the board.
+	 */
 	public Enemy enemyContact() {
-		if (start == null) {
+		if (end == null) {
 			return null;
-		}
-		
-		Node curr = start;
-		while (curr.getNext() != null) {
-			curr = curr.getNext();
 		}
 		
 		for (Enemy enemy : enemies) {
 			Node node = enemy.getNode();
-			if (node == curr) {
+			if (node == end) {
 				return enemy;
-			} 
+			}
 		}
 		return null;
 	}
