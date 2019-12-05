@@ -5,9 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import controller.TDController;
+import model.GameState;
+import model.Player;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
 import model.towers.Tower;
+import view.TDView;
 
 public class TDTests {
 	/**
@@ -19,7 +22,6 @@ public class TDTests {
 		TDController controller = new TDController(null, null);
 		Projectile projectile = new Projectile(10, 10); // x = 10, y = 10, radius = 10
 		Enemy enemy = new Enemy(10, 10, 50, 50); // x = 25, y = 25, width = 50, height = 50
-		
 		assertTrue(controller.getCollision(projectile, enemy));
 	}
 	
@@ -137,5 +139,19 @@ public class TDTests {
 		
 		projectile.getDistance();
 		projectile.setDistance();
+	}
+	
+	@Test
+	void testControllerGameOver() {
+		TDView view = new TDView();
+		Player player = new Player(view);
+		Player player1 = new Player(view, 100);
+		Player player2 = new Player(view, 0, 100);
+		Player player3 = new Player();
+		GameState gameState = new GameState(view);
+		TDController controller = new TDController(player, gameState);
+		TDController controller1 = new TDController(player2, gameState);
+		controller.isGameOver();
+		controller1.isGameOver();
 	}
 }
