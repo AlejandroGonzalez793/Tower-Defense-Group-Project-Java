@@ -20,8 +20,8 @@ public abstract class Entity {
 	
 	protected int x; // x coord of top left corner
 	protected int y; // y coord of top left corner
-	protected int dx; // x velocity
-	protected int dy; // y velocity
+	protected double dx; // x velocity
+	protected double dy; // y velocity
 	protected int speed;
 	protected Image image;
 	
@@ -77,19 +77,19 @@ public abstract class Entity {
 		this.height = height;
 	}
 	
-	public int getDx() {
+	public double getDx() {
 		return dx;
 	}
 	
-	public void setDx(int dx) {
+	public void setDx(double dx) {
 		this.dx = dx;
 	}
 	
-	public int getDy() {
+	public double getDy() {
 		return dy;
 	}
 	
-	public void setDy(int dy) {
+	public void setDy(double dy) {
 		this.dy = dy;
 	}
 	

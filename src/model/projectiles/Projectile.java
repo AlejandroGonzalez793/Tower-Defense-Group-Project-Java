@@ -49,6 +49,6 @@ public class Projectile extends Entity {
 	}
 	
 	public void setDistance() {
-		distance += speed;
+		distance += Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 	}
 }
