@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import controller.TDController;
+import javafx.stage.Stage;
 import model.GameState;
 import model.Player;
 import model.enemies.Enemy;
@@ -108,43 +109,42 @@ public class TDTests {
 		
 		projectile.setHeight(45);
 		projectile.setWidth(45);
+		assertEquals(projectile.getHeight(), 45);
+		assertEquals(projectile.getWidth(), 45);
 		
 		projectile.setDx(1.0);
 		projectile.setDy(1.0);
+		assertEquals(projectile.getDx(), 1.0);
+		assertEquals(projectile.getDy(), 1.0);
 		
 		projectile.setSpeed(50);
+		assertEquals(projectile.getSpeed(), 50);
 		
 		projectile.getImage();
 		projectile.setImage(null);
 		
 		projectile.setX(5);
 		projectile.setY(5);
-		
-		projectile.getDx();
-		projectile.getDy();
-		
-		projectile.getX();
-		projectile.getY();
+		assertEquals(projectile.getX(), 5);
+		assertEquals(projectile.getY(), 5);
 		
 		projectile.update();
+		assertEquals(projectile.getX(), 6);
+		assertEquals(projectile.getY(), 6);
 		
-		projectile.getHeight();
-		projectile.getWidth();
-		
-		projectile.getPower();
-		
-		projectile.getSpeed();
+		assertEquals(projectile.getPower(), 5);
 		
 		projectile.getRadius();
+		assertEquals(projectile.getRadius(), 150);
 		
-		projectile.getDistance();
+		assertEquals(projectile.getDistance(), 0);
 		projectile.setDistance();
+		
 	}
 	
 	@Test
 	void testControllerGameOver() {
 		TDView view = new TDView();
-		
 		Player player = new Player(view);
 		Player player1 = new Player(view, 100);
 		Player player2 = new Player(view, 0, 100);
