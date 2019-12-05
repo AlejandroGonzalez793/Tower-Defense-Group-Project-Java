@@ -141,26 +141,51 @@ public class GameState extends Observable {
 		notifyObservers(this);
 	}
 	
+	/**
+	 * Sets the next round in the game.
+	 * @param round the next round in the game.
+	 */
 	public void setRound(int round) {
 		this.round = round;
 	}
 	
+	/**
+	 * Gets the list of towers in the current GameState.
+	 * @return towers is a list of towers in the current GameState.
+	 */
 	public List<Tower> getTowers() {
 		return towers;
 	}
 	
+	/**
+	 * Gets the list of enemies in the current GameState.
+	 * @return enemies is a list of enemies in the current GameState.
+	 */
 	public List<Enemy> getEnemies() {
 		return enemies;
 	}
 	
+	/**
+	 * Gets the list of projectiles in the current GameState.
+	 * @return towers is a list of projectiles in the current GameState.
+	 */
 	public List<Projectile> getProjectiles() {
 		return projectiles;
 	}
 	
+	/**
+	 * Sets the starting position where the enemies first appear on the board.
+	 * @param start a node that indicates the starting positioning for the enemies.
+	 */
 	public void setStart(Node start) {
 		this.start = start;
 	}
 	
+	/**
+	 * Gets the starting position node where the enemies will first appear on 
+	 * the board.
+	 * @return start a node that indicates the starting positioning for the enemies.
+	 */
 	public Node getStart() {
 		return start;
 	}
@@ -191,6 +216,12 @@ public class GameState extends Observable {
 		end = node;
 	}
 	
+	/**
+	 * Checks if enemy has gone off the board.
+	 * 
+	 * @return enemy or null is returned to indicate if enemy has gone 
+	 * off the board.
+	 */
 	public Enemy enemyContact() {
 		if (end == null) {
 			return null;
