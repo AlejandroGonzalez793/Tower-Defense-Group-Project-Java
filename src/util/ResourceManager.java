@@ -22,6 +22,7 @@ public class ResourceManager {
 			images.put("OneShotTower", new Image(new FileInputStream("resources/images/towers/one_shot_tower.png")));
 			images.put("PiercingTower", new Image(new FileInputStream("resources/images/Thicc_Yoshi.gif")));	
 			images.put("RapidTower", new Image(new FileInputStream("resources/images/towers/rapid_tower.png")));
+			images.put("ExpensiveTower", new Image(new FileInputStream("resources/images/towers/expensive_tower.png")));
 			
 			// Enemies
 			images.put("Balloon", new Image(new FileInputStream("resources/images/enemies/balloon_purple.gif")));

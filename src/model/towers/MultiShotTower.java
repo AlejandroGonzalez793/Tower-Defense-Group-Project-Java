@@ -7,7 +7,7 @@ import util.ResourceManager;
 public class MultiShotTower extends Tower{
 	private static final int WIDTH = 80;
 	private static final int HEIGHT = 150;
-	private static final int RADIUS = 175;
+	private static final int RADIUS = 200;
 	private static final int RATE = 5;
 	private static final int COST = 300;
 	

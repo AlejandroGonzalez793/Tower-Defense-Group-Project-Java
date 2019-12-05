@@ -15,11 +15,11 @@ import util.ResourceManager;
  */
 public class Tower extends Entity {
 	public static final double SELLBACK_FACTOR = 0.9;
-	public static final int DEFAULT_RATE = 1;
-	public static final int DEFAULT_RADIUS = 50;
+	public static final int DEFAULT_RATE = 5;
 	public static final int DEFAULT_WIDTH = 50;
 	public static final int DEFAULT_HEIGHT = 50;
 	public static final int DEFAULT_COST = 50;
+	public static final int DEFAULT_RADIUS = 100;
 	
 	private int radius;
 	private int rate;

@@ -10,6 +10,7 @@ import java.util.Set;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import model.Entity;
 import model.GameState;
 import model.Node;
 import model.Player;
@@ -35,9 +36,10 @@ import util.ResourceManager;
 /**
  * The general controller used to interact with the game in its current state.
  * 
- * Contains auxiliary lists of towers and enemies at all times to keep track
- * of what is currently on the board in the view without needing to use a 
- * separate aggregate model.
+ * Contains a <tt>Player</tt> reference that holds the state of current user
+ * that is playing the game. Also contains a reference to <tt>GameState</tt>
+ * which holds lists for all of the towers, enemies, projectiles as well as
+ * logic for changing all of the entities at each tick of the game. 
  * 
  * @author Ethan Glasberg (glasberg@email.arizona.edu)
  * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
@@ -101,6 +103,20 @@ public class TDController {
 		return selectedTower.getCost() <= player.getMoney();
 	}
 	
+	/**
+	 * Determine if the selected tower can be placed at a specified x or y 
+	 * position. 
+	 * 
+	 * A tower must be selected before this method is called.
+	 * 
+	 * The x and y position passed into this function should correspond to
+	 * the middle of where the tower should be placed.
+	 * 
+	 * @param x the x coordinate at the middle of where the tower should be placed
+	 * @param y the y coordinate at the middle of where the tower should be placed
+	 * @return true if the selected tower can be placed at the specified position,
+	 * false otherwise
+	 */
 	public boolean canPlaceTower(int x, int y) {
 		int shiftedX = x - (selectedTower.getWidth() / 2);
 		int shiftedY = y - (selectedTower.getHeight() / 2);
@@ -109,7 +125,8 @@ public class TDController {
 		Node node = gameState.getStart();
 		while (node != null) {
 			Rectangle rect = node.getRectangle();
-			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
+			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), 
+					selectedTower.getHeight())) {
 				return false;
 			}
 			
@@ -118,8 +135,10 @@ public class TDController {
 		
 		// Check if tower collides with another tower
 		for (Tower tower : gameState.getTowers()) {
-			Rectangle rect = new Rectangle(tower.getX(), tower.getY(), tower.getWidth(), tower.getHeight());
-			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
+			Rectangle rect = new Rectangle(tower.getX(), tower.getY(), tower.getWidth(), 
+					tower.getHeight());
+			if (rect.intersects(shiftedX, shiftedY, selectedTower.getWidth(), 
+					selectedTower.getHeight())) {
 				return false;
 			}
 		}
@@ -127,18 +146,33 @@ public class TDController {
 	}
 	
 	/**
-	 * Check bullet collisions with enemies.
+	 * Check if a Projectile has collided with any enemies.
 	 * 
-	 * @param bullet object to be checked with a collision.
+	 * @param bullet Projectile to be checked with a collision.
 	 * @return True or false depending if a collision was made or not.
 	 */
 	public boolean checkBulletCollision(Projectile bullet) {
 		for (Enemy enemy : gameState.getEnemies()) {
-			if (gameState.getCollision(bullet, enemy)) {
+			if (getCollision(bullet, enemy)) {
+				enemy.setHealth(enemy.getHealth() - bullet.getPower());
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Determines if there is a collision between two entities.
+	 * 
+	 * @param e1 the first Entity to check
+	 * @param e2 the second Entity to check
+	 * @return true if the two entities are colliding, false otherwise
+	 */
+	public boolean getCollision(Entity e1, Entity e2) {
+		return e1.getX() < e2.getX() + e2.getWidth() &&
+				e1.getX() + e1.getWidth() > e2.getX() &&
+				e1.getY() < e2.getY() + e2.getHeight() &&
+				e1.getY() + e1.getHeight() > e2.getY();
 	}
 	
 	/**
@@ -162,11 +196,11 @@ public class TDController {
 	}
 	
 	/**
-	 * This method checks if the user clicked on a tower. If a tower was clicked on,
+	 * Checks if the user clicked on a tower. If a tower was clicked on,
 	 * then sell it back to the player and reference the selected tower.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x the x coordinate of where the player clicked
+	 * @param y the y coordinate of where the player clicked
 	 * @return True or false depending if a tower was sold back or not.
 	 */
 	public boolean sellTower(int x, int y) {				
@@ -182,9 +216,9 @@ public class TDController {
 	}
 	
 	/**
-	 * This method returns the cost of a tower object by its associated name.
+	 * Returns the cost of a tower object by its associated name.
 	 * 
-	 * @param towerName A string that is the name of the tower object.
+	 * @param towerName the name of the tower object to get
 	 * @return The cost of the specified tower object.
 	 */
 	public int getTowerCost(String towerName) {
@@ -232,7 +266,6 @@ public class TDController {
 			try {
 				Constructor<?> cons = towerEntry.getValue().getConstructor();
 				Tower tower = (Tower)cons.newInstance();
-				//Image newImage = tower.getImage().getScaledInstance(Tower.DEFAULT_WIDTH, Tower.DEFAULT_HEIGHT, Image.SCALE_DEFAULT);
 				imageMap.put(towerEntry.getKey(), tower.getImage());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 					InvocationTargetException | NoSuchMethodException | SecurityException e) {
@@ -274,26 +307,38 @@ public class TDController {
 		return selectedTower.getImage();
     }
 	
+	/**
+	 * Doubles the animation speed of the game
+	 */
 	public void speedUp() {
 		animationSpeed = 0.5;
 	}
 	
+	/**
+	 * Sets the animation speed to the normal amount (1x)
+	 */
 	public void regularSpeed() {
 		animationSpeed = 1.0;
 	}
 	
+	/**
+	 * Halves the animation speed of the game 
+	 */
 	public void slowDown() {
 		animationSpeed = 2.0;
 	}
 	
+	/**
+	 * Stops any animations from being run in the game
+	 */
 	public void pause() {
 		playing = !playing;
 	}
     
 	/**
-	 * Creates a new thread that runs while the games is in progress. Calls the
-	 * tick method to update all of the objects on the screen every
-	 * {@value #TICK_SPEED} milliseconds.
+	 * Creates a new AnimationTimer that runs while the games is in progress. Calls the
+	 * tick method to update all of the objects on the screen every {@value #TICK_SPEED} 
+	 * milliseconds.
 	 */
 	public void startGame() {
 		AnimationTimer at = new AnimationTimer() {
