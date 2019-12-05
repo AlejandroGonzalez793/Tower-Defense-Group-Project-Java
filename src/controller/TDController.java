@@ -394,13 +394,13 @@ public class TDController {
 		Enemy enemy = new Pterosaur(x, y);
 	    Enemy enemy2 = new GreenPlane(x, y);
 	    Enemy enemy3 = new RedHelicopter(x, y);
-	    Enemy enemy4 = new Balloon(x, y);
+	    //Enemy enemy4 = new Balloon(x, y);
 	    Enemy enemy5 = new HotAirBalloon(x, y);
 	    Enemy enemy6 = new Drifblim(x, y);
 		gameState.addEnemy(enemy);
 		gameState.addEnemy(enemy2);
 		gameState.addEnemy(enemy3);
-		gameState.addEnemy(enemy4);
+		//gameState.addEnemy(enemy4);
 		gameState.addEnemy(enemy5);
 		gameState.addEnemy(enemy6);
 		

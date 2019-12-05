@@ -56,6 +56,7 @@ public class TDView extends Application implements Observer {
 	private GraphicsContext drawingGC;
 	private TDController controller;
 	private TDMainMenu mainMenu;
+	private TDStageComplete victoryWindow;
 	private String mapFileName;
 	
 	private Text money;
@@ -191,15 +192,27 @@ public class TDView extends Application implements Observer {
 			newWaveButton.setDisable(false);
 		}
 		if (controller.isStageOver()) {
-			controller.setGameOver(true);
+			/*
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Stage Complete!");
 			alert.setHeaderText(null);
-			alert.setContentText("You may click on next stage to continue");
+			alert.setContentText("Press ok to continue");
 			alert.show();
-			newWaveButton.setText("Next Stage");
-			newWaveButton.setDisable(false);
-			nextStage = true;
+			*/
+			controller.setGameOver(true);
+			//newWaveButton.setText("Next Stage");
+			//newWaveButton.setDisable(false);
+			//nextStage = true;
+			victoryWindow = new TDStageComplete();
+			victoryWindow.setTitle("Stage Complete!");
+			victoryWindow.initModality(Modality.APPLICATION_MODAL);
+			victoryWindow.setResizable(false);
+			victoryWindow.show();
+			if (victoryWindow.isPressed())
+			{
+				primaryStage.hide();
+				mainMenu.show();	
+			}	
 		}
 	}
 
