@@ -73,16 +73,18 @@ public class TDTests {
 		Enemy enemy1 = new Enemy(0, 0, 50, 50, 5, 20, 10);
 		Enemy enemy2 = new Enemy(0, 0, 50, 50);
 		
-		enemy.getHealth();
-		enemy.getGold();
-		enemy.getNode();
-		
 		enemy.setHealth(50);
-		enemy.setGold(10000);
-		enemy.setNode(null);
-		enemy.getPower();
-		enemy.setPower(100);
+		assertEquals(enemy.getHealth(), 50);
 		
+		enemy.setGold(10000);
+		assertEquals(enemy.getGold(), 10000);
+		
+		assertNotNull(enemy.getNode());
+		enemy.setNode(null);
+		assertNull(enemy.getNode());
+		
+		enemy.setPower(100);
+		assertEquals(enemy.getPower(), 100);	
 	}
 	
 	@Test
