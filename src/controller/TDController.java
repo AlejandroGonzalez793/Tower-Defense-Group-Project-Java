@@ -50,6 +50,10 @@ public class TDController {
 	private Map<String, Class<? extends Tower>> towerMap;
 	private boolean playing;
 	private double animationSpeed = 1.0;
+	private boolean newRound = true;
+	private boolean finalRound = false;
+	private boolean nextStage = false;
+	private boolean gameOver = false;
 	public static final int TICK_SPEED = 40;
 	
 	public TDController(Player player, GameState gameState) {
@@ -286,7 +290,7 @@ public class TDController {
 	public void pause() {
 		playing = !playing;
 	}
-    
+	
 	/**
 	 * Creates a new thread that runs while the games is in progress. Calls the
 	 * tick method to update all of the objects on the screen every
@@ -297,7 +301,8 @@ public class TDController {
 			private long lastUpdate = 0;
 			@Override
 			public void handle(long now) {
-				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
+				if (!gameOver && playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {	
+					
 					lastUpdate = now;
 					Enemy enemy = gameState.enemyContact();
 					if (enemy != null)
@@ -305,11 +310,29 @@ public class TDController {
 						player.setHealth(player.getHealth() - enemy.getPower());
 						gameState.removeEnemy(enemy);
 					}
+						
+					if (gameState.getEnemies().isEmpty() && finalRound) {
+						nextStage = true;
+					} else if (gameState.getEnemies().isEmpty()) {
+						newRound = true;
+					} 
 					tick();
 				}
 			}
 		};
 		at.start();
+	}
+	
+	public boolean isNewRound() {
+		return newRound;
+	}
+	
+	public boolean isStageOver() {
+		return nextStage;
+	}
+	
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
 	}
 	
 	/**
@@ -332,7 +355,60 @@ public class TDController {
 		gameState.addEnemy(enemy4);
 		gameState.addEnemy(enemy5);
 		gameState.addEnemy(enemy6);
+		
+		//Enemy enemy7 = new Drifblim(x, y);
+		//Enemy enemy8 = new Drifblim(x, y);
+		//Enemy enemy9 = new Drifblim(x, y);
+		//gameState.addEnemy(enemy7);
+		//gameState.addEnemy(enemy8);
+		//gameState.addEnemy(enemy9);
 		playing = true;
+		newRound = false;
 		startGame();
+	}
+	
+	public void stageOneWave2() {
+		Rectangle start = gameState.getStart().getRectangle();
+		int x = (int)start.getX();
+		int y = (int)start.getY();
+		
+		Enemy enemy = new Pterosaur(x, y);
+		gameState.addEnemy(enemy);
+		newRound = false;
+	}
+	
+	public void stageOneWave3() {
+		Rectangle start = gameState.getStart().getRectangle();
+		int x = (int)start.getX();
+		int y = (int)start.getY();
+		
+		Enemy enemy = new GreenPlane(x, y);
+		gameState.addEnemy(enemy);
+		newRound = false;
+	}
+	
+	public void stageOneWave4() {
+		Rectangle start = gameState.getStart().getRectangle();
+		int x = (int)start.getX();
+		int y = (int)start.getY();
+		
+		Enemy enemy = new RedHelicopter(x, y);
+		gameState.addEnemy(enemy);
+		newRound = false;
+	}
+	
+	public void stageOneFinalWave() {
+		Rectangle start = gameState.getStart().getRectangle();
+		int x = (int)start.getX();
+		int y = (int)start.getY();
+		
+		Enemy enemy = new Pterosaur(x, y);
+		Enemy enemy2 = new Drifblim(x, y);
+		Enemy enemy3 = new GreenPlane(x, y);
+		gameState.addEnemy(enemy);
+		gameState.addEnemy(enemy2);
+		gameState.addEnemy(enemy3);
+		newRound = false;
+		finalRound = true;
 	}
 }

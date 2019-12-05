@@ -64,6 +64,10 @@ public class TDView extends Application implements Observer {
 	private Button sellButton;
 	private Boolean sellingTowers = false;
 	
+	private Button newWaveButton;
+	private int waveCount = 0;
+	private boolean nextStage = false;
+	
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 3;
@@ -128,7 +132,7 @@ public class TDView extends Application implements Observer {
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
-		primaryStage.show();
+		primaryStage.show();	
 	}
 
 	@Override
@@ -156,6 +160,29 @@ public class TDView extends Application implements Observer {
 			Player player = (Player)arg;
 			money.setText(Integer.toString(player.getMoney()));
 			health.setText(Integer.toString(player.getHealth()));
+			if (player.getHealth() <= 0) {
+				controller.setGameOver(true);
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Base Destroyed!");
+				alert.setHeaderText(null);
+				alert.setContentText("You have lost...");
+				alert.show();
+			}
+		}
+		
+		if (controller.isNewRound()) {
+			newWaveButton.setDisable(false);
+		}
+		if (controller.isStageOver()) {
+			controller.setGameOver(true);
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Stage Complete!");
+			alert.setHeaderText(null);
+			alert.setContentText("You may click on next stage to continue");
+			alert.show();
+			newWaveButton.setText("Next Stage");
+			newWaveButton.setDisable(false);
+			nextStage = true;
 		}
 	}
 	
@@ -374,9 +401,36 @@ public class TDView extends Application implements Observer {
 		sellBox.getChildren().add(sellButton);
 		
 		HBox waveBox = new HBox();
-		Button newWaveButton = new Button("New Wave >>");
+		newWaveButton = new Button("New Wave >>");
 		newWaveButton.setOnAction(e -> {
-			controller.newWave();
+			if (waveCount == 0) {
+				controller.newWave();
+				newWaveButton.setDisable(true);
+				waveCount++;
+			} else if (waveCount == 1) {
+				controller.stageOneWave2();
+				newWaveButton.setDisable(true);
+				waveCount++;
+			} else if (waveCount == 2) {
+				controller.stageOneWave3();
+				newWaveButton.setDisable(true);
+				waveCount++;
+			} else if (waveCount == 3) {
+				controller.stageOneWave4();
+				newWaveButton.setDisable(true);
+				waveCount++;
+			} else if (waveCount == 4) {
+				controller.stageOneFinalWave();
+				newWaveButton.setDisable(true);
+				waveCount++;
+			} 	
+			
+			if (nextStage) {
+				nextStage = false;
+				newWaveButton.setText("New Wave >>");
+				// TODO Here will be the setup of the next stage if there is one
+				// or stop if at stage 3
+			}
 		});
 		waveBox.getChildren().add(newWaveButton);
 		
