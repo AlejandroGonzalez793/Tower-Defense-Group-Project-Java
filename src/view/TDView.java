@@ -450,6 +450,7 @@ public class TDView extends Application implements Observer {
 		
 		public void handle(ActionEvent e) {	
 			mapFileName = MAP_PATH + mapFile;
+			controller.reset();
 			newGame();
 		}
 	}

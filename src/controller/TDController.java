@@ -383,4 +383,8 @@ public class TDController {
 		playing = true;
 		startGame();
 	}
+	
+	public void reset() {
+		playing = false;
+	}
 }
