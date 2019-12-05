@@ -4,7 +4,7 @@ import model.projectiles.AreaBullet;
 import model.projectiles.Projectile;
 import util.ResourceManager;
 
-public class AreaTower extends Tower{
+public class AreaTower extends Tower {
 	
 	private static final int WIDTH = 50;
 	private static final int HEIGHT = 50;
@@ -18,7 +18,7 @@ public class AreaTower extends Tower{
 	}
 	
 	public AreaTower(int x, int y, int width, int height) {
-		this(x, y, width, height, 150, 10, 1000);
+		this(x, y, width, height, RADIUS, RATE, COST);
 		
 	}
 	

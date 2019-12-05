@@ -304,8 +304,7 @@ public class TDController {
 				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
 					lastUpdate = now;
 					Enemy enemy = gameState.enemyContact();
-					if (enemy != null)
-					{
+					if (enemy != null) {
 						player.setHealth(player.getHealth() - enemy.getPower());
 						gameState.removeEnemy(enemy);
 					}
