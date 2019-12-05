@@ -39,7 +39,7 @@ public class GameState extends Observable {
 		}
 	}
 	
-	public void tick() {
+	public void tick() {        
 		for (Enemy enemy : enemies) {
 			Node node = enemy.getNode();
 			if (node != null) {
