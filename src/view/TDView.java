@@ -156,7 +156,7 @@ public class TDView extends Application implements Observer {
 			while (enemyIter.hasNext()) {
 				Enemy enemy = enemyIter.next();
 				if (enemy.getHealth() <= 0) {
-					// add animation here or draw some explosion
+					// TODO: add animation here or draw some explosion
 					enemyIter.remove();
 				} else {
 					drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 

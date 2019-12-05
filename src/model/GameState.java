@@ -55,22 +55,28 @@ public class GameState extends Observable {
 		
 		for (Tower tower : towers) {
 			for (Enemy enemy : enemies) {				
-				int x = enemy.getX() - tower.getX();
-				int y = enemy.getY() - tower.getY();
+				double x = Math.abs(enemy.getX() - tower.getX());
+				double y = Math.abs(enemy.getY() - tower.getY());
 				double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 				if (distance <= tower.getRadius()) {
 					if (tower.generateProjectile(ticks)) {
 						Projectile projectile = tower.getProjectile();
-						int gcd = 1;
-						for(int i = 1; i <= Math.abs(x) && i <= Math.abs(y); i++) {
-							if(x%i==0 && y%i==0) {
-								gcd = i;
-							}
+						
+						if (x < y) {
+							y /= x;
+							x = 1;
+						} else { 
+							x /= y;
+							y = 1;
 						}
 						
-						x /= gcd;
-						y /= gcd;
+						if (enemy.getX() < tower.getX()) {
+							x = -x;
+						}
 						
+						if (enemy.getY() < tower.getY()) {
+							y = -y;
+						}
 						projectile.setDx(x);
 						projectile.setDy(y);
 						projectiles.add(projectile);
