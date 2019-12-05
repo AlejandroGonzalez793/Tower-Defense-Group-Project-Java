@@ -160,6 +160,7 @@ public class TDView extends Application implements Observer {
 				Enemy enemy = enemyIter.next();
 				if (enemy.getHealth() <= 0) {
 					// TODO: add animation here or draw some explosion
+					controller.enemyReward(enemy.getGold());
 					enemyIter.remove();
 				} else {
 					drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 
@@ -178,6 +179,7 @@ public class TDView extends Application implements Observer {
 			health.setText(Integer.toString(player.getHealth()));
 			if (player.getHealth() <= 0) {
 				controller.setGameOver(true);
+				controller.stopAnimation();
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Base Destroyed!");
 				alert.setHeaderText(null);
@@ -198,6 +200,7 @@ public class TDView extends Application implements Observer {
 			alert.show();
 			*/
 			controller.setGameOver(true);
+			controller.stopAnimation();
 			victoryWindow = new TDStageComplete();
 			victoryWindow.setTitle("Stage Complete!");
 			victoryWindow.initModality(Modality.APPLICATION_MODAL);
@@ -492,6 +495,7 @@ public class TDView extends Application implements Observer {
 		
 		public void handle(ActionEvent e) {	
 			mapFileName = MAP_PATH + mapFile;
+			controller.stopAnimation();
 			newGame();
 		}
 	}

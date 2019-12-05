@@ -51,6 +51,7 @@ public class TDController {
 	private GameState gameState;
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
+	private AnimationTimer at;
 	private boolean playing;
 	private double animationSpeed = 1.0;
 	private boolean newRound = true;
@@ -178,6 +179,10 @@ public class TDController {
 				e1.getX() + e1.getWidth() > e2.getX() &&
 				e1.getY() < e2.getY() + e2.getHeight() &&
 				e1.getY() + e1.getHeight() > e2.getY();
+	}
+	
+	public void enemyReward(int gold) {
+		player.setMoney(player.getMoney() + gold);
 	}
 	
 	/**
@@ -346,7 +351,7 @@ public class TDController {
 	 * milliseconds.
 	 */
 	public void startGame() {
-		AnimationTimer at = new AnimationTimer() {
+		at = new AnimationTimer() {
 			private long lastUpdate = 0;
 			@Override
 			public void handle(long now) {
@@ -362,14 +367,25 @@ public class TDController {
 						
 					if (gameState.getEnemies().isEmpty() && finalRound) {
 						nextStage = true;
+						gameState.resetProjectiles();
 					} else if (gameState.getEnemies().isEmpty()) {
 						newRound = true;
 					} 
 					tick();
 				}
+				
+				if (gameOver) {
+					gameState.resetProjectiles();
+				}
 			}
 		};
 		at.start();
+	}
+	
+	public void stopAnimation() {
+		if (at != null) {
+			at.stop();
+		}	
 	}
 	
 	public boolean isNewRound() {
@@ -411,6 +427,15 @@ public class TDController {
 			gameState.addEnemy(enemy4);
 			gameState.addEnemy(enemy5);
 			gameState.addEnemy(enemy6);
+			
+			Enemy enemy7 = new Drifblim(x, y);
+			Enemy enemy8 = new Drifblim(x, y);
+			Enemy enemy9 = new Drifblim(x, y);
+			Enemy enemy10 = new Drifblim(x, y);
+			gameState.addEnemy(enemy7);
+			gameState.addEnemy(enemy8);
+			gameState.addEnemy(enemy9);
+			gameState.addEnemy(enemy10);
 			newRound = false;
 			waveNumber++;
 		} else if (waveNumber == 1) {

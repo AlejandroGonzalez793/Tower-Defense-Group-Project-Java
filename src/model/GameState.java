@@ -143,6 +143,10 @@ public class GameState extends Observable {
 		return projectiles;
 	}
 	
+	public void resetProjectiles() {
+		this.projectiles = new ArrayList<>();
+	}
+	
 	/**
 	 * Sets the starting position where the enemies first appear on the board.
 	 * @param start a node that indicates the starting positioning for the enemies.
