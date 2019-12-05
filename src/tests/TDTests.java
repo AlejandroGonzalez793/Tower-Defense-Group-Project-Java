@@ -4,11 +4,88 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import model.Entity;
 import model.GameState;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
+import model.towers.Tower;
 
 public class TDTests {
+	
+	@Test
+	void testEnemy() {
+		Enemy enemy = new Enemy(0, 0, 50, 50, 100, 5, 50, 10);
+		Enemy enemy1 = new Enemy(0, 0, 50, 50, 5, 20, 10);
+		Enemy enemy2 = new Enemy(0, 0, 50, 50);
+		
+		enemy.getHealth();
+		enemy.getGold();
+		enemy.getNode();
+		
+		enemy.setHealth(50);
+		enemy.setGold(10000);
+		enemy.setNode(null);
+		enemy.getPower();
+		enemy.setPower(100);
+		
+	}
+	
+	@Test
+	void testTower() {
+		Tower tower = new Tower();
+		Tower tower1 = new Tower(0, 0, 50, 50, 150, 2, 100);
+		Tower tower2 = new Tower(0, 0, 50, 50);
+		
+		tower.getRadius();
+		tower.getCost();
+		tower.getRate();
+		tower.generateProjectile(1);
+		tower.getProjectile();
+		tower.generateProjectile(10);
+		tower.getProjectile();
+		tower.update();
+	}
+	
+	@Test
+	void testProjectile() {
+		Projectile projectile = new Projectile(10, 10, 50, 50, 10, 5, 150);
+		Projectile projectile1 = new Projectile(10, 10, 50, 50);
+		Projectile projectile2 = new Projectile(10, 10);
+		
+		projectile.setHeight(45);
+		projectile.setWidth(45);
+		
+		projectile.setDx(1.0);
+		projectile.setDy(1.0);
+		
+		projectile.setSpeed(50);
+		
+		projectile.getImage();
+		projectile.setImage(null);
+		
+		projectile.setX(5);
+		projectile.setY(5);
+		
+		projectile.getDx();
+		projectile.getDy();
+		
+		projectile.getX();
+		projectile.getY();
+		
+		projectile.update();
+		
+		projectile.getHeight();
+		projectile.getWidth();
+		
+		projectile.getPower();
+		
+		projectile.getSpeed();
+		
+		projectile.getRadius();
+		
+		projectile.getDistance();
+		projectile.setDistance();
+	}
 	
 	/**
 	 * Tests if there is a collision between a projectile and enemy. Both the projectile and
