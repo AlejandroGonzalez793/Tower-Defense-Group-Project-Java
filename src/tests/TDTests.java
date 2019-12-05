@@ -169,4 +169,46 @@ public class TDTests {
 		assertFalse(controller.isGameOver());
 		assertTrue(controller1.isGameOver());
 	}
+	
+	@Test 
+	void testControllerPurchaseTower() {
+		String tower = "Tower";
+		
+		TDView view = new TDView();
+		
+		Player player = new Player(view);
+		Player player1 = new Player(view, 100, 0);
+		
+		GameState gameState = new GameState(view);
+		
+		TDController controller = new TDController(player, gameState);
+		TDController controller1 = new TDController(player1, gameState);
+		
+		assertTrue(controller.canPurchaseTower(tower));
+		assertFalse(controller1.canPurchaseTower(tower));
+		assertFalse(controller1.canPurchaseTower(null));
+	}
+	
+	@Test
+	void testControllerPlaceTower() {
+		String tower = "Tower";
+		String tower1 = "Tower";
+		
+		TDView view = new TDView();
+		
+		Player player = new Player(view);
+		Player player1 = new Player(view, 100, 0);
+		
+		GameState gameState = new GameState(view);
+		
+		TDController controller = new TDController(player, gameState);
+		TDController controller1 = new TDController(player1, gameState);
+		
+		controller.canPurchaseTower(tower);
+		assertTrue(controller.canPlaceTower(0, 0));
+		controller.addTower(0, 0);
+		
+		controller.canPurchaseTower(tower1);
+		assertFalse(controller.canPlaceTower(0, 0));
+	}
 }
