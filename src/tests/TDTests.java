@@ -144,14 +144,18 @@ public class TDTests {
 	@Test
 	void testControllerGameOver() {
 		TDView view = new TDView();
+		
 		Player player = new Player(view);
 		Player player1 = new Player(view, 100);
 		Player player2 = new Player(view, 0, 100);
 		Player player3 = new Player();
+		
 		GameState gameState = new GameState(view);
+		
 		TDController controller = new TDController(player, gameState);
 		TDController controller1 = new TDController(player2, gameState);
-		controller.isGameOver();
-		controller1.isGameOver();
+		
+		assertFalse(controller.isGameOver());
+		assertTrue(controller1.isGameOver());
 	}
 }
