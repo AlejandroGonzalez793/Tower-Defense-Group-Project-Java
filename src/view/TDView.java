@@ -3,8 +3,7 @@ package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Observable;
@@ -138,27 +137,31 @@ public class TDView extends Application implements Observer {
 		if (arg instanceof GameState) {
 			GameState gameState = (GameState)arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
-			List<Projectile> hits = new ArrayList<Projectile>();
-			for (Projectile proj : gameState.getProjectiles()) {
-				if (controller.checkBulletCollision(proj)) {
-					// do not redraw bullet
-					// decrement enemy health or...
-					// some explosion animation
-					System.out.println("hit");
-					hits.add(proj);
-				} else if (proj.getDistance() >= proj.getRadius()){
-					hits.add(proj);
+			
+			Iterator<Projectile> bulletIter = gameState.getProjectiles().iterator();
+			while (bulletIter.hasNext()) {
+				Projectile bullet = bulletIter.next();
+				if (controller.checkBulletCollision(bullet)){
+					bulletIter.remove();
+				} else if (bullet.getDistance() >= bullet.getRadius()) {
+					bulletIter.remove();
+				} else {
+					drawingGC.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(),
+							bullet.getWidth(), bullet.getHeight());
 				}
-				else {
-					drawingGC.drawImage(proj.getImage(), proj.getX(), proj.getY(),
-							proj.getWidth(), proj.getHeight());
-				}
-				proj.setDistance();
+				bullet.setDistance();
 			}
 			
-			for (Enemy enemy : gameState.getEnemies()) {
-				drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 
-						enemy.getWidth(), enemy.getHeight());
+			Iterator<Enemy> enemyIter = gameState.getEnemies().iterator();
+			while (enemyIter.hasNext()) {
+				Enemy enemy = enemyIter.next();
+				if (enemy.getHealth() <= 0) {
+					// add animation here or draw some explosion
+					enemyIter.remove();
+				} else {
+					drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), 
+							enemy.getWidth(), enemy.getHeight());
+				}
 			}
 			
 			for (Tower tower : gameState.getTowers()) {
@@ -166,17 +169,11 @@ public class TDView extends Application implements Observer {
 						tower.getWidth(), tower.getHeight());
 			}
 			
-			for (Projectile hit : hits) {
-				gameState.getProjectiles().remove(hit);
-			}
-			
-			
 		} else if (arg instanceof Player) {
 			Player player = (Player)arg;
 			money.setText(Integer.toString(player.getMoney()));
 			health.setText(Integer.toString(player.getHealth()));
 		}
-		System.gc();
 	}
 
 	public void newGame() {

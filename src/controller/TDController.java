@@ -135,6 +135,7 @@ public class TDController {
 	public boolean checkBulletCollision(Projectile bullet) {
 		for (Enemy enemy : gameState.getEnemies()) {
 			if (gameState.getCollision(bullet, enemy)) {
+				enemy.setHealth(enemy.getHealth() - bullet.getPower());
 				return true;
 			}
 		}
