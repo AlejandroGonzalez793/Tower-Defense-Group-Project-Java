@@ -87,18 +87,27 @@ public class TDTests {
 	
 	@Test
 	void testTower() {
-		Tower tower = new Tower();
-		Tower tower1 = new Tower(0, 0, 50, 50, 150, 2, 100);
+		Tower tower1 = new Tower();
+		Tower tower = new Tower(0, 0, 50, 50, 150, 2, 100);
 		Tower tower2 = new Tower(0, 0, 50, 50);
 		
 		tower.getRadius();
+		assertEquals(tower.getRadius(), 150);
+		
 		tower.getCost();
+		assertEquals(tower.getCost(), 100);
+		
 		tower.getRate();
-		tower.generateProjectile(1);
-		tower.getProjectile();
-		tower.generateProjectile(10);
-		tower.getProjectile();
+		assertEquals(tower.getRate(), 2);
+		
+		assertFalse(tower.generateProjectile(1));
+		
+		assertTrue(tower.generateProjectile(10));
+		assertNotNull(tower.getProjectile());
+		
 		tower.update();
+		assertEquals(tower.getX(), 0);
+		assertEquals(tower.getY(), 0);
 	}
 	
 	@Test
@@ -120,8 +129,8 @@ public class TDTests {
 		projectile.setSpeed(50);
 		assertEquals(projectile.getSpeed(), 50);
 		
-		projectile.getImage();
 		projectile.setImage(null);
+		assertNotNull(projectile.getImage());
 		
 		projectile.setX(5);
 		projectile.setY(5);
