@@ -73,6 +73,10 @@ public class TDTests {
 		Enemy enemy1 = new Enemy(0, 0, 50, 50, 5, 20, 10);
 		Enemy enemy2 = new Enemy(0, 0, 50, 50);
 		
+		assertNotNull(enemy);
+		assertNotNull(enemy1);
+		assertNotNull(enemy2);
+		
 		enemy.setHealth(50);
 		assertEquals(enemy.getHealth(), 50);
 		
@@ -92,6 +96,10 @@ public class TDTests {
 		Tower tower1 = new Tower();
 		Tower tower = new Tower(0, 0, 50, 50, 150, 2, 100);
 		Tower tower2 = new Tower(0, 0, 50, 50);
+		
+		assertNotNull(tower);
+		assertNotNull(tower1);
+		assertNotNull(tower2);
 		
 		tower.getRadius();
 		assertEquals(tower.getRadius(), 150);
@@ -117,6 +125,10 @@ public class TDTests {
 		Projectile projectile = new Projectile(10, 10, 50, 50, 10, 5, 150);
 		Projectile projectile1 = new Projectile(10, 10, 50, 50);
 		Projectile projectile2 = new Projectile(10, 10);
+		
+		assertNotNull(projectile);
+		assertNotNull(projectile1);
+		assertNotNull(projectile2);
 		
 		projectile.setHeight(45);
 		projectile.setWidth(45);
@@ -161,6 +173,12 @@ public class TDTests {
 		Player player2 = new Player(view, 0, 100);
 		Player player3 = new Player();
 		
+		assertNotNull(view);
+		assertNotNull(player);
+		assertNotNull(player1);
+		assertNotNull(player2);
+		assertNotNull(player3);
+		
 		GameState gameState = new GameState(view);
 		
 		TDController controller = new TDController(player, gameState);
@@ -203,6 +221,9 @@ public class TDTests {
 		
 		TDController controller = new TDController(player, gameState);
 		TDController controller1 = new TDController(player1, gameState);
+		
+		assertNotNull(controller);
+		assertNotNull(controller1);
 		
 		controller.canPurchaseTower(tower);
 		assertTrue(controller.canPlaceTower(0, 0));
