@@ -2,6 +2,7 @@ package view;
 
 import java.io.File;
 
+import controller.TDController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -21,8 +22,12 @@ public class TDMainMenu extends Stage {
 	private BorderPane menuPane = new BorderPane();
 	private String chosenMap;
 	private GridPane stageBox;
+	private boolean gameStarted = false;
+	private String mapFileName;
+	private TDController controller;
+	private TDView view;
 	
-	public TDMainMenu() {
+	public TDMainMenu() {		
 		Button startBtn = new Button("Start");
 		startBtn.setPadding(new Insets(10, 10, 10, 10));
 		startBtn.setOnAction(new StageButton("map1.td"));
@@ -102,6 +107,12 @@ public class TDMainMenu extends Stage {
 		return chosenMap;
 	}
 	
+	public void setReferences(TDView view, TDController controller, String mapFileName) {
+		this.view = view;
+		this.mapFileName = mapFileName;
+		this.controller = controller;
+	}
+	
 	class StageButton implements EventHandler<ActionEvent> {
 		private String mapFile;
 		
@@ -110,10 +121,23 @@ public class TDMainMenu extends Stage {
 		}
 		
 		public void handle(ActionEvent e) {	
-			chosenMap = TDView.MAP_PATH + mapFile;
-			Node source = (Node) e.getSource();
-		    Stage stage = (Stage) source.getScene().getWindow();
-		    stage.close();
+			if (!gameStarted) {
+				chosenMap = TDView.MAP_PATH + mapFile;
+				gameStarted = true;
+				stageBox.setVisible(false);
+				Node source = (Node) e.getSource();
+			    Stage stage = (Stage) source.getScene().getWindow();
+			    stage.close();
+			} else {
+				stageBox.setVisible(false);
+				mapFileName = TDView.MAP_PATH + mapFile;
+				controller.stopAnimation();
+				controller.reset();
+				view.newGame();
+				Node source = (Node) e.getSource();
+			    Stage stage = (Stage) source.getScene().getWindow();
+			    stage.close();
+			}		
 		}
 	}
 	

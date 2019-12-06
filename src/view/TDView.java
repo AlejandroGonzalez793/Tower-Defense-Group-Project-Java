@@ -210,6 +210,7 @@ public class TDView extends Application implements Observer {
 			victoryWindow.setResizable(false);
 			victoryWindow.getContinueBtn().setOnAction(e -> {
 				primaryStage.hide();
+				mainMenu.setReferences(this, controller, mapFileName);
 				mainMenu.show();
 				Node source = (Node) e.getSource();
 				Stage stage = (Stage) source.getScene().getWindow();
