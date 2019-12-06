@@ -1,6 +1,7 @@
 package view;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,16 +14,26 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.util.Duration;
 
 public class TDMainMenu extends Stage {
 	private BorderPane menuPane = new BorderPane();
 	private String chosenMap;
 	private GridPane stageBox;
+	private MediaPlayer playerMenu;
 	
 	public TDMainMenu() {
+		stopMenuMusic();
+		Media pick = new Media(Paths.get("resources/music/Slam_of_Fates.mp3").toUri().toString()); //throws here
+        playerMenu = new MediaPlayer(pick);
+        playerMenu.play();
+        loopMenuTrack();
+        
 		Button startBtn = new Button("Start");
 		startBtn.setPadding(new Insets(10, 10, 10, 10));
 		startBtn.setOnAction(new StageButton("map1.td"));
@@ -102,6 +113,26 @@ public class TDMainMenu extends Stage {
 		return chosenMap;
 	}
 	
+	public void loopMenuTrack() {
+		playerMenu.setOnEndOfMedia(new Runnable() {
+	        @Override
+	        public void run() {
+	        	while (true) {
+	        		playerMenu.seek(Duration.ZERO);
+		            playerMenu.play();
+	        	}  
+	        }
+	    }); 
+	}
+	
+	public void stopMenuMusic() {
+		if (playerMenu != null)
+	    {
+			playerMenu.stop();
+			playerMenu = null;
+	    }
+	}
+	
 	class StageButton implements EventHandler<ActionEvent> {
 		private String mapFile;
 		
@@ -110,6 +141,7 @@ public class TDMainMenu extends Stage {
 		}
 		
 		public void handle(ActionEvent e) {	
+			playerMenu.stop();
 			chosenMap = TDView.MAP_PATH + mapFile;
 			Node source = (Node) e.getSource();
 		    Stage stage = (Stage) source.getScene().getWindow();

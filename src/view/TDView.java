@@ -43,6 +43,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.GameState;
 import model.Player;
 import model.enemies.Enemy;
@@ -61,6 +62,7 @@ public class TDView extends Application implements Observer {
 	private TDMainMenu mainMenu;
 	private TDmicrotransaction microtransMenu;
 	private String mapFileName;
+	private MediaPlayer player;
 	
 	private Text money;
 	private Text health;
@@ -78,10 +80,6 @@ public class TDView extends Application implements Observer {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
-		Media pick = new Media(Paths.get("resources/Slam_of_Fates.mp3").toUri().toString()); //throws here
-        MediaPlayer player = new MediaPlayer(pick);
-        player.play();
 		
 		this.primaryStage = primaryStage;
 		
@@ -212,6 +210,10 @@ public class TDView extends Application implements Observer {
 		primaryStage.setMinWidth(100);
 		primaryStage.sizeToScene();
 		primaryStage.centerOnScreen();
+		
+		stopMusic();
+		getTrack();
+        loopTrack();
 	}
 
 	public void createMap() {
@@ -430,6 +432,41 @@ public class TDView extends Application implements Observer {
 		root.setRight(sidebarPane);
 	}
 	
+	public void getTrack() {
+		Media pick;
+		if (mapFileName.equals(MAP_PATH + "map1.td")) {
+			pick = new Media(Paths.get("resources/music/Rowdy_Rumble.mp3").toUri().toString());
+		} else if (mapFileName.equals(MAP_PATH + "map2.td")) {
+			pick = new Media(Paths.get("resources/music/Desire_for_All_That_Is_Lost.mp3").toUri().toString());
+		} else if (mapFileName.equals(MAP_PATH + "map3.td")) {
+			pick = new Media(Paths.get("resources/music/Rage_Awakening.mp3").toUri().toString());
+		} else {
+			pick = new Media(Paths.get("resources/music/Vim_and_Vigor.mp3").toUri().toString());
+		}
+        player = new MediaPlayer(pick);
+        player.play();
+	}
+	
+	public void stopMusic() {
+		if (player != null)
+	    {
+			player.stop();
+			player = null;
+	    }
+	}
+	
+	public void loopTrack() {
+		player.setOnEndOfMedia(new Runnable() {
+	        @Override
+	        public void run() {
+	        	while (true) {
+	        		player.seek(Duration.ZERO);
+		            player.play();
+	        	}     
+	        }
+	    }); 
+	}
+	
 	/**
 	 * The TowerButton class is the event handler class that will check if the 
 	 * player can buy a tower, then they can place it on the map. If they can't 
@@ -475,6 +512,9 @@ public class TDView extends Application implements Observer {
 		public void handle(ActionEvent e) {	
 			mapFileName = MAP_PATH + mapFile;
 			controller.reset();
+			stopMusic();
+			getTrack();
+	        loopTrack();
 			newGame();
 		}
 	}
