@@ -225,10 +225,10 @@ public class TDTests {
 		assertNotNull(controller1);
 		
 		controller.canPurchaseTower(tower);
-		assertTrue(controller.canPlaceTower(0, 0));
+		assertTrue(controller.canPlaceTower(0, 0, 1000, 1000));
 		controller.addTower(0, 0);
 		
 		controller.canPurchaseTower(tower1);
-		assertFalse(controller.canPlaceTower(0, 0));
+		assertFalse(controller.canPlaceTower(0, 0, 1000, 1000));
 	}
 }
