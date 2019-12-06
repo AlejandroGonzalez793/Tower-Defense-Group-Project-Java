@@ -67,7 +67,7 @@ public class GameState extends Observable {
 				enemy.update();
 			}
 		}
-
+		
 		for (Tower tower : towers) {
 			if (tower.generateProjectile(ticks)) {
 				for (Enemy enemy : enemies) {

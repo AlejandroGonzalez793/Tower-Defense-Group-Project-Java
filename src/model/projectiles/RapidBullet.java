@@ -5,7 +5,7 @@ import util.ResourceManager;
 public class RapidBullet extends Projectile {
 	private static final int WIDTH = 4;
 	private static final int HEIGHT = 4;
-	private static final int SPEED = 10;
+	private static final int SPEED = 50;
 	private static final int POWER = 2;
 	private static final int RADIUS = 100;
     
