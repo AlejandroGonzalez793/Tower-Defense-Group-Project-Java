@@ -428,7 +428,7 @@ public class TDView extends Application implements Observer {
 		public void handle(ActionEvent e) {		
 			if (controller.canPurchaseTower(this.tower)) {
 				Image image = controller.getSelectedTowerImage();
-				gamePane.setCursor(new ImageCursor(image));
+				gamePane.setCursor(new ImageCursor(image, image.getWidth() / 2, image.getHeight() / 2));
 				towerPane.setDisable(true);
 				gamePane.setDisable(false);
 			} else {
@@ -450,6 +450,7 @@ public class TDView extends Application implements Observer {
 		
 		public void handle(ActionEvent e) {	
 			mapFileName = MAP_PATH + mapFile;
+			controller.reset();
 			newGame();
 		}
 	}
