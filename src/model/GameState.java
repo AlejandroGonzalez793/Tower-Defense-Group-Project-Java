@@ -39,7 +39,8 @@ public class GameState extends Observable {
 		}
 	}
 	
-	public void tick() {        
+	public void tick() {
+		
 		for (Enemy enemy : enemies) {
 			Node node = enemy.getNode();
 			if (node != null) {
@@ -52,7 +53,6 @@ public class GameState extends Observable {
 				enemy.update();
 			}
 		}
-		
 		for (Tower tower : towers) {
 			for (Enemy enemy : enemies) {				
 				double x = Math.abs(enemy.getX() - tower.getX());
@@ -89,6 +89,7 @@ public class GameState extends Observable {
 		for (Projectile projectile : projectiles) {
 			projectile.update();
 		}
+
 		
 		ticks++;
 		setChanged();
