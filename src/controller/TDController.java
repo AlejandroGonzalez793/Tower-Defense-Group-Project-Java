@@ -339,6 +339,15 @@ public class TDController {
 	public void pause() {
 		playing = !playing;
 	}
+	
+	/**
+	 * Gets whether or not the current wave is running or paused.
+	 * 
+	 * @return
+	 */
+	public boolean getIsPlaying() {
+		return playing;
+	}
     
 	/**
 	 * Creates a new AnimationTimer that runs while the games is in progress. Calls the

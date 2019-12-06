@@ -37,6 +37,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -378,10 +379,26 @@ public class TDView extends Application implements Observer {
 		Button pauseButton = new Button("Pause");
 		pauseButton.setOnAction(e -> {
 			controller.pause();
+			if (controller.getIsPlaying()) {
+				pauseButton.setText("Pause");
+			} else {
+				pauseButton.setText("Play");
+			}
+		});
+		
+		Button pauseMusicButton = new Button("Pause Music");
+		pauseMusicButton.setOnAction(e -> {
+			if (player.getStatus().equals(Status.PLAYING)) {
+				player.pause();
+				pauseMusicButton.setText("Play Music");
+			} else {
+				player.play();
+				pauseMusicButton.setText("Pause Music");
+			}
 		});
 		
 		gameSpeedBox.setSpacing(5);
-		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton);
+		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton, pauseMusicButton);
 		
 		HBox towerPurchaseBox = new HBox();
 		sellButton = new Button("Sell Towers");
@@ -423,6 +440,7 @@ public class TDView extends Application implements Observer {
 		Button newWaveButton = new Button("New Wave");
 		newWaveButton.setOnAction(e -> {
 			controller.newWave();
+			pauseButton.setText("Pause");
 		});
 		waveBox.getChildren().add(newWaveButton);
 		

@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -21,7 +20,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class TDmicrotransaction extends Stage {
@@ -29,7 +27,7 @@ public class TDmicrotransaction extends Stage {
 	private Label currentPay;
 	private Label currentGold;
     TextField nameField;
-    PasswordField cardField;
+    TextField cardField;
     TextField dateField;
     TextField codeField;
 	private boolean bought = false;
@@ -45,7 +43,7 @@ public class TDmicrotransaction extends Stage {
 		HBox payBox = new HBox(payLabel, currentPay);
 		HBox goldBox = new HBox(goldLabel, currentGold);
 		
-		Button micro1Btn = new Button("AustensAustere\n  100 Gold\n $4.99");
+		Button micro1Btn = new Button("AustensAustere\n  100 Gold\n  +0 Gold\n $4.99");
 		micro1Btn.setPadding(new Insets(10, 10, 10, 10));
 		micro1Btn.setOnAction(new MicroButton("4.99", "100"));
 		
@@ -84,7 +82,7 @@ public class TDmicrotransaction extends Stage {
 	    Label name = new Label("Name (as it appears on your card)");
 	    nameField = new TextField();
 	    Label card = new Label("Card number (no dashes or spaces)");
-	    cardField = new PasswordField();
+	    cardField = new TextField();
 	    Label date = new Label("Expiration date (m/y)");
 	    dateField = new TextField();
 	    Label code = new Label("CVC");
@@ -108,9 +106,9 @@ public class TDmicrotransaction extends Stage {
 		GridPane.setHalignment(imageView, HPos.CENTER);
 		BorderPane.setAlignment(microBox, Pos.CENTER);
 		
-		Button OkBtn = new Button("Buy Towers");
-		OkBtn.setPadding(new Insets(10, 10, 10, 10));
-		OkBtn.setOnAction(e -> {
+		Button okBtn = new Button("Buy Towers");
+		okBtn.setPadding(new Insets(10, 10, 10, 10));
+		okBtn.setOnAction(e -> {
 			if (!nameField.getText().isEmpty() && 
 					cardField.getText().length() == 16 && isNumeric(cardField.getText()) &&
 					!dateField.getText().isEmpty() && dateField.getText().length() < 6 && 
@@ -141,6 +139,7 @@ public class TDmicrotransaction extends Stage {
 	    });
 		
 		Button cancelBtn = new Button("Cancel");
+		cancelBtn.setAlignment(Pos.BASELINE_RIGHT);
 		cancelBtn.setPadding(new Insets(10, 10, 10, 10));
 		cancelBtn.setOnAction(e -> {
 			Node source = (Node) e.getSource();
@@ -148,16 +147,15 @@ public class TDmicrotransaction extends Stage {
 		    stage.close();
 	    });
 		
-		HBox commandBox = new HBox(OkBtn, cancelBtn);
-		HBox.setMargin(OkBtn, new Insets(10, 0, 0, 0));
-		HBox.setMargin(cancelBtn, new Insets(10, 0, 0, 0));
-		commandBox.setSpacing(25);
+		BorderPane commandPane = new BorderPane();
+		commandPane.setLeft(okBtn);
+		commandPane.setRight(cancelBtn);
 		
 		microPane.setTop(microBox);
 		microPane.setCenter(stageBox);
-		microPane.setBottom(commandBox);
+		microPane.setBottom(commandPane);
 		BorderPane.setMargin(microBox, new Insets(10, 0, 0, 0));
-		BorderPane.setMargin(commandBox, new Insets(20, 20, 20, 20));
+		BorderPane.setMargin(commandPane, new Insets(20, 20, 20, 20));
 		Scene scene = new Scene(microPane, 550, 650);
 		this.setScene(scene);
 	}
