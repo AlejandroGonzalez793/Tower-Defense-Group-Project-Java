@@ -29,9 +29,10 @@ public class TDMainMenu extends Stage {
 	
 	public TDMainMenu() {
 		stopMenuMusic();
-		Media pick = new Media(Paths.get("resources/music/Slam_of_Fates.mp3").toUri().toString()); //throws here
-        playerMenu = new MediaPlayer(pick);
-        playerMenu.play();
+		Media pick = new Media(Paths.get("resources/music/Slam_of_Fates.mp3").toUri().toString());
+		playerMenu = new MediaPlayer(pick);
+		playerMenu.setVolume(0.5);
+		playerMenu.play();
         loopMenuTrack();
         
 		Button startBtn = new Button("Start");
@@ -115,19 +116,16 @@ public class TDMainMenu extends Stage {
 	
 	public void loopMenuTrack() {
 		playerMenu.setOnEndOfMedia(new Runnable() {
-	        @Override
-	        public void run() {
-	        	while (true) {
-	        		playerMenu.seek(Duration.ZERO);
-		            playerMenu.play();
-	        	}  
-	        }
-	    }); 
+			@Override
+			public void run() {
+				playerMenu.seek(Duration.ZERO);
+				playerMenu.play();
+			}
+		}); 
 	}
 	
 	public void stopMenuMusic() {
-		if (playerMenu != null)
-	    {
+		if (playerMenu != null) {
 			playerMenu.stop();
 			playerMenu = null;
 	    }
