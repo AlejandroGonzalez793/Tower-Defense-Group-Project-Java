@@ -14,13 +14,7 @@ import model.Entity;
 import model.GameState;
 import model.Node;
 import model.Player;
-import model.enemies.Balloon;
-import model.enemies.Drifblim;
 import model.enemies.Enemy;
-import model.enemies.GreenPlane;
-import model.enemies.HotAirBalloon;
-import model.enemies.Pterosaur;
-import model.enemies.RedHelicopter;
 import model.projectiles.Projectile;
 import model.towers.AreaTower;
 import model.towers.CheapTower;
@@ -55,10 +49,10 @@ public class TDController {
 	private boolean playing;
 	private double animationSpeed = 1.0;
 	private boolean newRound = true;
-	private boolean finalRound = false;
 	private boolean nextStage = false;
 	private boolean gameOver = false;
 	private int waveNumber = 0;
+	private int stageNumber = 0;
 	public static final int TICK_SPEED = 40;
 	
 	public TDController(Player player, GameState gameState) {
@@ -74,7 +68,7 @@ public class TDController {
 		towerMap.put("MultiShotTower", MultiShotTower.class);
 		towerMap.put("RapidTower", RapidTower.class);
 		towerMap.put("AreaTower", AreaTower.class);
-		towerMap.put("PiercingTower", PiercingTower.class);
+		towerMap.put("Thicc Yoshi", PiercingTower.class);
 		towerMap.put("OneShotTower", OneShotTower.class);
 		
 		ResourceManager.loadImages();
@@ -365,11 +359,12 @@ public class TDController {
 						gameState.removeEnemy(enemy);
 					}
 						
-					if (gameState.getEnemies().isEmpty() && finalRound) {
+					if (gameState.getEnemies().isEmpty() && waveNumber > 4) {
 						nextStage = true;
 						gameState.resetProjectiles();
 					} else if (gameState.getEnemies().isEmpty()) {
 						newRound = true;
+						gameState.resetProjectiles();
 					} 
 					tick();
 				}
@@ -410,62 +405,28 @@ public class TDController {
 	}
 	
 	public void enemyWave() {
-		Rectangle start = gameState.getStart().getRectangle();
-		int x = (int)start.getX();
-		int y = (int)start.getY();
-		
-		if (waveNumber == 0) {
-			Enemy enemy = new Pterosaur(x, y);
-		    Enemy enemy2 = new GreenPlane(x, y);
-		    Enemy enemy3 = new RedHelicopter(x, y);
-		    Enemy enemy4 = new Balloon(x, y);
-		    Enemy enemy5 = new HotAirBalloon(x, y);
-		    Enemy enemy6 = new Drifblim(x, y);
-			gameState.addEnemy(enemy);
-			gameState.addEnemy(enemy2);
-			gameState.addEnemy(enemy3);
-			gameState.addEnemy(enemy4);
-			gameState.addEnemy(enemy5);
-			gameState.addEnemy(enemy6);
-			
-			Enemy enemy7 = new Drifblim(x, y);
-			Enemy enemy8 = new Drifblim(x, y);
-			Enemy enemy9 = new Drifblim(x, y);
-			Enemy enemy10 = new Drifblim(x, y);
-			gameState.addEnemy(enemy7);
-			gameState.addEnemy(enemy8);
-			gameState.addEnemy(enemy9);
-			gameState.addEnemy(enemy10);
-			newRound = false;
-			waveNumber++;
-		} else if (waveNumber == 1) {
-			Enemy enemy = new Pterosaur(x, y);
-			gameState.addEnemy(enemy);
-			newRound = false;
-			waveNumber++;
-		} else if (waveNumber == 2) {
-			Enemy enemy = new GreenPlane(x, y);
-			gameState.addEnemy(enemy);
-			newRound = false;
-			waveNumber++;
-		} else if (waveNumber == 3) {
-			Enemy enemy = new RedHelicopter(x, y);
-			gameState.addEnemy(enemy);
-			newRound = false;
-			waveNumber++;
-		} else if (waveNumber == 4) {
-			Enemy enemy = new Pterosaur(x, y);
-			Enemy enemy2 = new Drifblim(x, y);
-			Enemy enemy3 = new GreenPlane(x, y);
-			gameState.addEnemy(enemy);
-			gameState.addEnemy(enemy2);
-			gameState.addEnemy(enemy3);
-			newRound = false;
-			finalRound = true;
+		if (stageNumber == 0) {
+			EnemyWaves.enemyWave(gameState, waveNumber);
+		} else if (stageNumber == 1) {
+			EnemyWaves.stage1Wave(gameState, waveNumber);
+		} else if (stageNumber == 2) {
+			EnemyWaves.stage2Wave(gameState, waveNumber);
+		} else if (stageNumber == 3) {
+			EnemyWaves.stage3Wave(gameState, waveNumber);
 		}
+		newRound = false;
+		waveNumber++;
+	}
+	
+	public void setStageNumber (int stageNumber) {
+		this.stageNumber = stageNumber;
 	}
 	
 	public int getWaveNumber () {
 		return waveNumber;
+	}
+	
+	public void reset() {
+		playing = false;
 	}
 }

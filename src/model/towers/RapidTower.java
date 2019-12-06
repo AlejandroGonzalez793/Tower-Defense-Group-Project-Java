@@ -8,8 +8,8 @@ public class RapidTower extends Tower{
 	private static final int WIDTH = 35;
 	private static final int HEIGHT = 50;
 	private static final int RADIUS = 100;
-	private static final int RATE = 20;
-	private static final int COST = 300;
+	private static final int RATE = 1;
+	private static final int COST = 350;
 
 	public RapidTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);

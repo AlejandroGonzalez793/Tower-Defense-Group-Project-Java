@@ -219,6 +219,14 @@ public class TDView extends Application implements Observer {
 		createMap();
 		createLayout();
 		
+		if (mapFileName.equals(MAP_PATH+"map1.td")) {
+			controller.setStageNumber(1);
+		} else if (mapFileName.equals(MAP_PATH+"map2.td")) {
+			controller.setStageNumber(2);
+		} else if (mapFileName.equals(MAP_PATH+"map3.td")) {
+			controller.setStageNumber(3);
+		}
+		
 		gamePane.setOnMouseClicked(e -> {
             if (!sellingTowers) {
                 if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
@@ -496,6 +504,7 @@ public class TDView extends Application implements Observer {
 		public void handle(ActionEvent e) {	
 			mapFileName = MAP_PATH + mapFile;
 			controller.stopAnimation();
+			controller.reset();
 			newGame();
 		}
 	}
