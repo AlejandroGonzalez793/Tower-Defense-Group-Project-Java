@@ -72,6 +72,7 @@ public class TDController {
 		towerMap.put("OneShotTower", OneShotTower.class);
 		
 		ResourceManager.loadImages();
+		ResourceManager.loadAudio();
 	}
 	
 	/**

@@ -3,7 +3,6 @@ package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -49,6 +48,7 @@ import model.Player;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
 import model.towers.Tower;
+import util.ResourceManager;
 
 public class TDView extends Application implements Observer {
 	private Stage primaryStage;
@@ -359,31 +359,18 @@ public class TDView extends Application implements Observer {
 		VBox controlBox = new VBox();
 		controlBox.setSpacing(5);
 		
-		Button microButton = new Button("Need more towers?");
-		microButton.setOnAction(e -> {
-			microtransMenu = new TDmicrotransaction();
-			microtransMenu.setTitle("MisurdaSoft");
-			microtransMenu.initModality(Modality.APPLICATION_MODAL);
-			microtransMenu.setResizable(false);
-			microtransMenu.showAndWait();
-			
-			if (microtransMenu.isBought()) {
-				controller.addGold(microtransMenu.getBoughtGold());
-			}
-		});
-		
 		HBox gameSpeedBox = new HBox();
-		Button slowButton = new Button("slow...");
+		Button slowButton = new Button("0.5x");
 		slowButton.setOnAction(e -> {
 			controller.slowDown();
 		});
 		
-		Button normalButton = new Button("Normal");
+		Button normalButton = new Button("1x");
 		normalButton.setOnAction(e -> {
 			controller.regularSpeed();
 		});
 		
-		Button fastButton = new Button("FAST!");
+		Button fastButton = new Button("2x");
 		fastButton.setOnAction(e -> {
 			controller.speedUp();
 		});
@@ -393,9 +380,10 @@ public class TDView extends Application implements Observer {
 			controller.pause();
 		});
 		
+		gameSpeedBox.setSpacing(5);
 		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton);
 		
-		HBox sellBox = new HBox();
+		HBox towerPurchaseBox = new HBox();
 		sellButton = new Button("Sell Towers");
 		sellButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -414,16 +402,31 @@ public class TDView extends Application implements Observer {
 			}
 		});
 		
-		sellBox.getChildren().add(sellButton);
+		
+		Button microButton = new Button("Get More Towers!");
+		microButton.setOnAction(e -> {
+			microtransMenu = new TDmicrotransaction();
+			microtransMenu.setTitle("MisurdaSoft");
+			microtransMenu.initModality(Modality.APPLICATION_MODAL);
+			microtransMenu.setResizable(false);
+			microtransMenu.showAndWait();
+			
+			if (microtransMenu.isBought()) {
+				controller.addGold(microtransMenu.getBoughtGold());
+			}
+		});
+		
+		towerPurchaseBox.setSpacing(5);
+		towerPurchaseBox.getChildren().addAll(sellButton, microButton);
 		
 		HBox waveBox = new HBox();
-		Button newWaveButton = new Button("New Wave >>");
+		Button newWaveButton = new Button("New Wave");
 		newWaveButton.setOnAction(e -> {
 			controller.newWave();
 		});
 		waveBox.getChildren().add(newWaveButton);
 		
-		controlBox.getChildren().addAll(microButton, gameSpeedBox, sellButton, waveBox);
+		controlBox.getChildren().addAll(towerPurchaseBox, gameSpeedBox, waveBox);
 		
 		sidebarPane.setTop(statsBox);
 		sidebarPane.setCenter(towerPane);
@@ -434,22 +437,22 @@ public class TDView extends Application implements Observer {
 	
 	public void getTrack() {
 		Media pick;
-		if (mapFileName.equals(MAP_PATH + "map1.td")) {
-			pick = new Media(Paths.get("resources/music/Rowdy_Rumble.mp3").toUri().toString());
-		} else if (mapFileName.equals(MAP_PATH + "map2.td")) {
-			pick = new Media(Paths.get("resources/music/Desire_for_All_That_Is_Lost.mp3").toUri().toString());
-		} else if (mapFileName.equals(MAP_PATH + "map3.td")) {
-			pick = new Media(Paths.get("resources/music/Rage_Awakening.mp3").toUri().toString());
+		if (mapFileName.endsWith("map1.td")) {
+			pick = ResourceManager.getAudio("map1");
+		} else if (mapFileName.endsWith("map2.td")) {
+			pick = ResourceManager.getAudio("map2");
+		} else if (mapFileName.endsWith("map3.td")) {
+			pick = ResourceManager.getAudio("map3");
 		} else {
-			pick = new Media(Paths.get("resources/music/Vim_and_Vigor.mp3").toUri().toString());
+			pick = ResourceManager.getAudio("default");
 		}
         player = new MediaPlayer(pick);
+        player.setVolume(0.5);
         player.play();
 	}
 	
 	public void stopMusic() {
-		if (player != null)
-	    {
+		if (player != null) {
 			player.stop();
 			player = null;
 	    }
@@ -459,10 +462,8 @@ public class TDView extends Application implements Observer {
 		player.setOnEndOfMedia(new Runnable() {
 	        @Override
 	        public void run() {
-	        	while (true) {
-	        		player.seek(Duration.ZERO);
-		            player.play();
-	        	}     
+        		player.seek(Duration.ZERO);
+	            player.play();
 	        }
 	    }); 
 	}

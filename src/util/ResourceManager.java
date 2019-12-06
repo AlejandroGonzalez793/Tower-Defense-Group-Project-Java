@@ -2,13 +2,16 @@ package util;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
 
 public class ResourceManager {
 	private static Map<String, Image> images = new HashMap<>();
+	private static Map<String, Media> audio = new HashMap<>();
 	
 	public static void loadImages() {
 		try {
@@ -46,6 +49,17 @@ public class ResourceManager {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public static void loadAudio() {
+		audio.put("map1", new Media(Paths.get("resources/music/Rowdy_Rumble.mp3").toUri().toString()));
+		audio.put("map2", new Media(Paths.get("resources/music/Desire_for_All_That_Is_Lost.mp3").toUri().toString()));
+		audio.put("map3", new Media(Paths.get("resources/music/Rage_Awakening.mp3").toUri().toString()));
+		audio.put("default", new Media(Paths.get("resources/music/Vim_and_Vigor.mp3").toUri().toString()));
+	}
+	
+	public static Media getAudio(String name) {
+		return audio.get(name);
 	}
 	
 	public static Image getImage(String name) {
