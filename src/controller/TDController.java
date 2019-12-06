@@ -133,6 +133,9 @@ public class TDController {
 			node = node.getNext();
 		}
 		
+		// check if tower goes off board
+		
+		
 		// Check if tower collides with another tower
 		for (Tower tower : gameState.getTowers()) {
 			Rectangle rect = new Rectangle(tower.getX(), tower.getY(), tower.getWidth(), 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
 import javafx.scene.shape.Rectangle;
 import model.enemies.Enemy;
@@ -76,7 +77,7 @@ public class GameState extends Observable {
 					double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 					if (distance <= tower.getRadius()) {
 						Projectile projectile = tower.getProjectile();
-
+						
 						if (x < y) {
 							y /= x;
 							x = 1;
@@ -84,7 +85,7 @@ public class GameState extends Observable {
 							x /= y;
 							y = 1;
 						}
-
+						
 						if (enemy.getX() < tower.getX()) {
 							x = -x;
 						}

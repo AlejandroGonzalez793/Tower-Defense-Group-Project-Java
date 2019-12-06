@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import controller.TDController;
-import javafx.stage.Stage;
 import model.GameState;
 import model.Player;
 import model.enemies.Enemy;
