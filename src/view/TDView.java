@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -376,13 +377,13 @@ public class TDView extends Application implements Observer {
 			controller.speedUp();
 		});
 		
-		Button pauseButton = new Button("Pause");
+		Button pauseButton = new Button("Pause Game");
 		pauseButton.setOnAction(e -> {
 			controller.pause();
 			if (controller.getIsPlaying()) {
-				pauseButton.setText("Pause");
+				pauseButton.setText("Pause Game");
 			} else {
-				pauseButton.setText("Play");
+				pauseButton.setText("Play Game");
 			}
 		});
 		
@@ -398,7 +399,7 @@ public class TDView extends Application implements Observer {
 		});
 		
 		gameSpeedBox.setSpacing(5);
-		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton, pauseMusicButton);
+		gameSpeedBox.getChildren().addAll(slowButton, normalButton, fastButton, pauseButton);
 		
 		HBox towerPurchaseBox = new HBox();
 		sellButton = new Button("Sell Towers");
@@ -440,9 +441,15 @@ public class TDView extends Application implements Observer {
 		Button newWaveButton = new Button("New Wave");
 		newWaveButton.setOnAction(e -> {
 			controller.newWave();
-			pauseButton.setText("Pause");
+			pauseButton.setText("Pause Game");
 		});
-		waveBox.getChildren().add(newWaveButton);
+		
+		Slider slider = new Slider(0, 100, 50);
+		slider.valueProperty().addListener(e -> {
+			player.setVolume(slider.getValue() / 100);
+        });
+		waveBox.setSpacing(5);
+		waveBox.getChildren().addAll(newWaveButton, pauseMusicButton, slider);
 		
 		controlBox.getChildren().addAll(towerPurchaseBox, gameSpeedBox, waveBox);
 		
