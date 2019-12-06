@@ -114,10 +114,12 @@ public class TDController {
 	 * 
 	 * @param x the x coordinate at the middle of where the tower should be placed
 	 * @param y the y coordinate at the middle of where the tower should be placed
+	 * @param height 
+	 * @param width 
 	 * @return true if the selected tower can be placed at the specified position,
 	 * false otherwise
 	 */
-	public boolean canPlaceTower(int x, int y) {
+	public boolean canPlaceTower(int x, int y, int height, int width) {
 		int shiftedX = x - (selectedTower.getWidth() / 2);
 		int shiftedY = y - (selectedTower.getHeight() / 2);
 		
@@ -134,7 +136,10 @@ public class TDController {
 		}
 		
 		// check if tower goes off board
-		
+		if (shiftedX < 0 || shiftedY < 0 || (selectedTower.getWidth() / 2 + x) > width 
+				|| (selectedTower.getHeight() / 2 + y) > height) {
+			return false;
+		}
 		
 		// Check if tower collides with another tower
 		for (Tower tower : gameState.getTowers()) {

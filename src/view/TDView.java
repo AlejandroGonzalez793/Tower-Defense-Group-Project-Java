@@ -183,7 +183,9 @@ public class TDView extends Application implements Observer {
 		
 		gamePane.setOnMouseClicked(e -> {
             if (!sellingTowers) {
-                if (controller.canPlaceTower((int)e.getX(), (int)e.getY())) {
+            	int height = (int)drawingCanvas.getHeight();
+            	int width = (int)drawingCanvas.getWidth();
+                if (controller.canPlaceTower((int)e.getX(), (int)e.getY(), height, width)) {
 				    controller.addTower((int) e.getX(), (int) e.getY());
 				    towerPane.setDisable(false);
                     gamePane.setDisable(true);
