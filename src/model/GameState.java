@@ -135,6 +135,10 @@ public class GameState extends Observable {
 		return enemies;
 	}
 	
+	public void setEnemies(List<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+	
 	/**
 	 * Gets the list of projectiles in the current GameState.
 	 * @return towers is a list of projectiles in the current GameState.

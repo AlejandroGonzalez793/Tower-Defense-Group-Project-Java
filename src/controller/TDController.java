@@ -14,6 +14,7 @@ import model.Entity;
 import model.GameState;
 import model.Node;
 import model.Player;
+import model.Waves;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
 import model.towers.AreaTower;
@@ -44,6 +45,7 @@ public class TDController {
 	private Player player;
 	private GameState gameState;
 	private Tower selectedTower;
+	private Waves enemyWaves;
 	private Map<String, Class<? extends Tower>> towerMap;
 	private AnimationTimer at;
 	private boolean playing;
@@ -52,7 +54,6 @@ public class TDController {
 	private boolean nextStage = false;
 	private boolean gameOver = false;
 	private int waveNumber = 0;
-	private int stageNumber = 0;
 	public static final int TICK_SPEED = 40;
 	
 	public TDController(Player player, GameState gameState) {
@@ -401,25 +402,14 @@ public class TDController {
 	public void newWave() {
 		playing = true;
 		newRound = false;
+		this.enemyWaves = new Waves(this.gameState);
 		startGame();
 	}
 	
 	public void enemyWave() {
-		if (stageNumber == 0) {
-			EnemyWaves.enemyWave(gameState, waveNumber);
-		} else if (stageNumber == 1) {
-			EnemyWaves.stage1Wave(gameState, waveNumber);
-		} else if (stageNumber == 2) {
-			EnemyWaves.stage2Wave(gameState, waveNumber);
-		} else if (stageNumber == 3) {
-			EnemyWaves.stage3Wave(gameState, waveNumber);
-		}
+		enemyWaves.getWave(waveNumber);
 		newRound = false;
 		waveNumber++;
-	}
-	
-	public void setStageNumber (int stageNumber) {
-		this.stageNumber = stageNumber;
 	}
 	
 	public int getWaveNumber () {

@@ -18,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -119,6 +120,8 @@ public class TDView extends Application implements Observer {
 			File file = fileChooser.showOpenDialog(primaryStage);
 			if (file != null) {
 				mapFileName = file.getPath();
+				controller.stopAnimation();
+				controller.reset();
 				newGame();
 			}
 		});
@@ -128,11 +131,11 @@ public class TDView extends Application implements Observer {
 		
 		root.setTop(menuBar);
 		
-		newGame();
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
-		primaryStage.show();	
+		newGame();
+		//primaryStage.show();	
 	}
 
 	@Override
@@ -205,12 +208,14 @@ public class TDView extends Application implements Observer {
 			victoryWindow.setTitle("Stage Complete!");
 			victoryWindow.initModality(Modality.APPLICATION_MODAL);
 			victoryWindow.setResizable(false);
-			victoryWindow.show();
-			if (victoryWindow.isPressed())
-			{
+			victoryWindow.getContinueBtn().setOnAction(e -> {
 				primaryStage.hide();
-				mainMenu.show();	
-			}	
+				mainMenu.show();
+				Node source = (Node) e.getSource();
+				Stage stage = (Stage) source.getScene().getWindow();
+				stage.close();
+			});
+			victoryWindow.show();
 		}
 	}
 
@@ -218,14 +223,6 @@ public class TDView extends Application implements Observer {
 		controller = new TDController(new Player(this), new GameState(this));
 		createMap();
 		createLayout();
-		
-		if (mapFileName.equals(MAP_PATH+"map1.td")) {
-			controller.setStageNumber(1);
-		} else if (mapFileName.equals(MAP_PATH+"map2.td")) {
-			controller.setStageNumber(2);
-		} else if (mapFileName.equals(MAP_PATH+"map3.td")) {
-			controller.setStageNumber(3);
-		}
 		
 		gamePane.setOnMouseClicked(e -> {
             if (!sellingTowers) {
@@ -247,6 +244,7 @@ public class TDView extends Application implements Observer {
 		primaryStage.setMinWidth(100);
 		primaryStage.sizeToScene();
 		primaryStage.centerOnScreen();
+		primaryStage.show();
 	}
 
 	public void createMap() {
