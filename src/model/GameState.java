@@ -39,19 +39,19 @@ public class GameState extends Observable {
 	}
 
 	/**
-	 * Updates all of the enemies, towers, and projectiles currently active in the game 
-	 * (in that order).
+	 * Updates all of the enemies, towers, and projectiles currently active in the
+	 * game (in that order).
 	 * 
-	 * For each enemy in the game, we first check to see if it has passed over its current 
-	 * node in the path and if it has, increment the node. We then updte the enemies' 
-	 * positions by calling their respective update method.
+	 * For each enemy in the game, we first check to see if it has passed over its
+	 * current node in the path and if it has, increment the node. We then updte the
+	 * enemies' positions by calling their respective update method.
 	 * 
-	 * For each tower in the game, we iterate through all of the enemies to
-	 * find the first one in its radius, and if it can generate a projectile
-	 * we generate a projectile and point it in the direction of the enemy.
+	 * For each tower in the game, we iterate through all of the enemies to find the
+	 * first one in its radius, and if it can generate a projectile we generate a
+	 * projectile and point it in the direction of the enemy.
 	 * 
-	 * For each projectile in the game, we call its respective update
-	 * method to update its position on the board.
+	 * For each projectile in the game, we call its respective update method to
+	 * update its position on the board.
 	 */
 	public void tick() {
 		for (Enemy enemy : enemies) {
@@ -67,7 +67,7 @@ public class GameState extends Observable {
 				enemy.update();
 			}
 		}
-		
+
 		for (Tower tower : towers) {
 			if (tower.generateProjectile(ticks)) {
 				for (Enemy enemy : enemies) {
