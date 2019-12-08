@@ -419,7 +419,7 @@ public class TDController {
 	}
 
 	/**
-	 * Gets the current enemy wave number
+	 * Gets the current enemy wave number.
 	 * 
 	 * @return Integer the wave number
 	 */
