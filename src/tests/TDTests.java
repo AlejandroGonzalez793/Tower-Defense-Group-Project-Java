@@ -11,6 +11,7 @@ import model.Node;
 import model.Player;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
+import model.towers.AreaTower;
 import model.towers.Tower;
 
 public class TDTests {
@@ -168,11 +169,15 @@ public class TDTests {
 	void testIsGameNotOver() {
 		Player player = new Player();
 		TDController controller = new TDController(player, new GameState(null));
+		
 		controller.setWaveNumber(5);
 		assertTrue(controller.isGameOver());
-
+		
 		player.setHealth(0);
 		assertTrue(controller.isPlayerDead());
+		
+		player.setHealth(100);
+		assertFalse(controller.isPlayerDead());
 	}
 
 	/**
@@ -239,4 +244,29 @@ public class TDTests {
 		gameState.addEnemy(new Enemy(0, 0, 10, 10));
 		assertTrue(controller.checkBulletCollision(projectile));
 	}
+	
+	/**
+	 * Tests that a user can sell a tower.
+	 */
+	@Test
+	void testSellTower() {
+		TDController controller = new TDController(new Player(), new GameState(null));
+
+		controller.canPurchaseTower("Tower");
+		controller.canPlaceTower(50, 50, 500, 500);
+		controller.addTower(50, 50);
+		
+		assertFalse(controller.sellTower(0, 0));
+		assertTrue(controller.sellTower(50, 50));
+	}
+	
+	/**
+	 * Tests by getting the tower price.
+	 */
+	@Test
+	void testTowerCost() {
+		TDController controller = new TDController(new Player(), new GameState(null));
+		assertEquals(controller.getTowerCost("Tower"), 50);
+	}
+	
 }
