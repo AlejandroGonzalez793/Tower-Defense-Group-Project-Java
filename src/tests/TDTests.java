@@ -74,21 +74,13 @@ public class TDTests {
 	@Test
 	void testEnemy() {
 		Enemy enemy = new Enemy(0, 0, 50, 50, 100, 5, 50, 10);
-<<<<<<< HEAD
-		
-=======
 
->>>>>>> refs/remotes/origin/feature/testcases
 		enemy.setHealth(50);
 		enemy.setGold(10000);
 		enemy.setPower(100);
 		Node node = new Node(new Rectangle(0, 0, 50, 50));
 		enemy.setNode(node);
-<<<<<<< HEAD
 		
-=======
-
->>>>>>> refs/remotes/origin/feature/testcases
 		assertEquals(50, enemy.getHealth());
 		assertEquals(10000, enemy.getGold());
 		assertEquals(100, enemy.getPower());
@@ -174,33 +166,13 @@ public class TDTests {
 	 */
 	@Test
 	void testIsGameNotOver() {
-		Player player = new Player(null);
+		Player player = new Player();
+		TDController controller = new TDController(player, new GameState(null));
+		controller.setWaveNumber(5);
+		assertTrue(controller.isGameOver());
 
-		assertNotNull(player);
-
-		GameState gameState = new GameState(null);
-<<<<<<< HEAD
-=======
-		gameState.setStart(new Node(new Rectangle(0, 0, 10, 10)));
-
->>>>>>> refs/remotes/origin/feature/testcases
-		TDController controller = new TDController(player, gameState);
-
-<<<<<<< HEAD
-=======
-		assertTrue(controller.isNewRound());
-		assertFalse(controller.getIsPlaying());
-		assertEquals(0, controller.getWaveNumber());
->>>>>>> refs/remotes/origin/feature/testcases
-		assertFalse(controller.isGameOver());
-<<<<<<< HEAD
-=======
-		assertFalse(controller.isPlayerDead());
-		
-		controller.setWaveNumber(4);
-		controller.nextWave();
-		assertFalse(controller.isGameOver());
->>>>>>> refs/remotes/origin/feature/testcases
+		player.setHealth(0);
+		assertTrue(controller.isPlayerDead());
 	}
 
 	/**
@@ -209,48 +181,27 @@ public class TDTests {
 	 */
 	@Test
 	void testIsGameOver() {
-<<<<<<< HEAD
 		TDController controller = new TDController(new Player(), new GameState(null));
 		controller.setWaveNumber(5);
 		assertTrue(controller.isGameOver());
-	}
-
-	/**
-	 * Tests if we can purchase a tower. A player's starting money is 1000 and the default
-	 * tower's cost is less than though, so we should be able to purchase it.
-=======
-		Player player = new Player();
-		TDController controller = new TDController(player, new GameState(null));
-		controller.setWaveNumber(5);
-		assertTrue(controller.isGameOver());
-		
-		player.setHealth(0);
-		assertTrue(controller.isPlayerDead());
 	}
 
 	/**
 	 * Tests if we can purchase a tower. A player's starting money is 1000 and the
 	 * default tower's cost is less than though, so we should be able to purchase
 	 * it.
->>>>>>> refs/remotes/origin/feature/testcases
 	 */
 	@Test
 	void testControllerPurchaseTower() {
 		TDController controller = new TDController(new Player(), new GameState(null));
 		assertTrue(controller.canPurchaseTower("Tower"));
-<<<<<<< HEAD
-=======
 		
 		// selects default tower instead
 		assertTrue(controller.canPurchaseTower("Some random tower that doesn't exist")); 
->>>>>>> refs/remotes/origin/feature/testcases
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Test if we can place a tower on the board. 
-=======
-	 * Tests if we cant purchase a tower because we don't have enough money
+	 * Tests if we can't purchase a tower because we don't have enough money
 	 */
 	@Test
 	void testControllerCantPurchaseTower() {
@@ -261,17 +212,11 @@ public class TDTests {
 
 	/**
 	 * Test if we can place a tower on the board.
->>>>>>> refs/remotes/origin/feature/testcases
 	 */
 	@Test
 	void testControllerPlaceTower() {
 		TDController controller = new TDController(new Player(), new GameState(null));
 
-<<<<<<< HEAD
-		controller.canPurchaseTower("Tower");
-		assertTrue(controller.canPlaceTower(50, 50, 500, 500));
-		controller.addTower(50, 50);
-=======
 		controller.addTower(0, 0); // Nothing should happen since no tower is selected
 
 		controller.canPurchaseTower("Tower");
@@ -293,6 +238,5 @@ public class TDTests {
 		gameState.addEnemy(new Enemy(100, 100, 1, 1));
 		gameState.addEnemy(new Enemy(0, 0, 10, 10));
 		assertTrue(controller.checkBulletCollision(projectile));
->>>>>>> refs/remotes/origin/feature/testcases
 	}
 }
