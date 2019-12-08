@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 import model.GameState;
 import model.Node;
 import model.Player;
+import model.Waves;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
 import model.towers.AreaTower;
@@ -267,6 +268,18 @@ public class TDTests {
 	void testTowerCost() {
 		TDController controller = new TDController(new Player(), new GameState(null));
 		assertEquals(controller.getTowerCost("Tower"), 50);
+	}
+	
+	/**
+	 * Tests the wave class to make sure it is returning enemies on whichever wave.
+	 */
+	@Test
+	void testWaves() {
+		assertNotNull(new Waves());
+		for (int i = 0; i < 6; i++) {
+			assertNotNull(Waves.getWave(i, 0, 0));	
+		}
+		
 	}
 	
 }
