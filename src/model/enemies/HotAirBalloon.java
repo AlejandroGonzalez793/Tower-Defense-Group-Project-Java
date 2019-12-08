@@ -3,9 +3,9 @@ package model.enemies;
 import util.ResourceManager;
 
 public class HotAirBalloon extends Enemy {
-	private static final int HEALTH = 20;
-	private static final int SPEED = 2;
-	private static final int POWER = 5;
+	private static final int HEALTH = 150;
+	private static final int SPEED = 3;
+	private static final int POWER = 10;
 	private static final int GOLD = 15;
 	
 	public HotAirBalloon(int x, int y, int width, int height, int health, int speed, int power, int gold) {

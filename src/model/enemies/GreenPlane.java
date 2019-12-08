@@ -3,8 +3,8 @@ package model.enemies;
 import util.ResourceManager;
 
 public class GreenPlane extends Enemy {
-	private static final int HEALTH = 10;
-	private static final int SPEED = 6;
+	private static final int HEALTH = 30;
+	private static final int SPEED = 10;
 	private static final int POWER = 7;
 	private static final int GOLD = 20;
 	

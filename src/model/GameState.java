@@ -257,4 +257,16 @@ public class GameState extends Observable {
 		}
 		return null;
 	}
+	
+	public void setEnemies(List<Enemy> enemies) {
+		for (Enemy enemy : enemies) {
+			enemy.setNode(start);
+		}
+		
+		this.enemies = enemies;
+	}
+	
+	public void resetProjectiles() {
+		this.projectiles = new ArrayList<>();
+	}
 }

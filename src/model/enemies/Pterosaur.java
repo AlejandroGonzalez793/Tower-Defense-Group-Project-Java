@@ -3,9 +3,9 @@ package model.enemies;
 import util.ResourceManager;
 
 public class Pterosaur extends Enemy {
-	private static final int HEALTH = 15;
-	private static final int SPEED = 10;
-	private static final int POWER = 3;
+	private static final int HEALTH = 70;
+	private static final int SPEED = 15;
+	private static final int POWER = 9;
 	private static final int GOLD = 40;
 	
 	public Pterosaur(int x, int y, int width, int height, int health, int speed, int power, int gold) {

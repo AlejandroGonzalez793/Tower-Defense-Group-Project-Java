@@ -14,13 +14,8 @@ import model.Entity;
 import model.GameState;
 import model.Node;
 import model.Player;
-import model.enemies.Balloon;
-import model.enemies.Drifblim;
+import model.Waves;
 import model.enemies.Enemy;
-import model.enemies.GreenPlane;
-import model.enemies.HotAirBalloon;
-import model.enemies.Pterosaur;
-import model.enemies.RedHelicopter;
 import model.projectiles.Projectile;
 import model.towers.AreaTower;
 import model.towers.CheapTower;
@@ -50,8 +45,11 @@ public class TDController {
 	private GameState gameState;
 	private Tower selectedTower;
 	private Map<String, Class<? extends Tower>> towerMap;
+	private AnimationTimer at;
 	private boolean playing;
 	private double animationSpeed = 1.0;
+	private boolean newRound = true;
+	private int waveNumber = 0;
 	public static final int TICK_SPEED = 40;
 
 	public TDController(Player player, GameState gameState) {
@@ -67,7 +65,7 @@ public class TDController {
 		towerMap.put("MultiShotTower", MultiShotTower.class);
 		towerMap.put("RapidTower", RapidTower.class);
 		towerMap.put("AreaTower", AreaTower.class);
-		towerMap.put("PiercingTower", PiercingTower.class);
+		towerMap.put("Thicc Yoshi", PiercingTower.class);
 		towerMap.put("OneShotTower", OneShotTower.class);
 
 		ResourceManager.loadImages();
@@ -83,14 +81,24 @@ public class TDController {
 	}
 
 	/**
-	 * Figure out whether the game is over or not
+	 * Figure out whether the player is dead based on their health.
+	 * If it is less than or equal to 0, they are dead.
 	 * 
-	 * @return true of the game is over, false otherwise
+	 * @return true of the player is dead, false otherwise
 	 */
-	public boolean isGameOver() {
+	public boolean isPlayerDead() {
 		return player.getHealth() <= 0;
 	}
-
+	
+	/**
+	 * Figure out if the game is over based on which wave we are on.
+	 * 
+	 * @return true if the game is over, false otherwise
+	 */
+	public boolean isGameOver() {
+		return newRound && waveNumber > 4;
+	}
+	
 	/**
 	 * Determines if the player can purchase a tower specified by its name
 	 * 
@@ -227,6 +235,11 @@ public class TDController {
 		return getTowerByName(towerName).getCost();
 	}
 
+	/**
+	 * Adds gold to the Player's money
+	 * 
+	 * @param gold the amount of money to add to the Player
+	 */
 	public void addGold(int gold) {
 		player.setMoney(player.getMoney() + gold);
 	}
@@ -250,8 +263,8 @@ public class TDController {
 		try {
 			Constructor<?> cons = c.getConstructor();
 			object = cons.newInstance();
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException 
+				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 			object = new Tower();
 		}
@@ -317,7 +330,7 @@ public class TDController {
 	 * Doubles the animation speed of the game
 	 */
 	public void speedUp() {
-		animationSpeed = 0.5;
+		animationSpeed = 0.2;
 	}
 
 	/**
@@ -356,18 +369,31 @@ public class TDController {
 	 * {@value #TICK_SPEED} milliseconds.
 	 */
 	public void startGame() {
-		AnimationTimer at = new AnimationTimer() {
+		if (at != null) {
+			return;
+		}
+		
+		at = new AnimationTimer() {
 			private long lastUpdate = 0;
 
 			@Override
 			public void handle(long now) {
 				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
+
 					lastUpdate = now;
 					Enemy enemy = gameState.enemyContact();
 					if (enemy != null) {
 						player.setHealth(player.getHealth() - enemy.getPower());
 						gameState.removeEnemy(enemy);
 					}
+					
+					// if wave is done, set playing to false and resetProjectiles.
+					if (gameState.getEnemies().isEmpty()) {
+						playing = false;
+						newRound = true;
+						gameState.resetProjectiles();
+					}
+					
 					tick();
 				}
 			}
@@ -376,30 +402,49 @@ public class TDController {
 	}
 
 	/**
-	 * Creates a new wave and starts the game loop
+	 * Return the state of the round.
+	 * 
+	 * @return true if the round ended, false if a round is still running.
 	 */
-	public void newWave() {
-		Rectangle start = gameState.getStart().getRectangle();
-		int x = (int) start.getX();
-		int y = (int) start.getY();
+	public boolean isNewRound() {
+		return newRound;
+	}
 
-		Enemy enemy = new Pterosaur(x, y);
-		Enemy enemy2 = new GreenPlane(x, y);
-		Enemy enemy3 = new RedHelicopter(x, y);
-		Enemy enemy4 = new Balloon(x, y);
-		Enemy enemy5 = new HotAirBalloon(x, y);
-		Enemy enemy6 = new Drifblim(x, y);
-		gameState.addEnemy(enemy);
-		gameState.addEnemy(enemy2);
-		gameState.addEnemy(enemy3);
-		gameState.addEnemy(enemy4);
-		gameState.addEnemy(enemy5);
-		gameState.addEnemy(enemy6);
+	/**
+	 * Gets the next wave of enemies, adds them to the game state and then 
+	 * starts the wave.
+	 */
+	public void nextWave() {
 		playing = true;
+		newRound = false;
+		
+		Rectangle rect = gameState.getStart().getRectangle();
+		int x = (int) rect.getX();
+		int y = (int) rect.getY();
+		
+		gameState.setEnemies(Waves.getWave(waveNumber, x, y));
+		waveNumber++;
 		startGame();
 	}
 
-	public void reset() {
+	/**
+	 * Gets the current enemy wave number.
+	 * 
+	 * @return Integer the wave number
+	 */
+	public int getWaveNumber() {
+		return waveNumber;
+	}
+
+	
+	/**
+	 * Stops any running wave by setting playing to false and then
+	 * completely stops the animation if it is running.
+	 */
+	public void stop() {
 		playing = false;
+		if (at != null) {
+			at.stop();
+		}
 	}
 }

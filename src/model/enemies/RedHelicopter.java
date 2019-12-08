@@ -3,9 +3,9 @@ package model.enemies;
 import util.ResourceManager;
 
 public class RedHelicopter extends Enemy {
-	private static final int HEALTH = 30;
-	private static final int SPEED = 4;
-	private static final int POWER = 10;
+	private static final int HEALTH = 100;
+	private static final int SPEED = 7;
+	private static final int POWER = 15;
 	private static final int GOLD = 30;
 
 	public RedHelicopter(int x, int y, int width, int height, int health, int speed, int power, int gold) {
