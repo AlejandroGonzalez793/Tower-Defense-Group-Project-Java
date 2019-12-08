@@ -176,10 +176,6 @@ public class TDController {
 				&& e1.getY() < e2.getY() + e2.getHeight() && e1.getY() + e1.getHeight() > e2.getY();
 	}
 
-	public void enemyReward(int gold) {
-		player.setMoney(player.getMoney() + gold);
-	}
-
 	/**
 	 * Adds the current selected tower to the tower list and subtracts the tower's
 	 * cost from the player's money.
