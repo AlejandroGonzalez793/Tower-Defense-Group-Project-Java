@@ -8,8 +8,8 @@ public class PiercingTower extends Tower{
 	private static final int WIDTH = 50;
 	private static final int HEIGHT = 50;
 	private static final int RADIUS = 100;
-	private static final int RATE = 8;
-	private static final int COST = 250;
+	private static final int RATE = 3;
+	private static final int COST = 350;
 
 	public PiercingTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);

@@ -4,7 +4,7 @@ import model.Entity;
 import util.ResourceManager;
 
 public class Projectile extends Entity {
-	public static final int DEFAULT_POWER = 1;
+	public static final int DEFAULT_POWER = 3;
 	public static final int DEFAULT_WIDTH = 10;
 	public static final int DEFAULT_HEIGHT = 10;
 	public static final int DEFAULT_SPEED = 10;

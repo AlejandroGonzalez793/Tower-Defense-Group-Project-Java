@@ -3,8 +3,8 @@ package model.enemies;
 import util.ResourceManager;
 
 public class Balloon extends Enemy {
-	private static final int HEALTH = 5;
-	private static final int SPEED = 1;
+	private static final int HEALTH = 20;
+	private static final int SPEED = 2;
 	private static final int POWER = 1;
 	private static final int GOLD = 10;
 	

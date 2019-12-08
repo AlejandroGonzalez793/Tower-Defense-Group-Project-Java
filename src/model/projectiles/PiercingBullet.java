@@ -6,7 +6,7 @@ public class PiercingBullet extends Projectile {
 	private static final int WIDTH = 16;
 	private static final int HEIGHT = 15;
 	private static final int SPEED = 10;
-	private static final int POWER = 5;
+	private static final int POWER = 15;
 	private static final int RADIUS = 100;
     
 	public PiercingBullet(int x, int y, int width, int height, int speed, int power, int radius) {
