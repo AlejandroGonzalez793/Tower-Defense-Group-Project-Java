@@ -44,14 +44,11 @@ public class TDController {
 	private Player player;
 	private GameState gameState;
 	private Tower selectedTower;
-	private Waves enemyWaves;
 	private Map<String, Class<? extends Tower>> towerMap;
 	private AnimationTimer at;
 	private boolean playing;
 	private double animationSpeed = 1.0;
 	private boolean newRound = true;
-	private boolean nextStage = false;
-	private boolean gameOver = false;
 	private int waveNumber = 0;
 	public static final int TICK_SPEED = 40;
 
@@ -84,14 +81,24 @@ public class TDController {
 	}
 
 	/**
-	 * Figure out whether the game is over or not
+	 * Figure out whether the player is dead based on their health.
+	 * If it is less than or equal to 0, they are dead.
 	 * 
-	 * @return true of the game is over, false otherwise
+	 * @return true of the player is dead, false otherwise
 	 */
-	public boolean isGameOver() {
+	public boolean isPlayerDead() {
 		return player.getHealth() <= 0;
 	}
-
+	
+	/**
+	 * Figure out if the game is over based on which wave we are on.
+	 * 
+	 * @return true if the game is over, false otherwise
+	 */
+	public boolean isGameOver() {
+		return newRound && waveNumber > 4;
+	}
+	
 	/**
 	 * Determines if the player can purchase a tower specified by its name
 	 * 
@@ -318,7 +325,7 @@ public class TDController {
 	 * Doubles the animation speed of the game
 	 */
 	public void speedUp() {
-		animationSpeed = 0.5;
+		animationSpeed = 0.2;
 	}
 
 	/**
@@ -357,12 +364,16 @@ public class TDController {
 	 * {@value #TICK_SPEED} milliseconds.
 	 */
 	public void startGame() {
+		if (at != null) {
+			return;
+		}
+		
 		at = new AnimationTimer() {
 			private long lastUpdate = 0;
 
 			@Override
 			public void handle(long now) {
-				if (!gameOver && playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
+				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
 
 					lastUpdate = now;
 					Enemy enemy = gameState.enemyContact();
@@ -371,15 +382,13 @@ public class TDController {
 						gameState.removeEnemy(enemy);
 					}
 					
-					// if all waves are done, set gameOver to true and resetProjectiles.
-					if (gameState.getEnemies().isEmpty() && waveNumber > 4) {
-						gameOver = true;
-						gameState.resetProjectiles();
-					} else if (gameState.getEnemies().isEmpty()) {
-						// when a round is over, make the new wave button pressable
+					// if wave is done, set playing to false and resetProjectiles.
+					if (gameState.getEnemies().isEmpty()) {
+						playing = false;
 						newRound = true;
 						gameState.resetProjectiles();
 					}
+					
 					tick();
 				}
 			}
@@ -397,42 +406,20 @@ public class TDController {
 	}
 
 	/**
-	 * Return the state of the game (playing or over).
-	 * 
-	 * @return true if the game ended, false if a game is still running.
+	 * Gets the next wave of enemies, adds them to the game state and then 
+	 * starts the wave.
 	 */
-	public boolean isStageComplete() {
-		return gameOver && gameState.getEnemies().isEmpty() && waveNumber > 4;
-	}
-
-	/**
-	 * Set if the game is over or not.
-	 * 
-	 * @param gameOver
-	 */
-	public void setGameOver(boolean gameOver) {
-		this.gameOver = gameOver;
-	}
-
-	/**
-	 * Creates a new wave and starts the game loop
-	 */
-	public void newWave() {
+	public void nextWave() {
 		playing = true;
 		newRound = false;
-		this.enemyWaves = new Waves(this.gameState);
-		startGame();
-	}
-
-	/**
-	 * Calls the next enemy wave based off of the wave number (up to 5 waves from 0-4).
-	 * Makes the newRound variable false so that the new wave button in TDView will be disabled.
-	 * Increments the wave number by 1.
-	 */
-	public void enemyWave() {
-		enemyWaves.getWave(waveNumber);
-		newRound = false;
+		
+		Rectangle rect = gameState.getStart().getRectangle();
+		int x = (int) rect.getX();
+		int y = (int) rect.getY();
+		
+		gameState.setEnemies(Waves.getWave(waveNumber, x, y));
 		waveNumber++;
+		startGame();
 	}
 
 	/**
@@ -444,6 +431,11 @@ public class TDController {
 		return waveNumber;
 	}
 
+	
+	/**
+	 * Stops any running wave by setting playing to false and then
+	 * completely stops the animation if it is running.
+	 */
 	public void stop() {
 		playing = false;
 		if (at != null) {

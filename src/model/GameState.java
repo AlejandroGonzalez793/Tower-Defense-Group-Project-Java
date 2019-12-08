@@ -258,6 +258,10 @@ public class GameState extends Observable {
 	}
 	
 	public void setEnemies(List<Enemy> enemies) {
+		for (Enemy enemy : enemies) {
+			enemy.setNode(start);
+		}
+		
 		this.enemies = enemies;
 	}
 	

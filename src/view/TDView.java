@@ -182,24 +182,32 @@ public class TDView extends Application implements Observer {
 
 		} else if (arg instanceof Player) {
 			Player player = (Player) arg;
+			
+			int playerHealth = Math.max(0, player.getHealth());
+			health.setText(Integer.toString(playerHealth));
 			money.setText(Integer.toString(player.getMoney()));
-			health.setText(Integer.toString(player.getHealth()));
-			if (controller.isGameOver()) {
+			
+			if (controller.isPlayerDead()) {
+				controller.stop();
 				stopMusic();
-				controller.setGameOver(true);
+				towerPane.setDisable(true);
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Base Destroyed!");
 				alert.setHeaderText(null);
 				alert.setContentText("You have lost...");
 				alert.show();
+				return;
 			}
 		}
+		
 		// if new round is true, set the wave button to be pressable
 		if (controller.isNewRound()) {
 			newWaveButton.setDisable(false);
 		}
+		
 		// when the stage is completed, show victory screen and return to main menu
-		if (controller.isStageComplete()) {
+		if (controller.isGameOver()) {
+			controller.stop();
 			stopMusic();
 			victoryWindow = new TDStageComplete();
 			victoryWindow.setTitle("Stage Complete!");
@@ -465,14 +473,8 @@ public class TDView extends Application implements Observer {
 		HBox waveBox = new HBox();
 		newWaveButton = new Button("New Wave");
 		newWaveButton.setOnAction(e -> {
-			if (controller.getWaveNumber() == 0) {
-				controller.newWave();
-				controller.enemyWave();
-				newWaveButton.setDisable(true);
-			} else {
-				controller.enemyWave();
-				newWaveButton.setDisable(true);
-			}
+			controller.nextWave();
+			newWaveButton.setDisable(true);
 		});
 
 		Slider slider = new Slider(0, 100, 50);

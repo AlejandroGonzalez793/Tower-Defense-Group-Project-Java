@@ -15,6 +15,7 @@ public class TDStageComplete extends Stage {
 	
 	public TDStageComplete() {
 		Label victory = new Label("You won!");
+		victory.setMinSize(50, 50);
 		
 		continueBtn = new Button("Continue");
 		continueBtn.setPadding(new Insets(10, 10, 10, 10));
