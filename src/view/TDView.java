@@ -221,7 +221,7 @@ public class TDView extends Application implements Observer {
 			gameOverWindow.setTitle("Stage Complete!");
 			gameOverWindow.initModality(Modality.APPLICATION_MODAL);
 			gameOverWindow.setResizable(false);
-			gameOverWindow.setLabel("You're Winner !");
+			gameOverWindow.setLabel("You Won!");
 			gameOverWindow.getContinueBtn().setOnAction(e -> {
 				primaryStage.hide();
 				mainMenu.playMenuMusic();
