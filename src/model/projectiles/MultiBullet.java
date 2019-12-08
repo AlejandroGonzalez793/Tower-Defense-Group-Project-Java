@@ -6,7 +6,7 @@ public class MultiBullet extends Projectile {
 	private static final int WIDTH = 16;
 	private static final int HEIGHT = 16;
 	private static final int SPEED = 10;
-	private static final int POWER = 4;
+	private static final int POWER = 7;
 	private static final int RADIUS = 200;
     
 	public MultiBullet(int x, int y, int width, int height, int speed, int power, int radius) {

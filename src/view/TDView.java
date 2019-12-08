@@ -18,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -62,6 +63,7 @@ public class TDView extends Application implements Observer {
 	private GraphicsContext drawingGC;
 	private TDController controller;
 	private TDMainMenu mainMenu;
+	private TDStageComplete gameOverWindow;
 	private TDmicrotransaction microtransMenu;
 	private String mapFileName;
 	private MediaPlayer player;
@@ -72,7 +74,9 @@ public class TDView extends Application implements Observer {
 
 	private Button sellButton;
 	private Boolean sellingTowers = false;
-
+	
+	private Button newWaveButton;
+	
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 3;
@@ -81,11 +85,11 @@ public class TDView extends Application implements Observer {
 	private static final String ROAD_CHAR = "-";
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-
+	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
+		this.controller = new TDController(new Player(this), new GameState(this));
 
-		mainMenu = new TDMainMenu();
+		mainMenu = new TDMainMenu(this, controller);
 		mainMenu.setTitle("Tower Defense");
 		mainMenu.initModality(Modality.APPLICATION_MODAL);
 		mainMenu.setResizable(false);
@@ -123,6 +127,7 @@ public class TDView extends Application implements Observer {
 			File file = fileChooser.showOpenDialog(primaryStage);
 			if (file != null) {
 				mapFileName = file.getPath();
+				controller.stop();
 				newGame();
 			}
 		});
@@ -132,12 +137,10 @@ public class TDView extends Application implements Observer {
 
 		root.setTop(menuBar);
 
-		newGame();
 		primaryStage.setTitle("Tower Defense");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
-		primaryStage.show();
-
+		newGame();
 	}
 
 	@Override
@@ -165,6 +168,7 @@ public class TDView extends Application implements Observer {
 				Enemy enemy = enemyIter.next();
 				if (enemy.getHealth() <= 0) {
 					// TODO: add animation here or draw some explosion
+					controller.addGold(enemy.getGold());
 					enemyIter.remove();
 				} else {
 					drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), enemy.getWidth(),
@@ -178,28 +182,71 @@ public class TDView extends Application implements Observer {
 
 		} else if (arg instanceof Player) {
 			Player player = (Player) arg;
+			
+			int playerHealth = Math.max(0, player.getHealth());
+			health.setText(Integer.toString(playerHealth));
 			money.setText(Integer.toString(player.getMoney()));
-			health.setText(Integer.toString(player.getHealth()));
+			
+			if (controller.isPlayerDead()) {
+				controller.stop();
+				stopMusic();
+				towerPane.setDisable(true);
+				gameOverWindow = new TDStageComplete();
+				gameOverWindow.setTitle("Game Over");
+				gameOverWindow.initModality(Modality.APPLICATION_MODAL);
+				gameOverWindow.setResizable(false);
+				gameOverWindow.setLabel("You have lost...");
+				gameOverWindow.getContinueBtn().setOnAction(e -> {
+					primaryStage.hide();
+					mainMenu.playMenuMusic();
+					mainMenu.show();
+					Node source = (Node) e.getSource();
+					Stage stage = (Stage) source.getScene().getWindow();
+					stage.close();
+				});
+				gameOverWindow.show();
+			}
+		}
+		
+		// if new round is true, set the wave button to be pressable
+		if (controller.isNewRound()) {
+			newWaveButton.setDisable(false);
+		}
+		
+		// when the stage is completed, show victory screen and return to main menu
+		if (controller.isGameOver()) {
+			controller.stop();
+			stopMusic();
+			gameOverWindow = new TDStageComplete();
+			gameOverWindow.setTitle("Stage Complete!");
+			gameOverWindow.initModality(Modality.APPLICATION_MODAL);
+			gameOverWindow.setResizable(false);
+			gameOverWindow.setLabel("You Won!");
+			gameOverWindow.getContinueBtn().setOnAction(e -> {
+				primaryStage.hide();
+				mainMenu.playMenuMusic();
+				mainMenu.show();
+				Node source = (Node) e.getSource();
+				Stage stage = (Stage) source.getScene().getWindow();
+				stage.close();
+			});
+			gameOverWindow.show();
 		}
 	}
 
 	public void newGame() {
-		controller = new TDController(new Player(this), new GameState(this));
+		this.controller = new TDController(new Player(this), new GameState(this));
 		createMap();
 		createLayout();
 
 		gamePane.setOnMouseClicked(e -> {
-			if (!sellingTowers) {
-				if (controller.canPlaceTower((int) e.getX(), (int) e.getY())) {
-					controller.addTower((int) e.getX(), (int) e.getY());
-					towerPane.setDisable(false);
-					gamePane.setDisable(true);
-					gamePane.setCursor(Cursor.DEFAULT);
-				}
+			if (!sellingTowers && controller.canPlaceTower((int) e.getX(), (int) e.getY())) {
+				controller.addTower((int) e.getX(), (int) e.getY());
+				towerPane.setDisable(false);
+				gamePane.setDisable(true);
+				gamePane.setCursor(Cursor.DEFAULT);
 			} else {
-				if (controller.sellTower((int) e.getX(), (int) e.getY())) {
-					// TODO: Do Something
-				}
+				controller.sellTower((int) e.getX(), (int) e.getY());
 			}
 		});
 		gamePane.setDisable(true);
@@ -208,10 +255,9 @@ public class TDView extends Application implements Observer {
 		primaryStage.setMinWidth(100);
 		primaryStage.sizeToScene();
 		primaryStage.centerOnScreen();
-
+		primaryStage.show();
 		stopMusic();
 		getTrack();
-		loopTrack();
 	}
 
 	public void createMap() {
@@ -434,10 +480,10 @@ public class TDView extends Application implements Observer {
 		towerPurchaseBox.getChildren().addAll(sellButton, microButton);
 
 		HBox waveBox = new HBox();
-		Button newWaveButton = new Button("New Wave");
+		newWaveButton = new Button("New Wave");
 		newWaveButton.setOnAction(e -> {
-			controller.newWave();
-			pauseButton.setText("Pause Game");
+			controller.nextWave();
+			newWaveButton.setDisable(true);
 		});
 
 		Slider slider = new Slider(0, 100, 50);
@@ -468,6 +514,11 @@ public class TDView extends Application implements Observer {
 			pick = ResourceManager.getAudio("default");
 		}
 		player = new MediaPlayer(pick);
+		player.setOnEndOfMedia(() -> {
+			player.seek(Duration.ZERO);
+			player.play();
+		});
+		
 		player.setVolume(0.5);
 		player.play();
 	}
@@ -478,15 +529,9 @@ public class TDView extends Application implements Observer {
 			player = null;
 		}
 	}
-
-	public void loopTrack() {
-		player.setOnEndOfMedia(new Runnable() {
-			@Override
-			public void run() {
-				player.seek(Duration.ZERO);
-				player.play();
-			}
-		});
+	
+	public void setMapFileName(String mapFileName) {
+		this.mapFileName = mapFileName;
 	}
 
 	/**
@@ -532,10 +577,9 @@ public class TDView extends Application implements Observer {
 
 		public void handle(ActionEvent e) {
 			mapFileName = MAP_PATH + mapFile;
-			controller.reset();
+			controller.stop();
 			stopMusic();
 			getTrack();
-			loopTrack();
 			newGame();
 		}
 	}

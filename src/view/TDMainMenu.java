@@ -3,6 +3,7 @@ package view;
 import java.io.File;
 import java.nio.file.Paths;
 
+import controller.TDController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -25,15 +26,24 @@ public class TDMainMenu extends Stage {
 	private BorderPane menuPane = new BorderPane();
 	private String chosenMap;
 	private GridPane stageBox;
+	private boolean gameStarted = false;
+	private TDController controller;
+	private TDView view;
 	private MediaPlayer playerMenu;
 
-	public TDMainMenu() {
+	public TDMainMenu(TDView view, TDController controller) {
+		this.view = view;
+		this.controller = controller;
+		
 		stopMenuMusic();
 		Media pick = new Media(Paths.get("resources/music/Slam_of_Fates.mp3").toUri().toString());
 		playerMenu = new MediaPlayer(pick);
+		playerMenu.setOnEndOfMedia(() -> {
+			playerMenu.seek(Duration.ZERO);
+			playerMenu.play();
+		});;
 		playerMenu.setVolume(0.5);
 		playerMenu.play();
-		loopMenuTrack();
 
 		Button startBtn = new Button("Start");
 		startBtn.setPadding(new Insets(10, 10, 10, 10));
@@ -108,18 +118,10 @@ public class TDMainMenu extends Stage {
 		this.setScene(scene);
 	}
 
-	public String getMapImage() {
-		return chosenMap;
-	}
-
-	public void loopMenuTrack() {
-		playerMenu.setOnEndOfMedia(new Runnable() {
-			@Override
-			public void run() {
-				playerMenu.seek(Duration.ZERO);
-				playerMenu.play();
-			}
-		});
+	public void playMenuMusic() {
+		if (playerMenu != null) {
+			playerMenu.play();
+		}
 	}
 
 	public void stopMenuMusic() {
@@ -128,20 +130,37 @@ public class TDMainMenu extends Stage {
 			playerMenu = null;
 		}
 	}
+	
+	public String getMapImage() {
+		return chosenMap;
+	}
 
-	class StageButton implements EventHandler<ActionEvent> {
+	private class StageButton implements EventHandler<ActionEvent> {
 		private String mapFile;
 
 		public StageButton(String mapFile) {
 			this.mapFile = mapFile;
 		}
-
-		public void handle(ActionEvent e) {
-			playerMenu.stop();
-			chosenMap = TDView.MAP_PATH + mapFile;
-			Node source = (Node) e.getSource();
-			Stage stage = (Stage) source.getScene().getWindow();
-			stage.close();
+	
+		public void handle(ActionEvent e) {	
+			if (!gameStarted) {
+				playerMenu.stop();
+				chosenMap = TDView.MAP_PATH + mapFile;
+				gameStarted = true;
+				stageBox.setVisible(false);
+				Node source = (Node) e.getSource();
+			    Stage stage = (Stage) source.getScene().getWindow();
+			    stage.close();
+			} else {
+				playerMenu.stop();
+				stageBox.setVisible(false);
+				controller.stop();
+				view.setMapFileName(TDView.MAP_PATH + mapFile);
+				view.newGame();
+				Node source = (Node) e.getSource();
+			    Stage stage = (Stage) source.getScene().getWindow();
+			    stage.close();
+			}		
 		}
 	}
 
