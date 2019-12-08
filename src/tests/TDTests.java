@@ -166,25 +166,9 @@ public class TDTests {
 	
 	@Test
 	void testControllerGameOver() {
-		TDView view = new TDView();
-		Player player = new Player(view);
-		Player player1 = new Player(view, 100);
-		Player player2 = new Player(view, 0, 100);
-		Player player3 = new Player();
-		
-		assertNotNull(view);
-		assertNotNull(player);
-		assertNotNull(player1);
-		assertNotNull(player2);
-		assertNotNull(player3);
-		
-		GameState gameState = new GameState(view);
-		
-		TDController controller = new TDController(player, gameState);
-		TDController controller1 = new TDController(player2, gameState);
-		
-		assertFalse(controller.isGameOver());
-		assertTrue(controller1.isGameOver());
+		TDController controller = new TDController(new Player(), new GameState(null));
+		controller.setWaveNumber(5);
+		assertTrue(controller.isGameOver());
 	}
 	
 	@Test 
@@ -208,28 +192,10 @@ public class TDTests {
 	
 	@Test
 	void testControllerPlaceTower() {
-		String tower = "Tower";
-		String tower1 = "Tower";
-		
-		TDView view = new TDView();
-		
-		Player player = new Player(view);
-		Player player1 = new Player(view, 100, 0);
-		
-		GameState gameState = new GameState(view);
-		
-		TDController controller = new TDController(player, gameState);
-		TDController controller1 = new TDController(player1, gameState);
-		
-		assertNotNull(controller);
-		assertNotNull(controller1);
-		
-		controller.canPurchaseTower(tower);
-		controller.sellTower(0, 0);
-		assertFalse(controller.canPlaceTower(0, 0, 1000, 1000));
-		controller.addTower(0, 0);
-		
-		controller.canPurchaseTower(tower1);
-		assertFalse(controller.canPlaceTower(0, 0, 1000, 1000));
+		TDController controller = new TDController(new Player(), new GameState(null));
+
+		controller.canPurchaseTower("Tower");
+		assertTrue(controller.canPlaceTower(50, 50, 500, 500));
+		controller.addTower(50, 50);
 	}
 }
