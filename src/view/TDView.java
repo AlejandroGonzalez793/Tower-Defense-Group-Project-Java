@@ -86,6 +86,9 @@ public class TDView extends Application implements Observer {
 
 	@Override
 	public void start(Stage primaryStage) {
+		ResourceManager.loadImages();
+		ResourceManager.loadAudio();
+		
 		this.primaryStage = primaryStage;
 		this.controller = new TDController(new Player(this), new GameState(this));
 
