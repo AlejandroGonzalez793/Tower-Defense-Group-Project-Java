@@ -82,6 +82,8 @@ public class TDTests {
 		enemy.setGold(10000);
 		enemy.setPower(100);
 		Node node = new Node(new Rectangle(0, 0, 50, 50));
+		Node nodeNext = new Node(new Rectangle(0, 0, 50, 50));
+		node.setNext(nodeNext);
 		enemy.setNode(node);
 		
 		assertEquals(50, enemy.getHealth());
@@ -291,8 +293,6 @@ public class TDTests {
 		assertNotNull(new Player(new TDView()));
 		assertNotNull(new Player(new TDView(), 1000));
 		assertNotNull(new Player(new TDView(), 1000, 1000));
-		
-		
 	}
 	
 }
