@@ -184,7 +184,8 @@ public class TDView extends Application implements Observer {
 			Player player = (Player) arg;
 			money.setText(Integer.toString(player.getMoney()));
 			health.setText(Integer.toString(player.getHealth()));
-			if (player.getHealth() <= 0) {
+			if (controller.isGameOver()) {
+				stopMusic();
 				controller.setGameOver(true);
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Base Destroyed!");
@@ -193,14 +194,13 @@ public class TDView extends Application implements Observer {
 				alert.show();
 			}
 		}
-		
+		// if new round is true, set the wave button to be pressable
 		if (controller.isNewRound()) {
 			newWaveButton.setDisable(false);
 		}
-		
-		if (controller.isStageOver()) {
+		// when the stage is completed, show victory screen and return to main menu
+		if (controller.isStageComplete()) {
 			stopMusic();
-			controller.setGameOver(true);
 			victoryWindow = new TDStageComplete();
 			victoryWindow.setTitle("Stage Complete!");
 			victoryWindow.initModality(Modality.APPLICATION_MODAL);

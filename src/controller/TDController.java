@@ -370,33 +370,46 @@ public class TDController {
 						player.setHealth(player.getHealth() - enemy.getPower());
 						gameState.removeEnemy(enemy);
 					}
-
+					
+					// if all waves are done, set gameOver to true and resetProjectiles.
 					if (gameState.getEnemies().isEmpty() && waveNumber > 4) {
-						nextStage = true;
+						gameOver = true;
 						gameState.resetProjectiles();
 					} else if (gameState.getEnemies().isEmpty()) {
+						// when a round is over, make the new wave button pressable
 						newRound = true;
 						gameState.resetProjectiles();
 					}
 					tick();
-				}
-
-				if (gameOver) {
-					gameState.resetProjectiles();
 				}
 			}
 		};
 		at.start();
 	}
 
+	/**
+	 * Return the state of the round.
+	 * 
+	 * @return true if the round ended, false if a round is still running.
+	 */
 	public boolean isNewRound() {
 		return newRound;
 	}
 
-	public boolean isStageOver() {
-		return nextStage;
+	/**
+	 * Return the state of the game (playing or over).
+	 * 
+	 * @return true if the game ended, false if a game is still running.
+	 */
+	public boolean isStageComplete() {
+		return gameOver && gameState.getEnemies().isEmpty() && waveNumber > 4;
 	}
 
+	/**
+	 * Set if the game is over or not.
+	 * 
+	 * @param gameOver
+	 */
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
@@ -411,12 +424,22 @@ public class TDController {
 		startGame();
 	}
 
+	/**
+	 * Calls the next enemy wave based off of the wave number (up to 5 waves from 0-4).
+	 * Makes the newRound variable false so that the new wave button in TDView will be disabled.
+	 * Increments the wave number by 1.
+	 */
 	public void enemyWave() {
 		enemyWaves.getWave(waveNumber);
 		newRound = false;
 		waveNumber++;
 	}
 
+	/**
+	 * Gets the current enemy wave number
+	 * 
+	 * @return Integer the wave number
+	 */
 	public int getWaveNumber() {
 		return waveNumber;
 	}

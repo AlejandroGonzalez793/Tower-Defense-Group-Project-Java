@@ -9,7 +9,7 @@ public class MultiShotTower extends Tower{
 	private static final int HEIGHT = 150;
 	private static final int RADIUS = 200;
 	private static final int RATE = 5;
-	private static final int COST = 300;
+	private static final int COST = 150;
 	
 	public MultiShotTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
