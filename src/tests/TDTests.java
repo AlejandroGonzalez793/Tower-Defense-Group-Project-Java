@@ -12,7 +12,6 @@ import model.Player;
 import model.Waves;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
-import model.towers.AreaTower;
 import model.towers.Tower;
 import view.TDView;
 
@@ -85,7 +84,7 @@ public class TDTests {
 		Node nodeNext = new Node(new Rectangle(0, 0, 50, 50));
 		node.setNext(nodeNext);
 		enemy.setNode(node);
-		
+
 		assertEquals(50, enemy.getHealth());
 		assertEquals(10000, enemy.getGold());
 		assertEquals(100, enemy.getPower());
@@ -165,24 +164,31 @@ public class TDTests {
 
 	}
 
-	/**
-	 * Tests if the game is not over through the controller. If the controller has
-	 * just been created, the game should not be considered over.
-	 */
-	@Test
-	void testIsGameNotOver() {
-		Player player = new Player();
-		TDController controller = new TDController(player, new GameState(null));
-		
-		controller.setWaveNumber(5);
-		assertTrue(controller.isGameOver());
-		
-		player.setHealth(0);
-		assertTrue(controller.isPlayerDead());
-		
-		player.setHealth(100);
-		assertFalse(controller.isPlayerDead());
-	}
+	/** 
+	 * Tests if the game is not over through the controller. If the controller has 
+	 * just been created, the game should not be considered over. 
+	 */ 
+	@Test 
+	void testIsGameNotOver() { 
+		Player player = new Player(null); 
+ 
+		assertNotNull(player); 
+ 
+		GameState gameState = new GameState(null); 
+		gameState.setStart(new Node(new Rectangle(0, 0, 10, 10))); 
+ 
+		TDController controller = new TDController(player, gameState); 
+ 
+		assertTrue(controller.isNewRound()); 
+		assertFalse(controller.getIsPlaying()); 
+		assertEquals(0, controller.getWaveNumber()); 
+		assertFalse(controller.isGameOver()); 
+		assertFalse(controller.isPlayerDead()); 
+		 
+		controller.setWaveNumber(4); 
+		controller.nextWave(); 
+		assertFalse(controller.isGameOver()); 
+	} 
 
 	/**
 	 * Tests if the game is over. If the wave number is 5 or greater, the game
@@ -190,9 +196,13 @@ public class TDTests {
 	 */
 	@Test
 	void testIsGameOver() {
-		TDController controller = new TDController(new Player(), new GameState(null));
+		Player player = new Player();
+		TDController controller = new TDController(player, new GameState(null));
 		controller.setWaveNumber(5);
 		assertTrue(controller.isGameOver());
+
+		player.setHealth(0);
+		assertTrue(controller.isPlayerDead());
 	}
 
 	/**
@@ -204,9 +214,9 @@ public class TDTests {
 	void testControllerPurchaseTower() {
 		TDController controller = new TDController(new Player(), new GameState(null));
 		assertTrue(controller.canPurchaseTower("Tower"));
-		
+
 		// selects default tower instead
-		assertTrue(controller.canPurchaseTower("Some random tower that doesn't exist")); 
+		assertTrue(controller.canPurchaseTower("Some random tower that doesn't exist"));
 	}
 
 	/**
@@ -232,7 +242,7 @@ public class TDTests {
 		assertTrue(controller.canPlaceTower(50, 50, 500, 500));
 		controller.addTower(50, 50);
 	}
-	
+
 	/**
 	 * Tests if there are any bullet collisions with enemies.
 	 */
@@ -241,14 +251,14 @@ public class TDTests {
 		Projectile projectile = new Projectile(0, 0, 50, 50);
 		GameState gameState = new GameState(null);
 		TDController controller = new TDController(new Player(), gameState);
-		
+
 		assertFalse(controller.checkBulletCollision(projectile));
-		
+
 		gameState.addEnemy(new Enemy(100, 100, 1, 1));
 		gameState.addEnemy(new Enemy(0, 0, 10, 10));
 		assertTrue(controller.checkBulletCollision(projectile));
 	}
-	
+
 	/**
 	 * Tests that a user can sell a tower.
 	 */
@@ -259,11 +269,11 @@ public class TDTests {
 		controller.canPurchaseTower("Tower");
 		controller.canPlaceTower(50, 50, 500, 500);
 		controller.addTower(50, 50);
-		
+
 		assertFalse(controller.sellTower(0, 0));
 		assertTrue(controller.sellTower(50, 50));
 	}
-	
+
 	/**
 	 * Tests by getting the tower price.
 	 */
@@ -272,7 +282,7 @@ public class TDTests {
 		TDController controller = new TDController(new Player(), new GameState(null));
 		assertEquals(controller.getTowerCost("Tower"), 50);
 	}
-	
+
 	/**
 	 * Tests the wave class to make sure it is returning enemies on whichever wave.
 	 */
@@ -280,10 +290,10 @@ public class TDTests {
 	void testWaves() {
 		assertNotNull(new Waves());
 		for (int i = 0; i < 6; i++) {
-			assertNotNull(Waves.getWave(i, 0, 0));	
-		}	
+			assertNotNull(Waves.getWave(i, 0, 0));
+		}
 	}
-	
+
 	/**
 	 * Tests the player class to make sure the constructors function properly.
 	 */
@@ -294,5 +304,5 @@ public class TDTests {
 		assertNotNull(new Player(new TDView(), 1000));
 		assertNotNull(new Player(new TDView(), 1000, 1000));
 	}
-	
+
 }
