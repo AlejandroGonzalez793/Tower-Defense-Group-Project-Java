@@ -168,7 +168,7 @@ public class TDView extends Application implements Observer {
 				Enemy enemy = enemyIter.next();
 				if (enemy.getHealth() <= 0) {
 					// TODO: add animation here or draw some explosion
-					controller.enemyReward(enemy.getGold());
+					controller.addGold(enemy.getGold());
 					enemyIter.remove();
 				} else {
 					drawingGC.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), enemy.getWidth(),
