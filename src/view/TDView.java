@@ -74,9 +74,9 @@ public class TDView extends Application implements Observer {
 
 	private Button sellButton;
 	private Boolean sellingTowers = false;
-	
+
 	private Button newWaveButton;
-	
+
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 3;
@@ -182,11 +182,11 @@ public class TDView extends Application implements Observer {
 
 		} else if (arg instanceof Player) {
 			Player player = (Player) arg;
-			
+
 			int playerHealth = Math.max(0, player.getHealth());
 			health.setText(Integer.toString(playerHealth));
 			money.setText(Integer.toString(player.getMoney()));
-			
+
 			if (controller.isPlayerDead()) {
 				controller.stop();
 				stopMusic();
@@ -207,12 +207,12 @@ public class TDView extends Application implements Observer {
 				gameOverWindow.show();
 			}
 		}
-		
+
 		// if new round is true, set the wave button to be pressable
 		if (controller.isNewRound()) {
 			newWaveButton.setDisable(false);
 		}
-		
+
 		// when the stage is completed, show victory screen and return to main menu
 		if (controller.isGameOver()) {
 			controller.stop();
@@ -522,7 +522,7 @@ public class TDView extends Application implements Observer {
 			player.seek(Duration.ZERO);
 			player.play();
 		});
-		
+
 		player.setVolume(0.5);
 		player.play();
 	}
@@ -533,7 +533,7 @@ public class TDView extends Application implements Observer {
 			player = null;
 		}
 	}
-	
+
 	public void setMapFileName(String mapFileName) {
 		this.mapFileName = mapFileName;
 	}

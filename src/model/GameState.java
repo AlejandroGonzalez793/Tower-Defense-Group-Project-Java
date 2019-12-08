@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
 
 import javafx.scene.shape.Rectangle;
 import model.enemies.Enemy;

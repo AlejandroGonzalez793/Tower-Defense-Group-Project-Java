@@ -25,7 +25,6 @@ import model.towers.OneShotTower;
 import model.towers.PiercingTower;
 import model.towers.RapidTower;
 import model.towers.Tower;
-import util.ResourceManager;
 
 /**
  * The general controller used to interact with the game in its current state.
@@ -67,9 +66,6 @@ public class TDController {
 		towerMap.put("AreaTower", AreaTower.class);
 		towerMap.put("Thicc Yoshi", PiercingTower.class);
 		towerMap.put("OneShotTower", OneShotTower.class);
-
-		ResourceManager.loadImages();
-		ResourceManager.loadAudio();
 	}
 
 	/**
@@ -120,8 +116,8 @@ public class TDController {
 	 * 
 	 * @param x the x coordinate at the middle of where the tower should be placed
 	 * @param y the y coordinate at the middle of where the tower should be placed
-	 * @param height 
-	 * @param width 
+	 * @param height the height of the board that we are placing the tower on
+	 * @param width the width of the board that we are placing the tower on
 	 * @return true if the selected tower can be placed at the specified position,
 	 *         false otherwise
 	 */
@@ -139,14 +135,11 @@ public class TDController {
 
 			node = node.getNext();
 		}
-
-		
 		// check if tower goes off board
 		if (shiftedX < 0 || shiftedY < 0 || (selectedTower.getWidth() / 2 + x) > width 
 				|| (selectedTower.getHeight() / 2 + y) > height) {
 			return false;
 		}
-	
 		// Check if tower collides with another tower
 		for (Tower tower : gameState.getTowers()) {
 			Rectangle rect = new Rectangle(tower.getX(), tower.getY(), tower.getWidth(), tower.getHeight());
@@ -425,6 +418,15 @@ public class TDController {
 		gameState.setEnemies(Waves.getWave(waveNumber, x, y));
 		waveNumber++;
 		startGame();
+	}
+	
+	/**
+	 * Sets the enemy wave number
+	 * 
+	 * @param waveNumber the number to set the wave to
+	 */
+	public void setWaveNumber(int waveNumber) {
+		this.waveNumber = waveNumber;
 	}
 
 	/**
