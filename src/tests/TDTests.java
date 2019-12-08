@@ -14,6 +14,7 @@ import model.enemies.Enemy;
 import model.projectiles.Projectile;
 import model.towers.AreaTower;
 import model.towers.Tower;
+import view.TDView;
 
 public class TDTests {
 	/**
@@ -278,7 +279,19 @@ public class TDTests {
 		assertNotNull(new Waves());
 		for (int i = 0; i < 6; i++) {
 			assertNotNull(Waves.getWave(i, 0, 0));	
-		}
+		}	
+	}
+	
+	/**
+	 * Tests the player class to make sure the constructors function properly.
+	 */
+	@Test
+	void testPlayer() {
+		assertNotNull(new Player());
+		assertNotNull(new Player(new TDView()));
+		assertNotNull(new Player(new TDView(), 1000));
+		assertNotNull(new Player(new TDView(), 1000, 1000));
+		
 		
 	}
 	
