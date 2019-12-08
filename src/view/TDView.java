@@ -63,7 +63,7 @@ public class TDView extends Application implements Observer {
 	private GraphicsContext drawingGC;
 	private TDController controller;
 	private TDMainMenu mainMenu;
-	private TDStageComplete victoryWindow;
+	private TDStageComplete gameOverWindow;
 	private TDmicrotransaction microtransMenu;
 	private String mapFileName;
 	private MediaPlayer player;
@@ -191,12 +191,20 @@ public class TDView extends Application implements Observer {
 				controller.stop();
 				stopMusic();
 				towerPane.setDisable(true);
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Base Destroyed!");
-				alert.setHeaderText(null);
-				alert.setContentText("You have lost...");
-				alert.show();
-				return;
+				gameOverWindow = new TDStageComplete();
+				gameOverWindow.setTitle("Game Over");
+				gameOverWindow.initModality(Modality.APPLICATION_MODAL);
+				gameOverWindow.setResizable(false);
+				gameOverWindow.setLabel("You have lost...");
+				gameOverWindow.getContinueBtn().setOnAction(e -> {
+					primaryStage.hide();
+					mainMenu.playMenuMusic();
+					mainMenu.show();
+					Node source = (Node) e.getSource();
+					Stage stage = (Stage) source.getScene().getWindow();
+					stage.close();
+				});
+				gameOverWindow.show();
 			}
 		}
 		
@@ -209,11 +217,12 @@ public class TDView extends Application implements Observer {
 		if (controller.isGameOver()) {
 			controller.stop();
 			stopMusic();
-			victoryWindow = new TDStageComplete();
-			victoryWindow.setTitle("Stage Complete!");
-			victoryWindow.initModality(Modality.APPLICATION_MODAL);
-			victoryWindow.setResizable(false);
-			victoryWindow.getContinueBtn().setOnAction(e -> {
+			gameOverWindow = new TDStageComplete();
+			gameOverWindow.setTitle("Stage Complete!");
+			gameOverWindow.initModality(Modality.APPLICATION_MODAL);
+			gameOverWindow.setResizable(false);
+			gameOverWindow.setLabel("You're Winner !");
+			gameOverWindow.getContinueBtn().setOnAction(e -> {
 				primaryStage.hide();
 				mainMenu.playMenuMusic();
 				mainMenu.show();
@@ -221,7 +230,7 @@ public class TDView extends Application implements Observer {
 				Stage stage = (Stage) source.getScene().getWindow();
 				stage.close();
 			});
-			victoryWindow.show();
+			gameOverWindow.show();
 		}
 	}
 

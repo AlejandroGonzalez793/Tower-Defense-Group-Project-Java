@@ -12,21 +12,26 @@ import javafx.stage.Stage;
 public class TDStageComplete extends Stage {
 	private BorderPane vicPane = new BorderPane();
 	private Button continueBtn;
+	private Label gameOverMessage;
 	
 	public TDStageComplete() {
-		Label victory = new Label("You won!");
-		victory.setMinSize(50, 50);
+		gameOverMessage = new Label("Game Ended");
+		gameOverMessage.setMinSize(50, 50);
 		
 		continueBtn = new Button("Continue");
 		continueBtn.setPadding(new Insets(10, 10, 10, 10));
 		
-		VBox vBox = new VBox(victory, continueBtn);
+		VBox vBox = new VBox(gameOverMessage, continueBtn);
 		vBox.setAlignment(Pos.TOP_CENTER);
 		vBox.setSpacing(5);
 		
 		vicPane.setCenter(vBox);
 		Scene scene = new Scene(vicPane, 200, 100);
 		this.setScene(scene);
+	}
+	
+	public void setLabel(String message) {
+		gameOverMessage.setText(message);
 	}
 	
 	public Button getContinueBtn() {
