@@ -27,18 +27,23 @@ public class TDMainMenu extends Stage {
 	private String chosenMap;
 	private GridPane stageBox;
 	private boolean gameStarted = false;
-	private String mapFileName;
 	private TDController controller;
 	private TDView view;
 	private MediaPlayer playerMenu;
 
-	public TDMainMenu() {
+	public TDMainMenu(TDView view, TDController controller) {
+		this.view = view;
+		this.controller = controller;
+		
 		stopMenuMusic();
 		Media pick = new Media(Paths.get("resources/music/Slam_of_Fates.mp3").toUri().toString());
 		playerMenu = new MediaPlayer(pick);
+		playerMenu.setOnEndOfMedia(() -> {
+			playerMenu.seek(Duration.ZERO);
+			playerMenu.play();
+		});;
 		playerMenu.setVolume(0.5);
 		playerMenu.play();
-		loopMenuTrack();
 
 		Button startBtn = new Button("Start");
 		startBtn.setPadding(new Insets(10, 10, 10, 10));
@@ -113,29 +118,10 @@ public class TDMainMenu extends Stage {
 		this.setScene(scene);
 	}
 
-	public String getMapImage() {
-		return chosenMap;
-	}	
-	public void setReferences(TDView view, TDController controller, String mapFileName) {
-		this.view = view;
-		this.mapFileName = mapFileName;
-		this.controller = controller;
-	}
-	
 	public void playMenuMusic() {
 		if (playerMenu != null) {
 			playerMenu.play();
 		}
-	}
-	
-	public void loopMenuTrack() {
-		playerMenu.setOnEndOfMedia(new Runnable() {
-			@Override
-			public void run() {
-				playerMenu.seek(Duration.ZERO);
-				playerMenu.play();
-			}
-		});
 	}
 
 	public void stopMenuMusic() {
@@ -144,8 +130,12 @@ public class TDMainMenu extends Stage {
 			playerMenu = null;
 		}
 	}
+	
+	public String getMapImage() {
+		return chosenMap;
+	}
 
-	class StageButton implements EventHandler<ActionEvent> {
+	private class StageButton implements EventHandler<ActionEvent> {
 		private String mapFile;
 
 		public StageButton(String mapFile) {
@@ -164,9 +154,8 @@ public class TDMainMenu extends Stage {
 			} else {
 				playerMenu.stop();
 				stageBox.setVisible(false);
-				mapFileName = TDView.MAP_PATH + mapFile;
-				controller.stopAnimation();
-				controller.reset();
+				controller.stop();
+				view.setMapFileName(TDView.MAP_PATH + mapFile);
 				view.newGame();
 				Node source = (Node) e.getSource();
 			    Stage stage = (Stage) source.getScene().getWindow();

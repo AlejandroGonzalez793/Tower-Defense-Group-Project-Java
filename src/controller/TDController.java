@@ -168,7 +168,7 @@ public class TDController {
 		return e1.getX() < e2.getX() + e2.getWidth() && e1.getX() + e1.getWidth() > e2.getX()
 				&& e1.getY() < e2.getY() + e2.getHeight() && e1.getY() + e1.getHeight() > e2.getY();
 	}
-	
+
 	public void enemyReward(int gold) {
 		player.setMoney(player.getMoney() + gold);
 	}
@@ -223,6 +223,11 @@ public class TDController {
 		return getTowerByName(towerName).getCost();
 	}
 
+	/**
+	 * Adds gold to the Player's money
+	 * 
+	 * @param gold the amount of money to add to the Player
+	 */
 	public void addGold(int gold) {
 		player.setMoney(player.getMoney() + gold);
 	}
@@ -246,8 +251,8 @@ public class TDController {
 		try {
 			Constructor<?> cons = c.getConstructor();
 			object = cons.newInstance();
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException 
+				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 			object = new Tower();
 		}
@@ -336,7 +341,7 @@ public class TDController {
 	public void pause() {
 		playing = !playing;
 	}
-	
+
 	/**
 	 * Gets whether or not the current wave is running or paused.
 	 * 
@@ -357,25 +362,25 @@ public class TDController {
 
 			@Override
 			public void handle(long now) {
-				if (!gameOver && playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {	
-					
+				if (!gameOver && playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
+
 					lastUpdate = now;
 					Enemy enemy = gameState.enemyContact();
 					if (enemy != null) {
 						player.setHealth(player.getHealth() - enemy.getPower());
 						gameState.removeEnemy(enemy);
 					}
-						
+
 					if (gameState.getEnemies().isEmpty() && waveNumber > 4) {
 						nextStage = true;
 						gameState.resetProjectiles();
 					} else if (gameState.getEnemies().isEmpty()) {
 						newRound = true;
 						gameState.resetProjectiles();
-					} 
+					}
 					tick();
 				}
-				
+
 				if (gameOver) {
 					gameState.resetProjectiles();
 				}
@@ -383,21 +388,15 @@ public class TDController {
 		};
 		at.start();
 	}
-	
-	public void stopAnimation() {
-		if (at != null) {
-			at.stop();
-		}	
-	}
-	
+
 	public boolean isNewRound() {
 		return newRound;
 	}
-	
+
 	public boolean isStageOver() {
 		return nextStage;
 	}
-	
+
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
@@ -417,12 +416,15 @@ public class TDController {
 		newRound = false;
 		waveNumber++;
 	}
-	
-	public int getWaveNumber () {
+
+	public int getWaveNumber() {
 		return waveNumber;
 	}
 
-	public void reset() {
+	public void stop() {
 		playing = false;
+		if (at != null) {
+			at.stop();
+		}
 	}
 }
