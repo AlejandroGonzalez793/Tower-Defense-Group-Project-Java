@@ -208,6 +208,7 @@ public class TDView extends Application implements Observer {
 					stage.close();
 				});
 				gameOverWindow.show();
+				return;
 			}
 		}
 
