@@ -13,6 +13,7 @@ import model.Waves;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
 import model.towers.Tower;
+import util.ResourceManager;
 import view.TDView;
 
 public class TDTests {
@@ -303,6 +304,27 @@ public class TDTests {
 		assertNotNull(new Player(new TDView()));
 		assertNotNull(new Player(new TDView(), 1000));
 		assertNotNull(new Player(new TDView(), 1000, 1000));
+	}
+	
+	@Test
+	void testTick() {
+		GameState state = new GameState(null);
+		
+		TDController controller = new TDController(new Player(), state);
+		
+		for (int i = 0; i < 10; i++) {
+			controller.addPathTile(i, 0, 50, 50);
+		}
+		
+		controller.setWaveNumber(1);
+		controller.nextWave();
+		
+		controller.canPurchaseTower("Tower");
+		controller.canPlaceTower(50, 50, 500, 500);
+		controller.addTower(50, 50);
+		
+		state.tick();
+		
 	}
 
 }
