@@ -92,7 +92,7 @@ public class TDController {
 	 * @return true if the game is over, false otherwise
 	 */
 	public boolean isGameOver() {
-		return newRound && waveNumber > 4;
+		return newRound && waveNumber > 5;
 	}
 	
 	/**
@@ -372,7 +372,7 @@ public class TDController {
 			@Override
 			public void handle(long now) {
 				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
-
+					
 					lastUpdate = now;
 					Enemy enemy = gameState.enemyContact();
 					if (enemy != null) {

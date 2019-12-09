@@ -17,9 +17,9 @@ public class Waves {
 		List<Enemy> wave = new ArrayList<>();
 		
 		if (waveNum == 0) {
-			wave.add(new Balloon(x, y));
-			wave.add(new HotAirBalloon(x, y));
-			wave.add(new GreenPlane(x, y));
+			for (int i = 0; i < 100; i++) {
+				wave.add(new Balloon(x, y));
+			}
 		} else if (waveNum == 1) {
 			wave.add(new Balloon(x, y));
 			wave.add(new HotAirBalloon(x, y));
@@ -38,6 +38,10 @@ public class Waves {
 			wave.add(new Balloon(x, y));
 			wave.add(new HotAirBalloon(x, y));
 			wave.add(new Drifblim(x, y));
+		} else if (waveNum == 5) {
+			for (int i = 0; i < 100; i++) {
+				wave.add(new Balloon(x, y));
+			}
 		}
 		
 		return wave;

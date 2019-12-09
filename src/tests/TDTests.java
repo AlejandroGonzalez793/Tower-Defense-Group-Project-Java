@@ -241,6 +241,10 @@ public class TDTests {
 		controller.canPurchaseTower("Tower");
 		assertTrue(controller.canPlaceTower(50, 50, 500, 500));
 		controller.addTower(50, 50);
+		
+		controller.canPurchaseTower("Tower");
+		assertFalse(controller.canPlaceTower(50, 50, 500, 500));
+		controller.addTower(50, 50);
 	}
 
 	/**
@@ -325,6 +329,29 @@ public class TDTests {
 		for (int i = 0; i < 10; i++) {
 			controller.tick();
 		}
+	}
+	
+	/**
+	 * Tests if getTowerMap returns a map of strings to images.
+	 */
+	@Test
+	void testControllerGetImage() {
+		TDController controller = new TDController(new Player(), new GameState(null));
+		assertNotNull(controller.getTowerImageMap());
+		assertNotNull(controller.getTowerNames());	
+	}
+	
+	/**
+	 * Tests the time methods in the controller
+	 */
+	@Test
+	void testControllerTimer() {
+		TDController controller = new TDController(new Player(), new GameState(null));
+		controller.speedUp();
+		controller.regularSpeed();
+		controller.slowDown();
+		controller.pause();
+		controller.stop();
 	}
 
 }

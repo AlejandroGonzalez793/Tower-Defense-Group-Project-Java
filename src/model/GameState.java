@@ -27,11 +27,13 @@ public class GameState extends Observable {
 	private Node end;
 	private int ticks;
 	private int round;
+	private int nEnemy;
 
 	public GameState(Observer o) {
 		this.towers = new ArrayList<>();
 		this.enemies = new ArrayList<>();
 		this.projectiles = new ArrayList<>();
+		this.nEnemy = 0;
 
 		if (o != null) {
 			addObserver(o);
@@ -54,7 +56,12 @@ public class GameState extends Observable {
 	 * update its position on the board.
 	 */
 	public void tick() {
-		for (Enemy enemy : enemies) {
+		for (int i = 0; i < enemies.size(); i++) {
+			if (nEnemy != enemies.size() && i == nEnemy ) {
+				nEnemy++;
+				break;
+			}
+			Enemy enemy = enemies.get(i);
 			Node node = enemy.getNode();
 			if (node != null) {
 				Rectangle rect = node.getRectangle();
@@ -66,6 +73,8 @@ public class GameState extends Observable {
 				}
 				enemy.update();
 			}
+			
+			
 		}
 
 		for (Tower tower : towers) {
@@ -86,11 +95,15 @@ public class GameState extends Observable {
 						}
 						
 						if (enemy.getX() < tower.getX()) {
-							x = -x;
+							x = -x-projectile.getSpeed();
+						}else {
+							x = x+projectile.getSpeed();
 						}
 
 						if (enemy.getY() < tower.getY()) {
-							y = -y;
+							y = -y-projectile.getSpeed();
+						}else {
+							y = y + projectile.getSpeed(); // add speed here
 						}
 						projectile.setDx(x);
 						projectile.setDy(y);
