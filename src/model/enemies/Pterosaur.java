@@ -12,11 +12,7 @@ public class Pterosaur extends Enemy {
 		super(x, y, width, height, health, speed, power, gold);
 		image = ResourceManager.getImage("Pterosaur");
 	}
-	
-	public Pterosaur(int x, int y, int width, int height, int speed, int power) {
-		this(x, y, width, height, HEALTH, speed, POWER, GOLD);
-	}
-	
+
 	public Pterosaur(int x, int y) {
 		this(x, y, 50, 50, HEALTH, SPEED, POWER, GOLD);
 	}

@@ -13,10 +13,6 @@ public class HotAirBalloon extends Enemy {
 		image = ResourceManager.getImage("HotAirBalloon");
 	}
 	
-	public HotAirBalloon(int x, int y, int width, int height, int speed, int power) {
-		this(x, y, width, height, HEALTH, speed, POWER, GOLD);
-	}
-	
 	public HotAirBalloon(int x, int y) {
 		this(x, y, 50, 50, HEALTH, SPEED, POWER, GOLD);
 	}

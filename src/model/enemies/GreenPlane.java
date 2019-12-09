@@ -13,10 +13,6 @@ public class GreenPlane extends Enemy {
 		image = ResourceManager.getImage("GreenPlane");
 	}
 	
-	public GreenPlane(int x, int y, int width, int height, int speed, int power, int gold) {
-		this(x, y, width, height, HEALTH, speed, POWER, GOLD);
-	}
-	
 	public GreenPlane(int x, int y) {
 		this(x, y, 50, 50, HEALTH, SPEED, POWER, GOLD);
 	}
