@@ -14,10 +14,6 @@ public class OneShotBullet extends Projectile {
 		image = ResourceManager.getImage("OneShotBullet");
 	}
 	
-	public OneShotBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER, RADIUS);
-	}
-	
 	public OneShotBullet(int x, int y) {
 		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}

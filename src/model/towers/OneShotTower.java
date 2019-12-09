@@ -16,10 +16,6 @@ public class OneShotTower extends Tower {
 		image = ResourceManager.getImage("OneShotTower");
 	}
 	
-	public OneShotTower(int x, int y, int width, int height) {
-		this(x, y, width, height, 150, 10, 1000);
-	}
-	
 	public OneShotTower() {
 		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 	}
