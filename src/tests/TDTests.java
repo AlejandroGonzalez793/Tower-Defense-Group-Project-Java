@@ -323,8 +323,9 @@ public class TDTests {
 		controller.canPlaceTower(50, 50, 500, 500);
 		controller.addTower(50, 50);
 		
-		state.tick();
-		
+		for (int i = 0; i < 10; i++) {
+			state.tick();
+		}
 	}
 
 }
