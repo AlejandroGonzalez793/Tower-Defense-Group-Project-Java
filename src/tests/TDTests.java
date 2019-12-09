@@ -13,7 +13,6 @@ import model.Waves;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
 import model.towers.Tower;
-import util.ResourceManager;
 import view.TDView;
 
 public class TDTests {
@@ -324,7 +323,7 @@ public class TDTests {
 		controller.addTower(50, 50);
 		
 		for (int i = 0; i < 10; i++) {
-			state.tick();
+			controller.tick();
 		}
 	}
 
