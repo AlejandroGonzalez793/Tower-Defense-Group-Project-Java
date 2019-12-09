@@ -23,6 +23,7 @@ public class GameState extends Observable {
 	private List<Tower> towers;
 	private List<Enemy> enemies;
 	private List<Projectile> projectiles;
+	private List<Rectangle> deadzones;
 	private Node start;
 	private Node end;
 	private int ticks;
@@ -33,6 +34,7 @@ public class GameState extends Observable {
 		this.towers = new ArrayList<>();
 		this.enemies = new ArrayList<>();
 		this.projectiles = new ArrayList<>();
+		this.deadzones = new ArrayList<>();
 		this.nEnemy = 0;
 
 		if (o != null) {
@@ -248,6 +250,14 @@ public class GameState extends Observable {
 
 		end.setNext(node);
 		end = node;
+	}
+	
+	public void addDeadzones(Rectangle zone) {
+		this.deadzones.add(zone);
+	}
+	
+	public List<Rectangle> getDeadZones() {
+		return this.deadzones;
 	}
 
 	/**

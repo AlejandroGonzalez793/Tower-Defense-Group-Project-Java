@@ -40,6 +40,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -83,6 +84,7 @@ public class TDView extends Application implements Observer {
 	private static final String START_CHAR = "+";
 	private static final String END_CHAR = "=";
 	private static final String ROAD_CHAR = "-";
+	private static final String DEAD_CHAR = "d";
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -278,9 +280,11 @@ public class TDView extends Application implements Observer {
 		Scanner input = null;
 		Image grass = null;
 		Image road = null;
+		Image rock = null;
 		try {
 			input = new Scanner(new File(mapFileName));
 			grass = new Image(new FileInputStream(IMAGE_PATH + "Grass.png"));
+			rock = new Image(new FileInputStream(IMAGE_PATH + "Rock.png"));
 			road = new Image(new FileInputStream(IMAGE_PATH + "Road.png"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -313,12 +317,17 @@ public class TDView extends Application implements Observer {
 			String line = input.nextLine();
 			tempBoard[row] = line.split("");
 			for (int col = 0; col < tempBoard[row].length; col++) {
+				
 				if (tempBoard[row][col].equals(START_CHAR)) {
 					currRow = row;
 					currCol = col;
+				} else if (tempBoard[row][col].equals(DEAD_CHAR)) {
+					this.controller.checkDeadzone(new Rectangle(row * 50, col * 50, 50, 50));
+					backgroundGC.drawImage(rock, col * 50, row * 50, 50 ,50);
 				} else {
 					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());
 				}
+				
 			}
 			row++;
 		}

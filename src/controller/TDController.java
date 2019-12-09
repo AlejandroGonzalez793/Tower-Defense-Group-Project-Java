@@ -140,6 +140,14 @@ public class TDController {
 				|| (selectedTower.getHeight() / 2 + y) > height) {
 			return false;
 		}
+		
+		for (Rectangle zone : gameState.getDeadZones()) {
+			System.out.println(zone);
+			if (zone.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
+				return false;
+			}
+		}
+		
 		// Check if tower collides with another tower
 		for (Tower tower : gameState.getTowers()) {
 			Rectangle rect = new Rectangle(tower.getX(), tower.getY(), tower.getWidth(), tower.getHeight());
@@ -436,6 +444,10 @@ public class TDController {
 	 */
 	public int getWaveNumber() {
 		return waveNumber;
+	}
+	
+	public void checkDeadzone(Rectangle zone) {
+		this.gameState.addDeadzones(zone);
 	}
 
 	
