@@ -22,6 +22,6 @@ public class PiercingTower extends Tower{
 	
 	@Override
 	public Projectile getProjectile() {
-		return new PiercingBullet(x, y);
+		return new PiercingBullet(x + WIDTH / 2, y + HEIGHT / 2);
 	}
 }

@@ -65,6 +65,6 @@ public class Tower extends Entity {
 	}
 	
 	public Projectile getProjectile() {
-		return new Projectile(x, y);
+		return new Projectile(x + DEFAULT_WIDTH / 2, y + DEFAULT_HEIGHT / 2);
 	}
 }
