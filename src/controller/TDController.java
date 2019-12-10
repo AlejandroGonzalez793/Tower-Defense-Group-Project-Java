@@ -143,7 +143,6 @@ public class TDController {
 		}
 		
 		for (Rectangle zone : gameState.getDeadZones()) {
-			System.out.println(zone);
 			if (zone.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
 				return false;
 			}
