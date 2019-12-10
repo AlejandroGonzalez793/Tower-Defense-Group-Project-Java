@@ -2,6 +2,9 @@ package model.enemies;
 
 import util.ResourceManager;
 
+/**
+ * The Balloon class holds the base enemy balloon. The weakest enemy in the game.
+ */
 public class Balloon extends Enemy {
 	private static final int HEALTH = 20;
 	private static final int SPEED = 2;
