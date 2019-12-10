@@ -14,10 +14,6 @@ public class WeakBullet extends Projectile {
 		image = ResourceManager.getImage("WeakBullet");
 	}
 	
-	public WeakBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER, RADIUS);
-	}
-	
 	public WeakBullet(int x, int y) {
 		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}

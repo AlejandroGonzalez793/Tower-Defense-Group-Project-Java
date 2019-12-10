@@ -14,10 +14,6 @@ public class StrongBullet extends Projectile {
 		image = ResourceManager.getImage("StrongBullet");
 	}
 	
-	public StrongBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER, RADIUS);
-	}
-	
 	public StrongBullet(int x, int y) {
 		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}

@@ -14,11 +14,6 @@ public class CheapTower extends Tower {
 	public CheapTower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height, radius, rate, cost);
 		image = ResourceManager.getImage("CheapTower");
-
-	}
-	
-	public CheapTower(int x, int y, int width, int height) {
-		this(x, y, width, height, 150, 10, 1000);
 	}
 	
 	public CheapTower() {

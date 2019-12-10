@@ -153,7 +153,7 @@ public class TDmicrotransaction extends Stage {
 		microPane.setBottom(commandPane);
 		BorderPane.setMargin(microBox, new Insets(10, 0, 0, 0));
 		BorderPane.setMargin(commandPane, new Insets(20, 20, 20, 20));
-		Scene scene = new Scene(microPane, 550, 650);
+		Scene scene = new Scene(microPane);
 		this.setScene(scene);
 	}
 

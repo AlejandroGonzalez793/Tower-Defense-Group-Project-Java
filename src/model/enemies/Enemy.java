@@ -31,10 +31,6 @@ public class Enemy extends Entity {
 		this.currNode = new Node(new Rectangle(x, y, width, height));
 	}
 	
-	public Enemy(int x, int y, int width, int height, int speed, int power, int gold) {
-		this(x, y, width, height, speed, DEFAULT_HEALTH, DEFAULT_POWER, DEFAULT_GOLD);
-	}
-	
 	public Enemy(int x, int y, int width, int height) {
 		this(x, y, width, height, DEFAULT_SPEED, DEFAULT_HEALTH, DEFAULT_POWER, DEFAULT_GOLD);
 	}

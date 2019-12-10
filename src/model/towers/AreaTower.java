@@ -17,11 +17,6 @@ public class AreaTower extends Tower {
 		image = ResourceManager.getImage("AreaTower");
 	}
 	
-	public AreaTower(int x, int y, int width, int height) {
-		this(x, y, width, height, RADIUS, RATE, COST);
-		
-	}
-	
 	public AreaTower() {
 		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 		
