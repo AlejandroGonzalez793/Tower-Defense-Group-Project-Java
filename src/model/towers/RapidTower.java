@@ -22,6 +22,6 @@ public class RapidTower extends Tower{
 	
 	@Override
 	public Projectile getProjectile() {
-		return new RapidBullet(x, y);
+		return new RapidBullet(x + WIDTH / 2, y + HEIGHT / 2);
 	}
 }
