@@ -50,7 +50,6 @@ public class TDController {
 	private boolean newRound = true;
 	private int waveNumber = 0;
 	public static final int TICK_SPEED = 40;
-	public static final int MAX_WAVES = 5;
 
 	public TDController(Player player, GameState gameState) {
 		this.player = player;
@@ -93,7 +92,7 @@ public class TDController {
 	 * @return true if the game is over, false otherwise
 	 */
 	public boolean isGameOver() {
-		return newRound && waveNumber > MAX_WAVES;
+		return newRound && waveNumber > Waves.MAX_WAVES;
 	}
 	
 	/**
@@ -143,7 +142,6 @@ public class TDController {
 		}
 		
 		for (Rectangle zone : gameState.getDeadZones()) {
-			System.out.println(zone);
 			if (zone.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
 				return false;
 			}

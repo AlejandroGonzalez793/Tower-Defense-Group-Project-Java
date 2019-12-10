@@ -212,7 +212,7 @@ public class TDTests {
 	void testIsGameOver() {
 		Player player = new Player();
 		TDController controller = new TDController(player, new GameState(null));
-		controller.setWaveNumber(TDController.MAX_WAVES + 1);
+		controller.setWaveNumber(Waves.MAX_WAVES + 1);
 		assertTrue(controller.isGameOver());
 
 		player.setHealth(0);
@@ -343,6 +343,52 @@ public class TDTests {
 		for (int i = 0; i < 10; i++) {
 			controller.tick();
 		}
+	}
+	
+	/**
+	 * Tests the tick method in the controller with an enemy that has a node
+	 * attached to it.
+	 */
+	@Test
+	void testTickWithNode() {
+		GameState state = new GameState(null);
+		TDController controller = new TDController(new Player(), state);
+		Enemy enemy = new Enemy(0, 0, 50, 50);
+		enemy.setSpeed(25);
+		enemy.setNode(new Node(new Rectangle(0, 0, 50, 50)));
+		state.addEnemy(enemy);
+		controller.tick();
+		controller.tick();
+		controller.tick();
+		
+		assertNull(state.enemyContact());
+	}
+	
+	/**
+	 * Tests game state tick method incrementing the enemy
+	 */
+	@Test
+	void testGameStateIncrement() {
+		GameState state = new GameState(null);
+		TDController controller = new TDController(new Player(), state);
+		Enemy enemy = new Enemy(500, 0, 50, 50);
+		enemy.setNode(new Node(new Rectangle(0, 0, 50, 50)));
+		state.addEnemy(enemy);
+		controller.tick();
+		controller.tick();
+		controller.tick();
+	}
+	
+	/**
+	 * Tests the rounds methods in the game state
+	 */
+	@Test
+	void testClearProjectiles() {
+		GameState state = new GameState(null);
+		assertEquals(0, state.getRound());
+		state.resetProjectiles();
+		state.setRound(10);
+		assertEquals(10, state.getRound());
 	}
 	
 	/**
