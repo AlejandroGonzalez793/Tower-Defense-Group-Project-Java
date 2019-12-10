@@ -306,5 +306,6 @@ public class GameState extends Observable {
 	 */
 	public void resetProjectiles() {
 		this.projectiles = new ArrayList<>();
+		this.nEnemy = 0;
 	}
 }

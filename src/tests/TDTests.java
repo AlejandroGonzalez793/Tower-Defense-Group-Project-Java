@@ -309,7 +309,7 @@ public class TDTests {
 	@Test
 	void testWaves() {
 		assertNotNull(new Waves());
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < Waves.MAX_WAVES; i++) {
 			assertNotNull(Waves.getWave(i, 0, 0));
 		}
 	}
