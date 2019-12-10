@@ -22,6 +22,6 @@ public class ExpensiveTower extends Tower{
 	
 	@Override
 	public Projectile getProjectile() {
-		return new StrongBullet(x, y);
+		return new StrongBullet(x + WIDTH / 2, y + HEIGHT / 2);
 	}
 }

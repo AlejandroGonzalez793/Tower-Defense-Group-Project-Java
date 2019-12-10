@@ -193,27 +193,31 @@ public class TDView extends Application implements Observer {
 			int playerHealth = Math.max(0, player.getHealth());
 			health.setText(Integer.toString(playerHealth));
 			money.setText(Integer.toString(player.getMoney()));
-
-			if (controller.isPlayerDead()) {
-				controller.stop();
-				stopMusic();
-				towerPane.setDisable(true);
-				gameOverWindow = new TDStageComplete();
-				gameOverWindow.setTitle("Game Over");
-				gameOverWindow.initModality(Modality.APPLICATION_MODAL);
-				gameOverWindow.setResizable(false);
-				gameOverWindow.setLabel("You have lost...");
-				gameOverWindow.getContinueBtn().setOnAction(e -> {
-					primaryStage.hide();
-					mainMenu.playMenuMusic();
-					mainMenu.show();
-					Node source = (Node) e.getSource();
-					Stage stage = (Stage) source.getScene().getWindow();
-					stage.close();
-				});
-				gameOverWindow.show();
+		}
+		
+		if (controller.isPlayerDead()) {
+			if (!controller.getIsPlaying()) {
 				return;
 			}
+			
+			controller.stop();
+			stopMusic();
+			towerPane.setDisable(true);
+			gameOverWindow = new TDStageComplete();
+			gameOverWindow.setTitle("Game Over");
+			gameOverWindow.initModality(Modality.APPLICATION_MODAL);
+			gameOverWindow.setResizable(false);
+			gameOverWindow.setLabel("You have lost...");
+			gameOverWindow.getContinueBtn().setOnAction(e -> {
+				primaryStage.hide();
+				mainMenu.playMenuMusic();
+				mainMenu.show();
+				Node source = (Node) e.getSource();
+				Stage stage = (Stage) source.getScene().getWindow();
+				stage.close();
+			});
+			gameOverWindow.show();
+			return;
 		}
 
 		// if new round is true, set the wave button to be pressable

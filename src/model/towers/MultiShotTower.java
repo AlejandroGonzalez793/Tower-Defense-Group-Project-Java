@@ -22,6 +22,6 @@ public class MultiShotTower extends Tower{
 	
 	@Override
 	public Projectile getProjectile() {
-		return new MultiBullet(x, y);
+		return new MultiBullet(x + WIDTH / 2, y + HEIGHT / 2);
 	}
 }

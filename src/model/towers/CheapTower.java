@@ -22,6 +22,6 @@ public class CheapTower extends Tower {
 	
 	@Override
 	public Projectile getProjectile() {
-		return new WeakBullet(x, y);
+		return new WeakBullet(x + WIDTH / 2, y + HEIGHT / 2);
 	}
 }
