@@ -12,7 +12,7 @@ import model.enemies.Pterosaur;
 import model.enemies.RedHelicopter;
 
 public class Waves {
-	public static final int MAX_WAVES = 10;
+	public static final int MAX_WAVES = 9;
 	
 	public static List<Enemy> getWave(int waveNum, int x, int y) {
 		List<Enemy> wave = new ArrayList<>();

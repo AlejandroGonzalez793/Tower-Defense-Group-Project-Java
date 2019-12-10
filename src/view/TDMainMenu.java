@@ -12,7 +12,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -25,6 +27,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -54,6 +57,22 @@ public class TDMainMenu extends Stage {
 		
 		playerMenu.setVolume(0.5);
 		playerMenu.play();
+		
+		Button pauseMusicButton = new Button("Pause Music");
+		pauseMusicButton.setOnAction(e -> {
+			if (playerMenu.getStatus().equals(Status.PLAYING)) {
+				playerMenu.pause();
+				pauseMusicButton.setText("Play Music");
+			} else {
+				playerMenu.play();
+				pauseMusicButton.setText("Pause Music");
+			}
+		});
+		
+		Slider slider = new Slider(0, 100, 50);
+		slider.valueProperty().addListener(e -> {
+			playerMenu.setVolume(slider.getValue() / 100);
+		});
 
 		Image backgroundImage = null;
 		try {
@@ -66,12 +85,12 @@ public class TDMainMenu extends Stage {
 				BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 
 		Label startBtn = new Label("Start");
-		startBtn.setPadding(new Insets(25, 25, 10, 25));
+		startBtn.setPadding(new Insets(25, 25, 10, 15));
 		startBtn.setOnMouseClicked(new StageButton("map1.td"));
 		startBtn.setFont(new Font("Arial", 35));
 
 		Label exitBtn = new Label("Exit");
-		exitBtn.setPadding(new Insets(10, 25, 25, 25));
+		exitBtn.setPadding(new Insets(10, 25, 25, 15));
 		exitBtn.setOnMouseClicked(e -> {
 			System.exit(1);
 		});
@@ -120,6 +139,8 @@ public class TDMainMenu extends Stage {
 		stageBox.add(stageTwoBtn, 1, 0);
 		stageBox.add(stageThreeBtn, 2, 0);
 		stageBox.add(selectMapBtn, 1, 1);
+		stageBox.add(pauseMusicButton, 0, 1);
+		stageBox.add(slider, 2, 1);
 		stageBox.setAlignment(Pos.CENTER);
 		stageBox.setVgap(10);
 		stageBox.setHgap(15);
