@@ -322,7 +322,7 @@ public class TDView extends Application implements Observer {
 					currRow = row;
 					currCol = col;
 				} else if (tempBoard[row][col].equals(DEAD_CHAR)) {
-					this.controller.checkDeadzone(new Rectangle(col * 50, row * 50, 50, 50));
+					this.controller.addDeadzone(new Rectangle(col * 50, row * 50, 50, 50));
 					backgroundGC.drawImage(rock, col * 50, row * 50, 50 ,50);
 				} else {
 					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());

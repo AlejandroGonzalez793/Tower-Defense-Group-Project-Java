@@ -11,7 +11,21 @@ import model.Node;
 import model.Player;
 import model.Waves;
 import model.enemies.Enemy;
+import model.projectiles.AreaBullet;
+import model.projectiles.MultiBullet;
+import model.projectiles.OneShotBullet;
+import model.projectiles.PiercingBullet;
 import model.projectiles.Projectile;
+import model.projectiles.RapidBullet;
+import model.projectiles.StrongBullet;
+import model.projectiles.WeakBullet;
+import model.towers.AreaTower;
+import model.towers.CheapTower;
+import model.towers.ExpensiveTower;
+import model.towers.MultiShotTower;
+import model.towers.OneShotTower;
+import model.towers.PiercingTower;
+import model.towers.RapidTower;
 import model.towers.Tower;
 import view.TDView;
 
@@ -353,5 +367,51 @@ public class TDTests {
 		controller.pause();
 		controller.stop();
 	}
+	
+	/**
+	 * Tests the projectile classes
+	 */
+	@Test
+	void testProjectiles() {
+		assertNotNull(new AreaBullet(0, 0, 5, 5, 5, 5, 50));
+		assertNotNull(new AreaBullet(0, 0));
 
+		assertNotNull(new MultiBullet(0, 0, 5, 5, 5, 5, 50));
+		assertNotNull(new MultiBullet(0, 0));
+		
+		assertNotNull(new OneShotBullet(0, 0, 5, 5, 5, 5, 50));
+		assertNotNull(new OneShotBullet(0, 0));
+
+		assertNotNull(new PiercingBullet(0, 0, 5, 5, 5, 5, 50));
+		assertNotNull(new PiercingBullet(0, 0));
+		
+		assertNotNull(new RapidBullet(0, 0, 5, 5, 5, 5, 50));
+		assertNotNull(new RapidBullet(0, 0));
+		
+		assertNotNull(new StrongBullet(0, 0, 5, 5, 5, 5, 50));
+		assertNotNull(new StrongBullet(0, 0));
+		
+		assertNotNull(new WeakBullet(0, 0, 5, 5, 5, 5, 50));
+		assertNotNull(new WeakBullet(0, 0));
+	}
+	
+	/**
+	 * Tests the tower classes
+	 */
+	@Test
+	void testTowers() {
+		assertNotNull(new AreaTower().getProjectile());
+		
+		assertNotNull(new CheapTower().getProjectile());
+		
+		assertNotNull(new ExpensiveTower().getProjectile());
+		
+		assertNotNull(new MultiShotTower().getProjectile());
+		
+		assertNotNull(new OneShotTower().getProjectile());
+		
+		assertNotNull(new PiercingTower().getProjectile());
+		
+		assertNotNull(new RapidTower().getProjectile());
+	}
 }
