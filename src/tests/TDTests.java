@@ -212,7 +212,7 @@ public class TDTests {
 	void testIsGameOver() {
 		Player player = new Player();
 		TDController controller = new TDController(player, new GameState(null));
-		controller.setWaveNumber(TDController.MAX_WAVES + 1);
+		controller.setWaveNumber(Waves.MAX_WAVES + 1);
 		assertTrue(controller.isGameOver());
 
 		player.setHealth(0);
@@ -231,6 +231,7 @@ public class TDTests {
 
 		// selects default tower instead
 		assertTrue(controller.canPurchaseTower("Some random tower that doesn't exist"));
+		assertNull(controller.getSelectedTowerImage());
 	}
 
 	/**
@@ -298,7 +299,8 @@ public class TDTests {
 	@Test
 	void testTowerCost() {
 		TDController controller = new TDController(new Player(), new GameState(null));
-		assertEquals(controller.getTowerCost("Tower"), 50);
+		assertEquals(50, controller.getTowerCost("Tower"));
+		assertEquals(50, controller.getTowerCost("Some random tower"));
 	}
 
 	/**
@@ -346,6 +348,52 @@ public class TDTests {
 	}
 	
 	/**
+	 * Tests the tick method in the controller with an enemy that has a node
+	 * attached to it.
+	 */
+	@Test
+	void testTickWithNode() {
+		GameState state = new GameState(null);
+		TDController controller = new TDController(new Player(), state);
+		Enemy enemy = new Enemy(0, 0, 50, 50);
+		enemy.setSpeed(25);
+		enemy.setNode(new Node(new Rectangle(0, 0, 50, 50)));
+		state.addEnemy(enemy);
+		controller.tick();
+		controller.tick();
+		controller.tick();
+		
+		assertNull(state.enemyContact());
+	}
+	
+	/**
+	 * Tests game state tick method incrementing the enemy
+	 */
+	@Test
+	void testGameStateIncrement() {
+		GameState state = new GameState(null);
+		TDController controller = new TDController(new Player(), state);
+		Enemy enemy = new Enemy(500, 0, 50, 50);
+		enemy.setNode(new Node(new Rectangle(0, 0, 50, 50)));
+		state.addEnemy(enemy);
+		controller.tick();
+		controller.tick();
+		controller.tick();
+	}
+	
+	/**
+	 * Tests the rounds methods in the game state
+	 */
+	@Test
+	void testClearProjectiles() {
+		GameState state = new GameState(null);
+		assertEquals(0, state.getRound());
+		state.resetProjectiles();
+		state.setRound(10);
+		assertEquals(10, state.getRound());
+	}
+	
+	/**
 	 * Tests if getTowerMap returns a map of strings to images.
 	 */
 	@Test
@@ -361,9 +409,13 @@ public class TDTests {
 	@Test
 	void testControllerTimer() {
 		TDController controller = new TDController(new Player(), new GameState(null));
+		controller.stop(); // nothing should happen
+		controller.startGame();
+		controller.startGame(); // nothing should happen
 		controller.speedUp();
 		controller.regularSpeed();
 		controller.slowDown();
+		controller.pause();
 		controller.pause();
 		controller.stop();
 	}
@@ -443,6 +495,65 @@ public class TDTests {
 				enemy.incrementNode();
 			}
 		}
+	}
+	 /**	
+	 * Tests adding dead zones to the GameState
+	 */
+	@Test
+	void testDeadZones() {
+		GameState gameState = new GameState(null);
+		TDController controller = new TDController(new Player(), gameState);
+		Rectangle rectangle = new Rectangle(10, 10, 20, 20);
+		controller.addDeadzone(rectangle);
 		
+		assertEquals(rectangle, gameState.getDeadZones().get(0));
+	}
+	
+	/**
+	 * Tests removing an enemy that was added to the GameState
+	 */
+	@Test
+	void testGameStateRemove() {
+		GameState gameState = new GameState(null);
+		Enemy enemy = new Enemy(0, 0, 20, 20);
+		gameState.addEnemy(enemy);
+		assertEquals(1, gameState.getEnemies().size());
+		
+		gameState.removeEnemy(enemy);
+		assertEquals(0, gameState.getEnemies().size());
+	}
+	
+	/**
+	 * Tests getting the projectiles from the GameState. Initially
+	 * there shouldn't be any.
+	 */
+	@Test
+	void testGameStateProjectiles() {
+		GameState gameState = new GameState(null);
+		assertEquals(0, gameState.getProjectiles().size());
+	}
+	
+	/**
+	 * Tests if there is enemy contact between an enemy and the
+	 * end of the board as dictated by the GameState node list
+	 */
+	@Test
+	void testGameStateEnemyContact() {
+		GameState gameState = new GameState(null);
+		Node node = new Node(new Rectangle(0, 0, 10, 10));
+		Node node2 = new Node(new Rectangle(10, 10, 10, 10));
+		gameState.addNode(node);
+		gameState.addNode(node2);
+		
+		assertNull(gameState.enemyContact());
+		
+		
+		Enemy enemy = new Enemy(0, 0, 10, 10);
+		Enemy enemy2 = new Enemy(10, 10, 10, 10);
+		enemy.setNode(node);
+		gameState.addEnemy(enemy);
+		gameState.addEnemy(enemy2);
+		enemy2.setNode(node2);
+		assertEquals(enemy2, gameState.enemyContact());
 	}
 }
