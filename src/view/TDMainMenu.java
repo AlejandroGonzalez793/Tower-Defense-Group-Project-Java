@@ -6,14 +6,13 @@ import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 
 import controller.TDController;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -74,14 +73,6 @@ public class TDMainMenu extends Stage {
 		startBtn.setOnMouseClicked(new StageButton("map1.td"));
 		startBtn.setFont(new Font("Arial", 35));
 
-		/*
-		Button stageBtn = new Button("Stage Select");
-		stageBtn.setPadding(new Insets(10, 10, 10, 10));
-		stageBtn.setOnAction(e -> {
-			stageBox.setVisible(!stageBox.visibleProperty().getValue());
-		});
-		*/
-
 		Label exitBtn = new Label("Exit");
 		exitBtn.setPadding(new Insets(10, 50, 10, 10));
 		exitBtn.setOnMouseClicked(e -> {
@@ -124,23 +115,9 @@ public class TDMainMenu extends Stage {
 		selectMapBtn.setPadding(new Insets(20, 20, 20, 20));
 		selectMapBtn.setFont(new Font("Arial", 20));
 		
-		//stageOneBtn.setVisible(false);
-		//stageOneBtn.setManaged(true);
-		//stageOneBtn.setOpaque(false);
-		//stageOneBtn.setContentAreaFilled(false);
-		//stageOneBtn.setBorderPainted(false);
-
-			
-		//stageTwoBtn.setVisible(false);
-		//stageThreeBtn.setVisible(false);
-		//selectMapBtn.setVisible(false);
-		//startBtn.setVisible(false);
-		//exitBtn.setVisible(false);
-		
 		VBox menuBox = new VBox(startBtn, exitBtn);
 		menuBox.setAlignment(Pos.CENTER);
 		menuBox.setSpacing(5);
-		//menuBox.setVisible(false);
 
 		stageBox = new GridPane();
 		stageBox.add(stageOneBtn, 0, 0);
@@ -148,7 +125,6 @@ public class TDMainMenu extends Stage {
 		stageBox.add(stageThreeBtn, 2, 0);
 		stageBox.add(selectMapBtn, 1, 1);
 		stageBox.setAlignment(Pos.CENTER);
-		//stageBox.setVisible(false);
 		stageBox.setVgap(10);
 		stageBox.setHgap(15);
 
