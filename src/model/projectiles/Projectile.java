@@ -3,6 +3,15 @@ package model.projectiles;
 import model.Entity;
 import util.ResourceManager;
 
+/**
+ * A minimal template for the different Projectile that can be drawn and used
+ * in the game.
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class Projectile extends Entity {
 	public static final int DEFAULT_POWER = 3;
 	public static final int DEFAULT_WIDTH = 10;

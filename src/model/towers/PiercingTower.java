@@ -4,6 +4,13 @@ import model.projectiles.PiercingBullet;
 import model.projectiles.Projectile;
 import util.ResourceManager;
 
+/**
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class PiercingTower extends Tower{
 	private static final int WIDTH = 50;
 	private static final int HEIGHT = 50;

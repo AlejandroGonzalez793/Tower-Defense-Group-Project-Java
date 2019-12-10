@@ -102,10 +102,22 @@ public class TDMainMenu extends Stage {
 			fileChooser.getExtensionFilters().addAll(mapFilter, allFilter);
 			File file = fileChooser.showOpenDialog(this);
 			if (file != null) {
-				chosenMap = file.getPath();
-				Node source = (Node) e.getSource();
-				Stage stage = (Stage) source.getScene().getWindow();
-				stage.close();
+				if (!gameStarted) {
+					playerMenu.stop();
+					chosenMap = file.getPath();
+					gameStarted = true;
+					Node source = (Node) e.getSource();
+					Stage stage = (Stage) source.getScene().getWindow();
+					stage.close();
+				} else {
+					playerMenu.stop();
+					controller.stop();
+					view.setMapFileName(file.getPath());
+					view.newGame();
+					Node source = (Node) e.getSource();
+					Stage stage = (Stage) source.getScene().getWindow();
+					stage.close();
+				}
 			}
 		});
 		selectMapBtn.setPadding(new Insets(20, 20, 20, 20));

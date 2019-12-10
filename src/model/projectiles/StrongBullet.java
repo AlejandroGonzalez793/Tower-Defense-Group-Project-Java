@@ -2,6 +2,13 @@ package model.projectiles;
 
 import util.ResourceManager;
 
+/**
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class StrongBullet extends Projectile {
 	private static final int WIDTH = 28;
 	private static final int HEIGHT = 28;

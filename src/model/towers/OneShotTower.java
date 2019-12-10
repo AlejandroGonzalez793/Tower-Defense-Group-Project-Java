@@ -4,6 +4,13 @@ import model.projectiles.OneShotBullet;
 import model.projectiles.Projectile;
 import util.ResourceManager;
 
+/**
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class OneShotTower extends Tower {
 	private static final int WIDTH = 75;
 	private static final int HEIGHT = 75;
