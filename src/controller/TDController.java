@@ -446,7 +446,13 @@ public class TDController {
 		return waveNumber;
 	}
 	
-	public void checkDeadzone(Rectangle zone) {
+	
+	/**
+	 * Adds a rectangle to a list of dead zones in the model
+	 * 
+	 * @param zone Rectangle object that represents a dead zone
+	 */
+	public void addDeadzone(Rectangle zone) {
 		this.gameState.addDeadzones(zone);
 	}
 

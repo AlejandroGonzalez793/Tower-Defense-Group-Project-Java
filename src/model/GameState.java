@@ -252,10 +252,19 @@ public class GameState extends Observable {
 		end = node;
 	}
 	
+	/**
+	 * A dead zone is added to the model so no towers can be placed on it
+	 * @param zone Rectangle object that represents a dead zone
+	 */
 	public void addDeadzones(Rectangle zone) {
 		this.deadzones.add(zone);
 	}
 	
+	/**
+	 * Gets a list of dead zones in the model
+	 * 
+	 * @return deadzones A list of rectangles. 
+	 */
 	public List<Rectangle> getDeadZones() {
 		return this.deadzones;
 	}
@@ -280,6 +289,10 @@ public class GameState extends Observable {
 		return null;
 	}
 	
+	/**
+	 * Sets the enemies to the starting node on the board
+	 * @param enemies enemies within the game
+	 */
 	public void setEnemies(List<Enemy> enemies) {
 		for (Enemy enemy : enemies) {
 			enemy.setNode(start);
@@ -288,6 +301,9 @@ public class GameState extends Observable {
 		this.enemies = enemies;
 	}
 	
+	/**
+	 * Resets the projectiles list in the game.
+	 */
 	public void resetProjectiles() {
 		this.projectiles = new ArrayList<>();
 	}
