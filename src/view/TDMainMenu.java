@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BackgroundImage;
@@ -27,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -69,9 +71,10 @@ public class TDMainMenu extends Stage {
 	            BackgroundPosition.DEFAULT,
 	           BackgroundSize.DEFAULT)));
 		
-		Button startBtn = new Button("Start");
+		Label startBtn = new Label("Start");
 		startBtn.setPadding(new Insets(10, 50, 10, 10));
-		startBtn.setOnAction(new StageButton("map1.td"));
+		startBtn.setOnMouseClicked(new StageButton("map1.td"));
+		startBtn.setFont(new Font("Arial", 35));
 
 		/*
 		Button stageBtn = new Button("Stage Select");
@@ -81,27 +84,31 @@ public class TDMainMenu extends Stage {
 		});
 		*/
 
-		Button exitBtn = new Button("Exit");
+		Label exitBtn = new Label("Exit");
 		exitBtn.setPadding(new Insets(10, 50, 10, 10));
-		exitBtn.setOnAction(e -> {
+		exitBtn.setOnMouseClicked(e -> {
 			System.exit(1);
 		});
+		exitBtn.setFont(new Font("Arial", 35));
 
-		Button stageOneBtn = new Button("Stage 1");
-		stageOneBtn.setOnAction(new StageButton("map1.td"));
-		stageOneBtn.setPadding(new Insets(20, 55, 20, 20));
+		Label stageOneBtn = new Label("Stage 1");
+		stageOneBtn.setOnMouseClicked(new StageButton("map1.td"));
+		stageOneBtn.setPadding(new Insets(20, 20, 20, 20));
+		stageOneBtn.setFont(new Font("Arial", 20));
 
-		Button stageTwoBtn = new Button("Stage 2");
-		stageTwoBtn.setOnAction(new StageButton("map2.td"));
-		stageTwoBtn.setPadding(new Insets(20, 55, 20, 20));
+		Label stageTwoBtn = new Label("Stage 2");
+		stageTwoBtn.setOnMouseClicked(new StageButton("map2.td"));
+		stageTwoBtn.setPadding(new Insets(20, 20, 20, 20));
+		stageTwoBtn.setFont(new Font("Arial", 20));
 
-		Button stageThreeBtn = new Button("Stage 3");
-		stageThreeBtn.setOnAction(new StageButton("map3.td"));
-		stageThreeBtn.setPadding(new Insets(20, 55, 20, 20));
+		Label stageThreeBtn = new Label("Stage 3");
+		stageThreeBtn.setOnMouseClicked(new StageButton("map3.td"));
+		stageThreeBtn.setPadding(new Insets(20, 20, 20, 20));
+		stageThreeBtn.setFont(new Font("Arial", 20));
 
 		
-		Button selectMapBtn = new Button("Select Map");
-		selectMapBtn.setOnAction(e -> {
+		Label selectMapBtn = new Label("Select Map");
+		selectMapBtn.setOnMouseClicked(e -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open Map File");
 			FileChooser.ExtensionFilter mapFilter = new ExtensionFilter("Map Files (*.td)", "*.td");
@@ -116,7 +123,8 @@ public class TDMainMenu extends Stage {
 				stage.close();
 			}
 		});
-		selectMapBtn.setPadding(new Insets(20, 60, 20, 20));
+		selectMapBtn.setPadding(new Insets(20, 20, 20, 20));
+		selectMapBtn.setFont(new Font("Arial", 20));
 		
 		//stageOneBtn.setVisible(false);
 		//stageOneBtn.setManaged(true);
@@ -177,25 +185,23 @@ public class TDMainMenu extends Stage {
 		return chosenMap;
 	}
 
-	private class StageButton implements EventHandler<ActionEvent> {
+	private class StageButton implements EventHandler<MouseEvent> {
 		private String mapFile;
 
 		public StageButton(String mapFile) {
 			this.mapFile = mapFile;
 		}
 	
-		public void handle(ActionEvent e) {	
+		public void handle(MouseEvent e) {	
 			if (!gameStarted) {
 				playerMenu.stop();
 				chosenMap = TDView.MAP_PATH + mapFile;
 				gameStarted = true;
-				stageBox.setVisible(false);
 				Node source = (Node) e.getSource();
 			    Stage stage = (Stage) source.getScene().getWindow();
 			    stage.close();
 			} else {
 				playerMenu.stop();
-				stageBox.setVisible(false);
 				controller.stop();
 				view.setMapFileName(TDView.MAP_PATH + mapFile);
 				view.newGame();
