@@ -231,6 +231,7 @@ public class TDTests {
 
 		// selects default tower instead
 		assertTrue(controller.canPurchaseTower("Some random tower that doesn't exist"));
+		assertNull(controller.getSelectedTowerImage());
 	}
 
 	/**
@@ -298,7 +299,8 @@ public class TDTests {
 	@Test
 	void testTowerCost() {
 		TDController controller = new TDController(new Player(), new GameState(null));
-		assertEquals(controller.getTowerCost("Tower"), 50);
+		assertEquals(50, controller.getTowerCost("Tower"));
+		assertEquals(50, controller.getTowerCost("Some random tower"));
 	}
 
 	/**
@@ -411,6 +413,7 @@ public class TDTests {
 		controller.regularSpeed();
 		controller.slowDown();
 		controller.pause();
+		controller.pause();
 		controller.stop();
 	}
 	
@@ -459,5 +462,18 @@ public class TDTests {
 		assertNotNull(new PiercingTower().getProjectile());
 		
 		assertNotNull(new RapidTower().getProjectile());
+	}
+	
+	/**
+	 * Tests adding dead zones to the GameState
+	 */
+	@Test
+	void testDeadZones() {
+		GameState gameState = new GameState(null);
+		TDController controller = new TDController(new Player(), gameState);
+		Rectangle rectangle = new Rectangle(10, 10, 20, 20);
+		controller.addDeadzone(rectangle);
+		
+		assertEquals(rectangle, gameState.getDeadZones().get(0));
 	}
 }
