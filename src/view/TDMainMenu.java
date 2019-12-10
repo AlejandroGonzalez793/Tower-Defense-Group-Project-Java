@@ -14,6 +14,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundSize;
@@ -56,7 +57,7 @@ public class TDMainMenu extends Stage {
 
 		Image backgroundImage = null;
 		try {
-			backgroundImage = new Image(new FileInputStream("resources/images/Title3.png"));
+			backgroundImage = new Image(new FileInputStream("resources/images/Title4.png"));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
