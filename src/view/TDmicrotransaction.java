@@ -50,7 +50,7 @@ public class TDmicrotransaction extends Stage {
 		micro2Btn.setPadding(new Insets(10, 10, 10, 10));
 		micro2Btn.setOnAction(new MicroButton("9.99", "250"));
 
-		Button micro3Btn = new Button("MisurdasMatsuda\n  400 Gold\n  +100 Gold\n $19.99");
+		Button micro3Btn = new Button("MisurdasPiazza\n  400 Gold\n  +100 Gold\n $19.99");
 		micro3Btn.setPadding(new Insets(10, 10, 10, 10));
 		micro3Btn.setOnAction(new MicroButton("19.99", "500"));
 
