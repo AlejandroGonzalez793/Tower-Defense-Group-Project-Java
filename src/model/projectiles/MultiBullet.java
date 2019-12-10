@@ -14,10 +14,6 @@ public class MultiBullet extends Projectile {
 		image = ResourceManager.getImage("MultiBullet");
 	}
 	
-	public MultiBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER, RADIUS);
-	}
-	
 	public MultiBullet(int x, int y) {
 		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}

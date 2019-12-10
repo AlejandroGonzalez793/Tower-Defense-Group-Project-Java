@@ -40,6 +40,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -74,18 +75,22 @@ public class TDView extends Application implements Observer {
 
 	private Button sellButton;
 	private Boolean sellingTowers = false;
-	
+
 	private Button newWaveButton;
-	
+
 	private static final String IMAGE_PATH = "resources/images/";
 	public static final String MAP_PATH = "resources/maps/";
 	private static final int TOWER_ROWS = 3;
 	private static final String START_CHAR = "+";
 	private static final String END_CHAR = "=";
 	private static final String ROAD_CHAR = "-";
+	private static final String DEAD_CHAR = "d";
 
 	@Override
 	public void start(Stage primaryStage) {
+		ResourceManager.loadImages();
+		ResourceManager.loadAudio();
+		
 		this.primaryStage = primaryStage;
 		this.controller = new TDController(new Player(this), new GameState(this));
 
@@ -182,11 +187,11 @@ public class TDView extends Application implements Observer {
 
 		} else if (arg instanceof Player) {
 			Player player = (Player) arg;
-			
+
 			int playerHealth = Math.max(0, player.getHealth());
 			health.setText(Integer.toString(playerHealth));
 			money.setText(Integer.toString(player.getMoney()));
-			
+
 			if (controller.isPlayerDead()) {
 				controller.stop();
 				stopMusic();
@@ -205,14 +210,15 @@ public class TDView extends Application implements Observer {
 					stage.close();
 				});
 				gameOverWindow.show();
+				return;
 			}
 		}
-		
+
 		// if new round is true, set the wave button to be pressable
 		if (controller.isNewRound()) {
 			newWaveButton.setDisable(false);
 		}
-		
+
 		// when the stage is completed, show victory screen and return to main menu
 		if (controller.isGameOver()) {
 			controller.stop();
@@ -240,15 +246,19 @@ public class TDView extends Application implements Observer {
 		createLayout();
 
 		gamePane.setOnMouseClicked(e -> {
-			if (!sellingTowers && controller.canPlaceTower((int) e.getX(), (int) e.getY())) {
-				controller.addTower((int) e.getX(), (int) e.getY());
-				towerPane.setDisable(false);
-				gamePane.setDisable(true);
-				gamePane.setCursor(Cursor.DEFAULT);
-			} else {
-				controller.sellTower((int) e.getX(), (int) e.getY());
-			}
-		});
+            if (!sellingTowers) {
+            	int height = (int)drawingCanvas.getHeight();
+            	int width = (int)drawingCanvas.getWidth();
+                if (controller.canPlaceTower((int)e.getX(), (int)e.getY(), height, width)) {
+				    controller.addTower((int) e.getX(), (int) e.getY());
+				    towerPane.setDisable(false);
+                    gamePane.setDisable(true);
+                    gamePane.setCursor(Cursor.DEFAULT);
+                }
+            } else {
+            	controller.sellTower((int) e.getX(), (int) e.getY());
+            }
+        });
 		gamePane.setDisable(true);
 
 		primaryStage.setMinHeight(100);
@@ -270,9 +280,11 @@ public class TDView extends Application implements Observer {
 		Scanner input = null;
 		Image grass = null;
 		Image road = null;
+		Image rock = null;
 		try {
 			input = new Scanner(new File(mapFileName));
 			grass = new Image(new FileInputStream(IMAGE_PATH + "Grass.png"));
+			rock = new Image(new FileInputStream(IMAGE_PATH + "Rock.png"));
 			road = new Image(new FileInputStream(IMAGE_PATH + "Road.png"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -305,12 +317,17 @@ public class TDView extends Application implements Observer {
 			String line = input.nextLine();
 			tempBoard[row] = line.split("");
 			for (int col = 0; col < tempBoard[row].length; col++) {
+				
 				if (tempBoard[row][col].equals(START_CHAR)) {
 					currRow = row;
 					currCol = col;
+				} else if (tempBoard[row][col].equals(DEAD_CHAR)) {
+					this.controller.addDeadzone(new Rectangle(col * 50, row * 50, 50, 50));
+					backgroundGC.drawImage(rock, col * 50, row * 50, 50 ,50);
 				} else {
 					backgroundGC.drawImage(grass, col * grass.getWidth(), row * grass.getHeight());
 				}
+				
 			}
 			row++;
 		}
@@ -518,7 +535,7 @@ public class TDView extends Application implements Observer {
 			player.seek(Duration.ZERO);
 			player.play();
 		});
-		
+
 		player.setVolume(0.5);
 		player.play();
 	}
@@ -529,7 +546,7 @@ public class TDView extends Application implements Observer {
 			player = null;
 		}
 	}
-	
+
 	public void setMapFileName(String mapFileName) {
 		this.mapFileName = mapFileName;
 	}

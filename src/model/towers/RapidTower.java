@@ -16,10 +16,6 @@ public class RapidTower extends Tower{
 		image = ResourceManager.getImage("RapidTower");
 	}
 	
-	public RapidTower(int x, int y, int width, int height) {
-		this(x, y, width, height, RADIUS, RATE, COST);
-	}
-	
 	public RapidTower() {
 		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 	}

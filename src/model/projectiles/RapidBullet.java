@@ -14,10 +14,6 @@ public class RapidBullet extends Projectile {
 		image = ResourceManager.getImage("RapidBullet");
 	}
 	
-	public RapidBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER, RADIUS);
-	}
-	
 	public RapidBullet(int x, int y) {
 		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}

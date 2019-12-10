@@ -25,7 +25,6 @@ import model.towers.OneShotTower;
 import model.towers.PiercingTower;
 import model.towers.RapidTower;
 import model.towers.Tower;
-import util.ResourceManager;
 
 /**
  * The general controller used to interact with the game in its current state.
@@ -67,9 +66,6 @@ public class TDController {
 		towerMap.put("AreaTower", AreaTower.class);
 		towerMap.put("Thicc Yoshi", PiercingTower.class);
 		towerMap.put("OneShotTower", OneShotTower.class);
-
-		ResourceManager.loadImages();
-		ResourceManager.loadAudio();
 	}
 
 	/**
@@ -96,7 +92,7 @@ public class TDController {
 	 * @return true if the game is over, false otherwise
 	 */
 	public boolean isGameOver() {
-		return newRound && waveNumber > 4;
+		return newRound && waveNumber > Waves.MAX_WAVES;
 	}
 	
 	/**
@@ -120,10 +116,12 @@ public class TDController {
 	 * 
 	 * @param x the x coordinate at the middle of where the tower should be placed
 	 * @param y the y coordinate at the middle of where the tower should be placed
+	 * @param height the height of the board that we are placing the tower on
+	 * @param width the width of the board that we are placing the tower on
 	 * @return true if the selected tower can be placed at the specified position,
 	 *         false otherwise
 	 */
-	public boolean canPlaceTower(int x, int y) {
+	public boolean canPlaceTower(int x, int y, int height, int width) {
 		int shiftedX = x - (selectedTower.getWidth() / 2);
 		int shiftedY = y - (selectedTower.getHeight() / 2);
 
@@ -137,7 +135,18 @@ public class TDController {
 
 			node = node.getNext();
 		}
-
+		// check if tower goes off board
+		if (shiftedX < 0 || shiftedY < 0 || (selectedTower.getWidth() / 2 + x) > width 
+				|| (selectedTower.getHeight() / 2 + y) > height) {
+			return false;
+		}
+		
+		for (Rectangle zone : gameState.getDeadZones()) {
+			if (zone.intersects(shiftedX, shiftedY, selectedTower.getWidth(), selectedTower.getHeight())) {
+				return false;
+			}
+		}
+		
 		// Check if tower collides with another tower
 		for (Tower tower : gameState.getTowers()) {
 			Rectangle rect = new Rectangle(tower.getX(), tower.getY(), tower.getWidth(), tower.getHeight());
@@ -370,7 +379,7 @@ public class TDController {
 			@Override
 			public void handle(long now) {
 				if (playing && now - lastUpdate >= (TICK_SPEED * animationSpeed) * 1000000) {
-
+					
 					lastUpdate = now;
 					Enemy enemy = gameState.enemyContact();
 					if (enemy != null) {
@@ -417,6 +426,15 @@ public class TDController {
 		waveNumber++;
 		startGame();
 	}
+	
+	/**
+	 * Sets the enemy wave number
+	 * 
+	 * @param waveNumber the number to set the wave to
+	 */
+	public void setWaveNumber(int waveNumber) {
+		this.waveNumber = waveNumber;
+	}
 
 	/**
 	 * Gets the current enemy wave number.
@@ -425,6 +443,16 @@ public class TDController {
 	 */
 	public int getWaveNumber() {
 		return waveNumber;
+	}
+	
+	
+	/**
+	 * Adds a rectangle to a list of dead zones in the model
+	 * 
+	 * @param zone Rectangle object that represents a dead zone
+	 */
+	public void addDeadzone(Rectangle zone) {
+		this.gameState.addDeadzones(zone);
 	}
 
 	
