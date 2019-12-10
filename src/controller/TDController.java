@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
@@ -279,7 +280,7 @@ public class TDController {
 	 *         value being the tower's Image
 	 */
 	public Map<String, Image> getTowerImageMap() {
-		Map<String, Image> imageMap = new HashMap<>();
+		Map<String, Image> imageMap = new TreeMap<>();
 
 		for (Entry<String, Class<? extends Tower>> towerEntry : towerMap.entrySet()) {
 			try {

@@ -43,14 +43,15 @@ public class TDMainMenu extends Stage {
 	public TDMainMenu(TDView view, TDController controller) {
 		this.view = view;
 		this.controller = controller;
-		
+
 		stopMenuMusic();
 		Media pick = new Media(Paths.get("resources/music/Slam_of_Fates.mp3").toUri().toString());
 		playerMenu = new MediaPlayer(pick);
 		playerMenu.setOnEndOfMedia(() -> {
 			playerMenu.seek(Duration.ZERO);
 			playerMenu.play();
-		});;
+		});
+		
 		playerMenu.setVolume(0.5);
 		playerMenu.play();
 
@@ -58,23 +59,19 @@ public class TDMainMenu extends Stage {
 		try {
 			backgroundImage = new Image(new FileInputStream("resources/images/Title4.png"));
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-	    menuPane.setBackground(new Background(new BackgroundImage(backgroundImage,
-	            BackgroundRepeat.REPEAT,
-	            BackgroundRepeat.REPEAT,
-	            BackgroundPosition.DEFAULT,
-	           BackgroundSize.DEFAULT)));
-		
+
+		menuPane.setBackground(new Background(new BackgroundImage(backgroundImage, BackgroundRepeat.REPEAT,
+				BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+
 		Label startBtn = new Label("Start");
-		startBtn.setPadding(new Insets(10, 50, 10, 10));
+		startBtn.setPadding(new Insets(25, 25, 10, 25));
 		startBtn.setOnMouseClicked(new StageButton("map1.td"));
 		startBtn.setFont(new Font("Arial", 35));
 
 		Label exitBtn = new Label("Exit");
-		exitBtn.setPadding(new Insets(10, 50, 10, 10));
+		exitBtn.setPadding(new Insets(10, 25, 25, 25));
 		exitBtn.setOnMouseClicked(e -> {
 			System.exit(1);
 		});
@@ -95,7 +92,6 @@ public class TDMainMenu extends Stage {
 		stageThreeBtn.setPadding(new Insets(20, 20, 20, 20));
 		stageThreeBtn.setFont(new Font("Arial", 20));
 
-		
 		Label selectMapBtn = new Label("Select Map");
 		selectMapBtn.setOnMouseClicked(e -> {
 			FileChooser fileChooser = new FileChooser();
@@ -114,7 +110,7 @@ public class TDMainMenu extends Stage {
 		});
 		selectMapBtn.setPadding(new Insets(20, 20, 20, 20));
 		selectMapBtn.setFont(new Font("Arial", 20));
-		
+
 		VBox menuBox = new VBox(startBtn, exitBtn);
 		menuBox.setAlignment(Pos.CENTER);
 		menuBox.setSpacing(5);
@@ -133,7 +129,7 @@ public class TDMainMenu extends Stage {
 		GridPane.setHalignment(stageThreeBtn, HPos.CENTER);
 		GridPane.setHalignment(selectMapBtn, HPos.CENTER);
 
-		BorderPane.setAlignment(menuBox, Pos.CENTER); 
+		BorderPane.setAlignment(menuBox, Pos.CENTER);
 
 		menuPane.setCenter(menuBox);
 		menuPane.setBottom(stageBox);
@@ -154,7 +150,7 @@ public class TDMainMenu extends Stage {
 			playerMenu = null;
 		}
 	}
-	
+
 	public String getMapImage() {
 		return chosenMap;
 	}
@@ -165,24 +161,24 @@ public class TDMainMenu extends Stage {
 		public StageButton(String mapFile) {
 			this.mapFile = mapFile;
 		}
-	
-		public void handle(MouseEvent e) {	
+
+		public void handle(MouseEvent e) {
 			if (!gameStarted) {
 				playerMenu.stop();
 				chosenMap = TDView.MAP_PATH + mapFile;
 				gameStarted = true;
 				Node source = (Node) e.getSource();
-			    Stage stage = (Stage) source.getScene().getWindow();
-			    stage.close();
+				Stage stage = (Stage) source.getScene().getWindow();
+				stage.close();
 			} else {
 				playerMenu.stop();
 				controller.stop();
 				view.setMapFileName(TDView.MAP_PATH + mapFile);
 				view.newGame();
 				Node source = (Node) e.getSource();
-			    Stage stage = (Stage) source.getScene().getWindow();
-			    stage.close();
-			}		
+				Stage stage = (Stage) source.getScene().getWindow();
+				stage.close();
+			}
 		}
 	}
 
