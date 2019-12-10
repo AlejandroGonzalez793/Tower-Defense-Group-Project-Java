@@ -16,10 +16,6 @@ public class MultiShotTower extends Tower{
 		image = ResourceManager.getImage("MultiShotTower");
 	}
 	
-	public MultiShotTower(int x, int y, int width, int height) {
-		this(x, y, width, height, 150, 10, 1000);
-	}
-	
 	public MultiShotTower() {
 		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 	}

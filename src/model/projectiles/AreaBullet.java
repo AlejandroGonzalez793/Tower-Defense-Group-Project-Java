@@ -14,10 +14,6 @@ public class AreaBullet extends Projectile {
 		image = ResourceManager.getImage("AreaBullet");
 	}
 	
-	public AreaBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER, RADIUS);
-	}
-	
 	public AreaBullet(int x, int y) {
 		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}

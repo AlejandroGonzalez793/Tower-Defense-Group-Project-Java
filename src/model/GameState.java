@@ -23,15 +23,19 @@ public class GameState extends Observable {
 	private List<Tower> towers;
 	private List<Enemy> enemies;
 	private List<Projectile> projectiles;
+	private List<Rectangle> deadzones;
 	private Node start;
 	private Node end;
 	private int ticks;
 	private int round;
+	private int nEnemy;
 
 	public GameState(Observer o) {
 		this.towers = new ArrayList<>();
 		this.enemies = new ArrayList<>();
 		this.projectiles = new ArrayList<>();
+		this.deadzones = new ArrayList<>();
+		this.nEnemy = 0;
 
 		if (o != null) {
 			addObserver(o);
@@ -54,7 +58,12 @@ public class GameState extends Observable {
 	 * update its position on the board.
 	 */
 	public void tick() {
-		for (Enemy enemy : enemies) {
+		for (int i = 0; i < enemies.size(); i++) {
+			if (nEnemy != enemies.size() && i == nEnemy ) {
+				nEnemy++;
+				break;
+			}
+			Enemy enemy = enemies.get(i);
 			Node node = enemy.getNode();
 			if (node != null) {
 				Rectangle rect = node.getRectangle();
@@ -66,6 +75,8 @@ public class GameState extends Observable {
 				}
 				enemy.update();
 			}
+			
+			
 		}
 
 		for (Tower tower : towers) {
@@ -76,7 +87,7 @@ public class GameState extends Observable {
 					double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 					if (distance <= tower.getRadius()) {
 						Projectile projectile = tower.getProjectile();
-
+						
 						if (x < y) {
 							y /= x;
 							x = 1;
@@ -84,13 +95,17 @@ public class GameState extends Observable {
 							x /= y;
 							y = 1;
 						}
-
+						
 						if (enemy.getX() < tower.getX()) {
-							x = -x;
+							x = -x-projectile.getSpeed();
+						}else {
+							x = x+projectile.getSpeed();
 						}
 
 						if (enemy.getY() < tower.getY()) {
-							y = -y;
+							y = -y-projectile.getSpeed();
+						}else {
+							y = y + projectile.getSpeed(); // add speed here
 						}
 						projectile.setDx(x);
 						projectile.setDy(y);
@@ -236,6 +251,23 @@ public class GameState extends Observable {
 		end.setNext(node);
 		end = node;
 	}
+	
+	/**
+	 * A dead zone is added to the model so no towers can be placed on it
+	 * @param zone Rectangle object that represents a dead zone
+	 */
+	public void addDeadzones(Rectangle zone) {
+		this.deadzones.add(zone);
+	}
+	
+	/**
+	 * Gets a list of dead zones in the model
+	 * 
+	 * @return deadzones A list of rectangles. 
+	 */
+	public List<Rectangle> getDeadZones() {
+		return this.deadzones;
+	}
 
 	/**
 	 * Checks if enemy has gone off the board.
@@ -257,6 +289,10 @@ public class GameState extends Observable {
 		return null;
 	}
 	
+	/**
+	 * Sets the enemies to the starting node on the board
+	 * @param enemies enemies within the game
+	 */
 	public void setEnemies(List<Enemy> enemies) {
 		for (Enemy enemy : enemies) {
 			enemy.setNode(start);
@@ -265,6 +301,9 @@ public class GameState extends Observable {
 		this.enemies = enemies;
 	}
 	
+	/**
+	 * Resets the projectiles list in the game.
+	 */
 	public void resetProjectiles() {
 		this.projectiles = new ArrayList<>();
 	}

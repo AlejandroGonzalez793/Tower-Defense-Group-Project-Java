@@ -12,6 +12,7 @@ import model.enemies.Pterosaur;
 import model.enemies.RedHelicopter;
 
 public class Waves {
+	public static final int MAX_WAVES = 4;
 	
 	public static List<Enemy> getWave(int waveNum, int x, int y) {
 		List<Enemy> wave = new ArrayList<>();
@@ -19,8 +20,14 @@ public class Waves {
 		if (waveNum == 0) {
 			wave.add(new Balloon(x, y));
 			wave.add(new HotAirBalloon(x, y));
-			wave.add(new GreenPlane(x, y));
+			wave.add(new RedHelicopter(x, y));
 		} else if (waveNum == 1) {
+			wave.add(new Balloon(x, y));
+			wave.add(new HotAirBalloon(x, y));
+			wave.add(new RedHelicopter(x, y));
+			wave.add(new Balloon(x, y));
+			wave.add(new HotAirBalloon(x, y));
+			wave.add(new RedHelicopter(x, y));
 			wave.add(new Balloon(x, y));
 			wave.add(new HotAirBalloon(x, y));
 			wave.add(new RedHelicopter(x, y));
@@ -38,7 +45,7 @@ public class Waves {
 			wave.add(new Balloon(x, y));
 			wave.add(new HotAirBalloon(x, y));
 			wave.add(new Drifblim(x, y));
-		}
+		} 
 		
 		return wave;
 	}

@@ -16,10 +16,6 @@ public class ExpensiveTower extends Tower{
 		image = ResourceManager.getImage("ExpensiveTower");
 	}
 	
-	public ExpensiveTower(int x, int y, int width, int height) {
-		this(x, y, width, height, 150, 10, 1000);
-	}
-	
 	public ExpensiveTower() {
 		this(0, 0, WIDTH, HEIGHT, RADIUS, RATE, COST);
 	}

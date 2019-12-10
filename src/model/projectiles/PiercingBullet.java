@@ -14,10 +14,6 @@ public class PiercingBullet extends Projectile {
 		image = ResourceManager.getImage("PiercingBullet");
 	}
 	
-	public PiercingBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER, RADIUS);
-	}
-	
 	public PiercingBullet(int x, int y) {
 		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}
