@@ -156,20 +156,10 @@ public class TDView extends Application implements Observer {
 			GameState gameState = (GameState) arg;
 			drawingGC.clearRect(0, 0, drawingCanvas.getWidth(), drawingCanvas.getHeight());
 
-			Iterator<Projectile> bulletIter = gameState.getProjectiles().iterator();
-			while (bulletIter.hasNext()) {
-				Projectile bullet = bulletIter.next();
-				if (controller.checkBulletCollision(bullet)) {
-					bulletIter.remove();
-				} else if (bullet.getDistance() >= bullet.getRadius()) {
-					bulletIter.remove();
-				} else {
-					drawingGC.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), bullet.getWidth(),
-							bullet.getHeight());
-				}
-				bullet.setDistance();
+			for (Tower tower : gameState.getTowers()) {
+				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), tower.getWidth(), tower.getHeight());
 			}
-
+			
 			Iterator<Enemy> enemyIter = gameState.getEnemies().iterator();
 			while (enemyIter.hasNext()) {
 				Enemy enemy = enemyIter.next();
@@ -183,10 +173,19 @@ public class TDView extends Application implements Observer {
 				}
 			}
 
-			for (Tower tower : gameState.getTowers()) {
-				drawingGC.drawImage(tower.getImage(), tower.getX(), tower.getY(), tower.getWidth(), tower.getHeight());
+			Iterator<Projectile> bulletIter = gameState.getProjectiles().iterator();
+			while (bulletIter.hasNext()) {
+				Projectile bullet = bulletIter.next();
+				if (controller.checkBulletCollision(bullet)) {
+					bulletIter.remove();
+				} else if (bullet.getDistance() >= bullet.getRadius()) {
+					bulletIter.remove();
+				} else {
+					drawingGC.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), bullet.getWidth(),
+							bullet.getHeight());
+				}
+				bullet.setDistance();
 			}
-
 		} else if (arg instanceof Player) {
 			Player player = (Player) arg;
 
