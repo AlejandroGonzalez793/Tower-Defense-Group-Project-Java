@@ -1,6 +1,8 @@
 package view;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 
 import controller.TDController;
@@ -12,9 +14,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
@@ -45,34 +54,51 @@ public class TDMainMenu extends Stage {
 		playerMenu.setVolume(0.5);
 		playerMenu.play();
 
+		Image backgroundImage = null;
+		try {
+			backgroundImage = new Image(new FileInputStream("resources/images/Title3.png"));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+	    menuPane.setBackground(new Background(new BackgroundImage(backgroundImage,
+	            BackgroundRepeat.REPEAT,
+	            BackgroundRepeat.REPEAT,
+	            BackgroundPosition.DEFAULT,
+	           BackgroundSize.DEFAULT)));
+		
 		Button startBtn = new Button("Start");
-		startBtn.setPadding(new Insets(10, 10, 10, 10));
+		startBtn.setPadding(new Insets(10, 50, 10, 10));
 		startBtn.setOnAction(new StageButton("map1.td"));
 
+		/*
 		Button stageBtn = new Button("Stage Select");
 		stageBtn.setPadding(new Insets(10, 10, 10, 10));
 		stageBtn.setOnAction(e -> {
 			stageBox.setVisible(!stageBox.visibleProperty().getValue());
 		});
+		*/
 
 		Button exitBtn = new Button("Exit");
-		exitBtn.setPadding(new Insets(10, 10, 10, 10));
+		exitBtn.setPadding(new Insets(10, 50, 10, 10));
 		exitBtn.setOnAction(e -> {
 			System.exit(1);
 		});
 
 		Button stageOneBtn = new Button("Stage 1");
 		stageOneBtn.setOnAction(new StageButton("map1.td"));
-		stageOneBtn.setPadding(new Insets(20, 20, 20, 20));
+		stageOneBtn.setPadding(new Insets(20, 55, 20, 20));
 
 		Button stageTwoBtn = new Button("Stage 2");
 		stageTwoBtn.setOnAction(new StageButton("map2.td"));
-		stageTwoBtn.setPadding(new Insets(20, 20, 20, 20));
+		stageTwoBtn.setPadding(new Insets(20, 55, 20, 20));
 
 		Button stageThreeBtn = new Button("Stage 3");
 		stageThreeBtn.setOnAction(new StageButton("map3.td"));
-		stageThreeBtn.setPadding(new Insets(20, 20, 20, 20));
+		stageThreeBtn.setPadding(new Insets(20, 55, 20, 20));
 
+		
 		Button selectMapBtn = new Button("Select Map");
 		selectMapBtn.setOnAction(e -> {
 			FileChooser fileChooser = new FileChooser();
@@ -89,31 +115,46 @@ public class TDMainMenu extends Stage {
 				stage.close();
 			}
 		});
-		selectMapBtn.setPadding(new Insets(20, 20, 20, 20));
+		selectMapBtn.setPadding(new Insets(20, 60, 20, 20));
+		
+		//stageOneBtn.setVisible(false);
+		//stageOneBtn.setManaged(true);
+		//stageOneBtn.setOpaque(false);
+		//stageOneBtn.setContentAreaFilled(false);
+		//stageOneBtn.setBorderPainted(false);
 
-		HBox menuBox = new HBox(startBtn, stageBtn, exitBtn);
-		menuBox.setAlignment(Pos.TOP_CENTER);
+			
+		//stageTwoBtn.setVisible(false);
+		//stageThreeBtn.setVisible(false);
+		//selectMapBtn.setVisible(false);
+		//startBtn.setVisible(false);
+		//exitBtn.setVisible(false);
+		
+		VBox menuBox = new VBox(startBtn, exitBtn);
+		menuBox.setAlignment(Pos.CENTER);
 		menuBox.setSpacing(5);
+		//menuBox.setVisible(false);
 
 		stageBox = new GridPane();
 		stageBox.add(stageOneBtn, 0, 0);
-		stageBox.add(stageTwoBtn, 0, 1);
-		stageBox.add(stageThreeBtn, 0, 2);
-		stageBox.add(selectMapBtn, 0, 3);
+		stageBox.add(stageTwoBtn, 1, 0);
+		stageBox.add(stageThreeBtn, 2, 0);
+		stageBox.add(selectMapBtn, 1, 1);
 		stageBox.setAlignment(Pos.CENTER);
-		stageBox.setVisible(false);
+		//stageBox.setVisible(false);
 		stageBox.setVgap(10);
+		stageBox.setHgap(15);
 
 		GridPane.setHalignment(stageOneBtn, HPos.CENTER);
 		GridPane.setHalignment(stageTwoBtn, HPos.CENTER);
 		GridPane.setHalignment(stageThreeBtn, HPos.CENTER);
 		GridPane.setHalignment(selectMapBtn, HPos.CENTER);
 
-		BorderPane.setAlignment(menuBox, Pos.CENTER);
+		BorderPane.setAlignment(menuBox, Pos.CENTER); 
 
-		menuPane.setTop(menuBox);
-		menuPane.setCenter(stageBox);
-		BorderPane.setMargin(menuBox, new Insets(10, 0, 0, 0));
+		menuPane.setCenter(menuBox);
+		menuPane.setBottom(stageBox);
+		BorderPane.setMargin(menuBox, new Insets(120, 0, 0, 0));
 		Scene scene = new Scene(menuPane, 450, 450);
 		this.setScene(scene);
 	}
