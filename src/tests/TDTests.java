@@ -198,7 +198,7 @@ public class TDTests {
 	void testIsGameOver() {
 		Player player = new Player();
 		TDController controller = new TDController(player, new GameState(null));
-		controller.setWaveNumber(5);
+		controller.setWaveNumber(TDController.MAX_WAVES + 1);
 		assertTrue(controller.isGameOver());
 
 		player.setHealth(0);
