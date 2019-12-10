@@ -1,37 +1,21 @@
 package model.projectiles;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import javafx.scene.image.Image;
+import util.ResourceManager;
 
 public class StrongBullet extends Projectile {
 	private static final int WIDTH = 28;
 	private static final int HEIGHT = 28;
 	private static final int SPEED = 10;
-	private static final int POWER = 10;
-	private static final int RADIUS = 50;
-    
-	public StrongBullet(int x, int y, int width, int height, int speed, int power) {
-		super(x, y, width, height, speed, power);
-		try {
-			image = new Image(new FileInputStream("resources/images/projectiles/strong_bullet.png"));
-			//this.setImage(image);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public StrongBullet(int x, int y, int width, int height) {
-		this(x, y, width, height, SPEED, POWER);
+	private static final int POWER = 8;
+	private static final int RADIUS = 100;
+ 
+	public StrongBullet(int x, int y, int width, int height, int speed, int power, int radius) {
+		super(x, y, width, height, speed, power, radius);
+		image = ResourceManager.getImage("StrongBullet");
 	}
 	
 	public StrongBullet(int x, int y) {
-		this(x, y, WIDTH, HEIGHT, SPEED, POWER);
-	}
-	
-	public int getRadius() {
-		return RADIUS;
+		this(x, y, WIDTH, HEIGHT, SPEED, POWER, RADIUS);
 	}
 
 }
