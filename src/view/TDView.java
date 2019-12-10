@@ -49,6 +49,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.GameState;
 import model.Player;
+import model.Waves;
 import model.enemies.Enemy;
 import model.projectiles.Projectile;
 import model.towers.Tower;
@@ -71,6 +72,7 @@ public class TDView extends Application implements Observer {
 
 	private Text money;
 	private Text health;
+	private Label roundLabel;
 	private GridPane towerPane;
 
 	private Button sellButton;
@@ -217,6 +219,7 @@ public class TDView extends Application implements Observer {
 		// if new round is true, set the wave button to be pressable
 		if (controller.isNewRound()) {
 			newWaveButton.setDisable(false);
+			roundLabel.setText("Rounds: " + controller.getWaveNumber() + "/" + Waves.MAX_WAVES);
 		}
 
 		// when the stage is completed, show victory screen and return to main menu
@@ -403,6 +406,8 @@ public class TDView extends Application implements Observer {
 			}
 		}
 
+		BorderPane statsPane = new BorderPane();
+		
 		VBox statsBox = new VBox();
 		statsBox.setSpacing(5);
 
@@ -417,6 +422,11 @@ public class TDView extends Application implements Observer {
 		moneyBox.getChildren().addAll(moneyLabel, money);
 
 		statsBox.getChildren().addAll(hpBox, moneyBox);
+		
+		roundLabel = new Label("Rounds: 0/" + Waves.MAX_WAVES);
+		
+		statsPane.setLeft(statsBox);
+		statsPane.setRight(roundLabel);
 
 		VBox controlBox = new VBox();
 		controlBox.setSpacing(5);
@@ -512,7 +522,7 @@ public class TDView extends Application implements Observer {
 
 		controlBox.getChildren().addAll(towerPurchaseBox, gameSpeedBox, waveBox);
 
-		sidebarPane.setTop(statsBox);
+		sidebarPane.setTop(statsPane);
 		sidebarPane.setCenter(towerPane);
 		sidebarPane.setBottom(controlBox);
 
