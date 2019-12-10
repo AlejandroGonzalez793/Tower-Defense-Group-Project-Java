@@ -409,6 +409,9 @@ public class TDTests {
 	@Test
 	void testControllerTimer() {
 		TDController controller = new TDController(new Player(), new GameState(null));
+		controller.stop(); // nothing should happen
+		controller.startGame();
+		controller.startGame(); // nothing should happen
 		controller.speedUp();
 		controller.regularSpeed();
 		controller.slowDown();
@@ -475,5 +478,53 @@ public class TDTests {
 		controller.addDeadzone(rectangle);
 		
 		assertEquals(rectangle, gameState.getDeadZones().get(0));
+	}
+	
+	/**
+	 * Tests removing an enemy that was added to the GameState
+	 */
+	@Test
+	void testGameStateRemove() {
+		GameState gameState = new GameState(null);
+		Enemy enemy = new Enemy(0, 0, 20, 20);
+		gameState.addEnemy(enemy);
+		assertEquals(1, gameState.getEnemies().size());
+		
+		gameState.removeEnemy(enemy);
+		assertEquals(0, gameState.getEnemies().size());
+	}
+	
+	/**
+	 * Tests getting the projectiles from the GameState. Initially
+	 * there shouldn't be any.
+	 */
+	@Test
+	void testGameStateProjectiles() {
+		GameState gameState = new GameState(null);
+		assertEquals(0, gameState.getProjectiles().size());
+	}
+	
+	/**
+	 * Tests if there is enemy contact between an enemy and the
+	 * end of the board as dictated by the GameState node list
+	 */
+	@Test
+	void testGameStateEnemyContact() {
+		GameState gameState = new GameState(null);
+		Node node = new Node(new Rectangle(0, 0, 10, 10));
+		Node node2 = new Node(new Rectangle(10, 10, 10, 10));
+		gameState.addNode(node);
+		gameState.addNode(node2);
+		
+		assertNull(gameState.enemyContact());
+		
+		
+		Enemy enemy = new Enemy(0, 0, 10, 10);
+		Enemy enemy2 = new Enemy(10, 10, 10, 10);
+		enemy.setNode(node);
+		gameState.addEnemy(enemy);
+		gameState.addEnemy(enemy2);
+		enemy2.setNode(node2);
+		assertEquals(enemy2, gameState.enemyContact());
 	}
 }
