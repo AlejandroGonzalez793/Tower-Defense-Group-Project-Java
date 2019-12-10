@@ -30,7 +30,7 @@ public class ResourceManager {
 			// Enemies
 			images.put("Balloon", new Image(new FileInputStream("resources/images/enemies/balloon_purple.gif")));
 			images.put("Drifblim", new Image(new FileInputStream("resources/images/enemies/Drifblim.gif")));
-			images.put("GreenPlane", new Image(new FileInputStream("resources/images/enemies/green_plane.gif")));
+			images.put("GreenPlane", new Image(new FileInputStream("resources/images/enemies/cat_balloon.png")));
 			images.put("HotAirBalloon", new Image(new FileInputStream("resources/images/enemies/hot_air_balloon.gif")));
 			images.put("Pterosaur", new Image(new FileInputStream("resources/images/enemies/pterosaur_small.gif")));
 			images.put("RedHelicopter", new Image(new FileInputStream("resources/images/enemies/red_helicopter.gif")));

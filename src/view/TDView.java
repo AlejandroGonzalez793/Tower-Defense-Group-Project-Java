@@ -290,7 +290,7 @@ public class TDView extends Application implements Observer {
 		try {
 			input = new Scanner(new File(mapFileName));
 			grass = new Image(new FileInputStream(IMAGE_PATH + "Grass.png"));
-			rock = new Image(new FileInputStream(IMAGE_PATH + "Rock.png"));
+			rock = new Image(new FileInputStream(IMAGE_PATH + "DeadZone.png"));
 			road = new Image(new FileInputStream(IMAGE_PATH + "Road.png"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
