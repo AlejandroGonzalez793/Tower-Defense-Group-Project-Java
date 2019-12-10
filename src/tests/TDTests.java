@@ -414,4 +414,35 @@ public class TDTests {
 		
 		assertNotNull(new RapidTower().getProjectile());
 	}
+	
+	/**
+	 * Tests Enemy direction and increment node
+	 */
+	@Test
+	void testEnemyDirection() {
+		GameState state = new GameState(null);
+		
+		TDController controller = new TDController(new Player(), state);
+		
+		controller.addPathTile(0, 0, 50, 50);
+		controller.addPathTile(1, 0, 50, 50);
+		controller.addPathTile(2, 0, 50, 50);
+		controller.addPathTile(3, 0, 50, 50);
+		controller.addPathTile(4, 0, 50, 50);
+		controller.addPathTile(4, 1, 50, 50);
+		controller.addPathTile(4, 2, 50, 50);
+		controller.addPathTile(4, 3, 50, 50);
+		controller.addPathTile(4, 4, 50, 50);
+		controller.addPathTile(4, 4, 50, 50);
+		
+		controller.setWaveNumber(1);
+		controller.nextWave();
+		
+		for (int i = 0; i < 10; i++) {
+			for (Enemy enemy : state.getEnemies()) {
+				enemy.incrementNode();
+			}
+		}
+		
+	}
 }
