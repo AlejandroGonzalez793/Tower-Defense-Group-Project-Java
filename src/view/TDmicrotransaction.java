@@ -48,8 +48,6 @@ public class TDmicrotransaction extends Stage {
 	 * will need to enter their name, credit card number, expiration date,
 	 * and CVS number in order to process the money, so they can get the
 	 * bought gold added to their total gold in the game.
-	 * 
-	 * @throws FileNotFoundException when an image can not be found.
 	 */
 	public TDmicrotransaction() {
 		Label payLabel = new Label("Pay Amount: $");

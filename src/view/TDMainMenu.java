@@ -57,7 +57,6 @@ public class TDMainMenu extends Stage {
 	 * 
 	 * @param view the TDView object for reference.
 	 * @param controller the TDcontroller object for reference.
-	 * @throws FileNotFoundException when an image can not be found.
 	 */
 	public TDMainMenu(TDView view, TDController controller) {
 		this.view = view;

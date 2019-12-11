@@ -202,7 +202,7 @@ public class GameState extends Observable {
 	/**
 	 * Gets the current round that the game is in.
 	 * 
-	 * @return
+	 * @return round This represents the round the game is at
 	 */
 	public int getRound() {
 		return round;

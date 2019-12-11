@@ -629,7 +629,7 @@ public class TDView extends Application implements Observer {
 	/**
 	 * This method sets the map file to be read so the map can be constructed
 	 * 
-	 * @param mapFileName
+	 * @param mapFileName This the map file path
 	 */
 	public void setMapFileName(String mapFileName) {
 		this.mapFileName = mapFileName;
@@ -646,7 +646,7 @@ public class TDView extends Application implements Observer {
 		/**
 		 * This is the tower button constructor. 
 		 * 
-		 * @param tower
+		 * @param tower This is a string object
 		 */
 		public TowerButton(String tower) {
 			this.tower = tower;
@@ -685,7 +685,7 @@ public class TDView extends Application implements Observer {
 		/**
 		 * This constructor is the stage button.
 		 * 
-		 * @param mapFile
+		 * @param mapFile This is a map file path
 		 */
 		public StageButton(String mapFile) {
 			this.mapFile = mapFile;

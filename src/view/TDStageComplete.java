@@ -48,7 +48,8 @@ public class TDStageComplete extends Stage {
 	/**
 	 * This method sets the label for the game over message.
 	 * 
-	 * @param message
+	 * @param message This is a string that indicates if the user 
+	 * won or lost.
 	 */
 	public void setLabel(String message) {
 		gameOverMessage.setText(message);

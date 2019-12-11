@@ -190,7 +190,8 @@ public class TDController {
 	 * Adds the current selected tower to the tower list and subtracts the tower's
 	 * cost from the player's money.
 	 * 
-	 * @param tower the Tower to add
+	 * @param x This is a x coordinate
+	 * @param y This is a y coordinate
 	 */
 	public void addTower(int x, int y) {
 		// TODO: Do something if no selected tower
@@ -358,7 +359,8 @@ public class TDController {
 	/**
 	 * Gets whether or not the current wave is running or paused.
 	 * 
-	 * @return
+	 * @return playing This is a boolean that determines if current 
+	 * wave is playing.
 	 */
 	public boolean getIsPlaying() {
 		return playing;

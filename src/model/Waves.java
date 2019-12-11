@@ -29,7 +29,7 @@ public class Waves {
 	 * @param waveNum The current wave that will be chosen
 	 * @param x the x coordinate where the enemy will spawn
 	 * @param y the y coordinate where the enemy will spawn
-	 * @return the List<Enemy> to be set to the main enemy list in the GameState
+	 * @return the List of Enemies to be set to the main enemy list in the GameState
 	 */
 	public static List<Enemy> getWave(int waveNum, int x, int y) {
 		List<Enemy> wave = new ArrayList<>();

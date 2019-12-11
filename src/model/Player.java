@@ -92,7 +92,7 @@ public class Player extends Observable {
 	/**
 	 * Set player's current money
 	 * 
-	 * @param health the amount of money the player has.
+	 * @param money the amount of money the player has.
 	 */
 	public void setMoney(int money) {
 		this.money = money;

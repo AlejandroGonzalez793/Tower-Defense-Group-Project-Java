@@ -25,8 +25,6 @@ public class ResourceManager {
 
 	/**
 	 * Add images (png or gif files) to the images list for the resource manager.
-	 * 
-	 * @throws FileNotFoundException when an image can not be found.
 	 */
 	public static void loadImages() {
 		try {

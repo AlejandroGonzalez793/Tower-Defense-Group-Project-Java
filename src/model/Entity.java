@@ -58,6 +58,8 @@ public abstract class Entity {
 	
 	/**
 	 * Sets the x coordinate of the entity.
+	 * 
+	 * @param x This is an int.
 	 */
 	public void setX(int x) {
 		this.x = x;
@@ -73,6 +75,8 @@ public abstract class Entity {
 	
 	/**
 	 * Sets the y coordinate of the entity.
+	 * 
+	 * @param y This is an int.
 	 */
 	public void setY(int y) {
 		this.y = y;
@@ -88,6 +92,8 @@ public abstract class Entity {
 	
 	/**
 	 * Sets the width of the entity.
+	 * 
+	 * @param width This is an int.
 	 */
 	public void setWidth(int width) {
 		this.width = width;
@@ -103,6 +109,8 @@ public abstract class Entity {
 	
 	/**
 	 * Sets the height of the entity.
+	 * 
+	 * @param height This is an int.
 	 */
 	public void setHeight(int height) {
 		this.height = height;
@@ -118,6 +126,8 @@ public abstract class Entity {
 	
 	/**
 	 * Sets the dx value of the entity.
+	 * 
+	 * @param dx This is an int.
 	 */
 	public void setDx(double dx) {
 		this.dx = dx;
@@ -134,6 +144,8 @@ public abstract class Entity {
 	
 	/**
 	 * Sets the dy value of the entity.
+	 * 
+	 * @param dy This is an int.
 	 */
 	public void setDy(double dy) {
 		this.dy = dy;
@@ -153,6 +165,8 @@ public abstract class Entity {
 	
 	/**
 	 * Sets the image of the entity from the resource manager.
+	 * 
+	 * @param image This is an image object
 	 */
 	public void setImage(Image image) {
 		this.image = image;
@@ -168,6 +182,8 @@ public abstract class Entity {
 	
 	/**
 	 * Sets the speed of the entity.
+	 * 
+	 * @param speed This is an int.
 	 */
 	public void setSpeed(int speed) {
 		this.speed = speed;
