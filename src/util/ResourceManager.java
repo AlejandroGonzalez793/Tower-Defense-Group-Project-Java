@@ -9,10 +9,23 @@ import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 
+/**
+ * The ResourceManager class makes it so images/audio are all referenced from a Map.
+ * This makes it so multiple images are not being created at once which helps with 
+ * lag in game. 
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class ResourceManager {
 	private static Map<String, Image> images = new HashMap<>();
 	private static Map<String, Media> audio = new HashMap<>();
 
+	/**
+	 * Add images (png or gif files) to the images list for the resource manager.
+	 */
 	public static void loadImages() {
 		try {
 			images.put("Default", new Image(new FileInputStream("resources/images/towers/default_tower.png")));
@@ -54,6 +67,9 @@ public class ResourceManager {
 
 	}
 
+	/**
+	 * Add soundtracks (mp3 files) to the audio list for the resource manager.
+	 */
 	public static void loadAudio() {
 		audio.put("map1", new Media(Paths.get("resources/music/Rowdy_Rumble.mp3").toUri().toString()));
 		audio.put("map2", new Media(Paths.get("resources/music/Desire_for_All_That_Is_Lost.mp3").toUri().toString()));
@@ -61,10 +77,22 @@ public class ResourceManager {
 		audio.put("default", new Media(Paths.get("resources/music/Vim_and_Vigor.mp3").toUri().toString()));
 	}
 
+	/**
+	 * Get a music track to use for a stage in the game.
+	 * 
+	 * @param name the name of the soundtrack
+	 * @return a media object
+	 */
 	public static Media getAudio(String name) {
 		return audio.get(name);
 	}
 
+	/**
+	 * Get an image to use for a tower, enemy or projectile.
+	 * 
+	 * @param name the name of the image
+	 * @return an image object
+	 */
 	public static Image getImage(String name) {
 		return images.get(name);
 	}

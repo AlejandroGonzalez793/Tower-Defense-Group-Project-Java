@@ -11,9 +11,26 @@ import model.enemies.HotAirBalloon;
 import model.enemies.Pterosaur;
 import model.enemies.RedHelicopter;
 
+/**
+ * The Waves class has all of the enemy waves that will be used during the game. 
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class Waves {
 	public static final int MAX_WAVES = 9;
 	
+	/**
+	 * Depending on the wave number, the corresponding wave (enemy list) will be set to the 
+	 * enemy list in the gamestate.
+	 * 
+	 * @param waveNum The current wave that will be chosen
+	 * @param x the x coordinate where the enemy will spawn
+	 * @param y the y coordinate where the enemy will spawn
+	 * @return the List of Enemies to be set to the main enemy list in the GameState
+	 */
 	public static List<Enemy> getWave(int waveNum, int x, int y) {
 		List<Enemy> wave = new ArrayList<>();
 		

@@ -22,6 +22,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+/**
+ * The TDmicrotransaction class provides a microtransaction window
+ * for the the Tower Defense game.
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class TDmicrotransaction extends Stage {
 	private BorderPane microPane = new BorderPane();
 	private Label currentPay;
@@ -33,6 +42,13 @@ public class TDmicrotransaction extends Stage {
 	private boolean bought = false;
 	private GridPane stageBox;
 
+	/**
+	 * Creates the microtransaction window that will prompt the player
+	 * to get more gold at various ranges from varying prices. The player
+	 * will need to enter their name, credit card number, expiration date,
+	 * and CVS number in order to process the money, so they can get the
+	 * bought gold added to their total gold in the game.
+	 */
 	public TDmicrotransaction() {
 		Label payLabel = new Label("Pay Amount: $");
 		Label goldLabel = new Label("Gold Amount: ");
@@ -157,6 +173,12 @@ public class TDmicrotransaction extends Stage {
 		this.setScene(scene);
 	}
 
+	/**
+	 * Check if a string is numeric.
+	 * 
+	 * @param str the string to check if it is numeric
+	 * @return false if the string is not numeric and true if the string is numeric
+	 */
 	public boolean isNumeric(String str) {
 		try {
 			Long.parseLong(str);
@@ -166,23 +188,46 @@ public class TDmicrotransaction extends Stage {
 		}
 	}
 
+	/**
+	 * Check to see if the player bought something in the microtransaction.
+	 * 
+	 * @return true if microtransaction was successful or false if not.
+	 */
 	public boolean isBought() {
 		return bought;
 	}
 
+	/**
+	 * Get the bought gold amount from a string and convert it to an integer.
+	 * 
+	 * @return the amount of gold as an integer
+	 */
 	public int getBoughtGold() {
 		return Integer.parseInt(currentGold.getText());
 	}
 
+	/**
+	 * The MicroButton is used for all of the microtransaction buttons.
+	 */
 	class MicroButton implements EventHandler<ActionEvent> {
 		private String payAmount;
 		private String goldAmount;
 
+		/**
+		 * Constructor for MicroButton that takes in pay amount and gold gained variables.
+		 * 
+		 * @param payAmount how much the player will pay
+		 * @param goldAmount how much gold the player will gain
+		 */
 		public MicroButton(String payAmount, String goldAmount) {
 			this.payAmount = payAmount;
 			this.goldAmount = goldAmount;
 		}
 
+		/**
+		 * Set the text in the Pay and Gold amounts to the payAmount and
+		 * goldAmount from the pay package the player choose.
+		 */
 		public void handle(ActionEvent e) {
 			currentPay.setText(payAmount);
 			currentGold.setText(goldAmount);

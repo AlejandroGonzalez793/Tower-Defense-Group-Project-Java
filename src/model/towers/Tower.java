@@ -25,6 +25,17 @@ public class Tower extends Entity {
 	private int rate;
 	private int cost;
 	
+	/**
+	 * Custom constructor for a Tower object.
+	 * 
+	 * @param x the x coordinate were the tower will be placed
+	 * @param y the y coordinate were the tower will be placed
+	 * @param width the width of the tower
+	 * @param height the height of the tower
+	 * @param radius the enemy detection radius of the tower
+	 * @param rate the fire rate of the tower
+	 * @param cost how much the tower cost to buy
+	 */
 	public Tower(int x, int y, int width, int height, int radius, int rate, int cost) {
 		super(x, y, width, height);
 		this.radius = radius;
@@ -33,10 +44,21 @@ public class Tower extends Entity {
 		image = ResourceManager.getImage("Default");
 	}
 	
+	/**
+	 * Custom constructor for a Tower object with specified height and width.
+	 * 
+	 * @param x the x coordinate were the tower will be placed
+	 * @param y the y coordinate were the tower will be placed
+	 * @param width the width of the tower
+	 * @param height the height of the tower
+	 */
 	public Tower(int x, int y, int width, int height) {
 		this(x, y, width, height, DEFAULT_RADIUS, DEFAULT_RATE, DEFAULT_COST);
 	}
 	
+	/**
+	 * Base constructor for a Tower object.
+	 */
 	public Tower() {
 		this(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_RADIUS, DEFAULT_RATE, DEFAULT_COST);
 	}
@@ -52,18 +74,38 @@ public class Tower extends Entity {
 		return tick % rate == 0;
 	}
 	
+	/**
+	 * Get the detection radius of the tower.
+	 * 
+	 * @return the detection radius value of the tower
+	 */
 	public int getRadius() {
 		return radius;
 	}
 	
+	/**
+	 * Get the fire rate of the tower.
+	 * 
+	 * @return the fire rate value
+	 */
 	public int getRate() {
 		return rate;
 	}
 	
+	/**
+	 * Get the tower price.
+	 * 
+	 * @return the cost of the tower
+	 */
 	public int getCost() {
 		return cost;
 	}
 	
+	/**
+	 * Create a new projectile object.
+	 * 
+	 * @return a new projectile object
+	 */
 	public Projectile getProjectile() {
 		return new Projectile(x + DEFAULT_WIDTH / 2, y + DEFAULT_HEIGHT / 2);
 	}

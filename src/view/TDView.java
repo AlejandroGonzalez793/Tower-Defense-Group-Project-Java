@@ -55,6 +55,21 @@ import model.projectiles.Projectile;
 import model.towers.Tower;
 import util.ResourceManager;
 
+
+/**
+ * This class represents the view of our program. 
+ * 
+ * The view uses JavaFX to display our Tower defense game. The view
+ * contains multiple windows for the main main, game window, and other
+ * window pop ups. The view reads in a user designed text file that 
+ * constructs our map to play tower defense. The view updates every time 
+ * the tick method in the model set changes to it's observers. 
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class TDView extends Application implements Observer {
 	private Stage primaryStage;
 	private BorderPane root;
@@ -88,6 +103,12 @@ public class TDView extends Application implements Observer {
 	private static final String ROAD_CHAR = "-";
 	private static final String DEAD_CHAR = "d";
 
+	/**
+	 * This method is the start method that initializes our view once the 
+	 * main class calls starts the application. 
+	 * 
+	 * @param primaryStage This is a Stage object that will contain our view.
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		ResourceManager.loadImages();
@@ -115,6 +136,7 @@ public class TDView extends Application implements Observer {
 
 		root = new BorderPane();
 
+		// These our all our preset maps in the main menu
 		MenuBar menuBar = new MenuBar();
 		Menu menu = new Menu("Stage Select");
 		MenuItem stageOneItem = new MenuItem("Stage 1");
@@ -150,6 +172,18 @@ public class TDView extends Application implements Observer {
 		newGame();
 	}
 
+	/**
+	 * This method update our view each time the observable is changed in the model.
+	 * 
+	 * Once a projectile hits and enemy or goes outside the tower radius, the 
+	 * projectile will decrement the enemies health and then have the bullet removed
+	 * from the canvas. It also checks if the game is over, if so then a pop up window
+	 * appears and the user is redirected to the main menu.
+	 * 
+	 * @param o This is a Observable object
+	 * @param arg This is a Object that contains either the gamestate object or the 
+	 * player object.
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg instanceof GameState) {
@@ -164,7 +198,6 @@ public class TDView extends Application implements Observer {
 			while (enemyIter.hasNext()) {
 				Enemy enemy = enemyIter.next();
 				if (enemy.getHealth() <= 0) {
-					// TODO: add animation here or draw some explosion
 					controller.addGold(enemy.getGold());
 					enemyIter.remove();
 				} else {
@@ -246,6 +279,13 @@ public class TDView extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * This method initializes a new game for the user once he or she has just started
+	 * the game. 
+	 * 
+	 * The layout and map of the game is reseted to whatever map the user has chosen or 
+	 * goes to the default map when the user clicks start.
+	 */
 	public void newGame() {
 		this.controller = new TDController(new Player(this), new GameState(this));
 		createMap();
@@ -276,6 +316,15 @@ public class TDView extends Application implements Observer {
 		getTrack();
 	}
 
+	/**
+	 * This method creates our entire map.
+	 * 
+	 * The map will contain a set path that will be a linked list of nodes
+	 * that contain a rectangle object. The free spaces for the user to set 
+	 * done towers are denoted as "free spaces" with green grass with the road
+	 * being "road spaces" that will have some stone road image. Then the dead
+	 * zones on the map appear as rocks on the map.
+	 */
 	public void createMap() {
 		backgroundCanvas = new Canvas();
 		drawingCanvas = new Canvas();
@@ -373,6 +422,15 @@ public class TDView extends Application implements Observer {
 		root.setCenter(gamePane);
 	}
 
+	/**
+	 * This method creates our layout of towers and other buttons on the map.
+	 * 
+	 * There are eight towers added to the right of the border pane along with
+	 * the gold, round, and health added to the top of them. We also include 
+	 * multiple buttons for the speed of the rounds, next wave, music sound, 
+	 * stop music, and more, which are all added to the right side of the border
+	 * pane below the towers.
+	 */
 	public void createLayout() {
 		// Create side bar
 		BorderPane sidebarPane = new BorderPane();
@@ -382,6 +440,7 @@ public class TDView extends Application implements Observer {
 		towerPane.setHgap(5);
 		Map<String, Image> towerImageMap = controller.getTowerImageMap();
 
+		// These are the towers being set on the border pane
 		int i = 0;
 		int j = 0;
 		for (Map.Entry<String, Image> entry : towerImageMap.entrySet()) {
@@ -478,7 +537,7 @@ public class TDView extends Application implements Observer {
 		sellButton = new Button("Sell Towers");
 		sellButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent event) {
+			public void handle(ActionEvent event) { // This allows towers to be sold and removed
 				if (!sellingTowers) {
 					towerPane.setDisable(true);
 					gamePane.setDisable(false);
@@ -494,7 +553,7 @@ public class TDView extends Application implements Observer {
 		});
 
 		Button microButton = new Button("Get More Towers!");
-		microButton.setOnAction(e -> {
+		microButton.setOnAction(e -> { // This opens the microtransaction window
 			microtransMenu = new TDmicrotransaction();
 			microtransMenu.setTitle("MisurdaSoft");
 			microtransMenu.initModality(Modality.APPLICATION_MODAL);
@@ -511,7 +570,7 @@ public class TDView extends Application implements Observer {
 
 		HBox waveBox = new HBox();
 		newWaveButton = new Button("New Wave");
-		newWaveButton.setOnAction(e -> {
+		newWaveButton.setOnAction(e -> { // Next wave
 			controller.nextWave();
 			newWaveButton.setDisable(true);
 		});
@@ -532,6 +591,10 @@ public class TDView extends Application implements Observer {
 		root.setRight(sidebarPane);
 	}
 
+	/**
+	 * This method gets the according music to the map generated
+	 * when the user selects a map.
+	 */
 	public void getTrack() {
 		Media pick;
 		if (mapFileName.endsWith("map1.td")) {
@@ -553,6 +616,9 @@ public class TDView extends Application implements Observer {
 		player.play();
 	}
 
+	/**
+	 * This method stops the music being played.
+	 */
 	public void stopMusic() {
 		if (player != null) {
 			player.stop();
@@ -560,6 +626,11 @@ public class TDView extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * This method sets the map file to be read so the map can be constructed
+	 * 
+	 * @param mapFileName This the map file path
+	 */
 	public void setMapFileName(String mapFileName) {
 		this.mapFileName = mapFileName;
 	}
@@ -572,6 +643,11 @@ public class TDView extends Application implements Observer {
 	private class TowerButton implements EventHandler<ActionEvent> {
 		private String tower;
 
+		/**
+		 * This is the tower button constructor. 
+		 * 
+		 * @param tower This is a string object
+		 */
 		public TowerButton(String tower) {
 			this.tower = tower;
 		}
@@ -598,13 +674,28 @@ public class TDView extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * This private class is a event handler that constructs a new map that 
+	 * the user selects and gets the according text file to generate that 
+	 * map.
+	 */
 	private class StageButton implements EventHandler<ActionEvent> {
 		private String mapFile;
 
+		/**
+		 * This constructor is the stage button.
+		 * 
+		 * @param mapFile This is a map file path
+		 */
 		public StageButton(String mapFile) {
 			this.mapFile = mapFile;
 		}
 
+		/**
+		 * This method is the handler method that set s the map file path,
+		 * stops the music, gets the music track for that map, and then 
+		 * generates that map.
+		 */
 		public void handle(ActionEvent e) {
 			mapFileName = MAP_PATH + mapFile;
 			controller.stop();
