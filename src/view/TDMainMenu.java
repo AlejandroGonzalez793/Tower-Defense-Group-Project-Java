@@ -31,6 +31,14 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
 
+/**
+ * The TDMainMenu class provides the main menu of the Tower Defense game.
+ * 
+ * @author Ethan Glasberg (glasberg@email.arizona.edu)
+ * @author Jarod Bristol (jarodkylebristol@email.arizona.edu)
+ * @author Alex Gonzalez (aegonzalez793@email.arizona.edu)
+ * @author Patrick Dearborn (pdearborn@email.arizona.edu)
+ */
 public class TDMainMenu extends Stage {
 	private BorderPane menuPane = new BorderPane();
 	private String chosenMap;
@@ -40,6 +48,17 @@ public class TDMainMenu extends Stage {
 	private TDView view;
 	private MediaPlayer playerMenu;
 
+	/**
+	 * Create the main menu that has clickable labels Start, Exit,
+	 * Stage 1, Stage 2, Stage 3 and Map Select. Start makes it so the
+	 * user begins at stage 1. Exit closes the application. Stage 1, Stage 2 and
+	 * Stage 3 will put the user to stage 1, 2 or 3 respectively. The Map
+	 * Selection will allow the user to access a custom map of their choice.
+	 * 
+	 * @param view the TDView object for reference.
+	 * @param controller the TDcontroller object for reference.
+	 * @throws FileNotFoundException when an image can not be found.
+	 */
 	public TDMainMenu(TDView view, TDController controller) {
 		this.view = view;
 		this.controller = controller;
@@ -150,12 +169,19 @@ public class TDMainMenu extends Stage {
 		this.setScene(scene);
 	}
 
+	/**
+	 * If the MediaPlayer object is not null, music will be played.
+	 */
 	public void playMenuMusic() {
 		if (playerMenu != null) {
 			playerMenu.play();
 		}
 	}
 
+	/**
+	 * If the MediaPlayer object is not null, stop playing music
+	 * and set the MediaPlayer to null.
+	 */
 	public void stopMenuMusic() {
 		if (playerMenu != null) {
 			playerMenu.stop();
@@ -163,17 +189,39 @@ public class TDMainMenu extends Stage {
 		}
 	}
 
+	/**
+	 * Get the chosen map name for the stage to be played.
+	 * 
+	 * @return the chosen map String for the stage selection
+	 */
 	public String getMapImage() {
 		return chosenMap;
 	}
 
+	/**
+	 * The StageButton is used for the Stage 1, 2 and 3 labels as well as the
+	 * Start label. When the user clicks on the label, the MouseEvent will
+	 * pass in the correct map name and this will be sent to the TDView so
+	 * the correct stage will be played.
+	 */
 	private class StageButton implements EventHandler<MouseEvent> {
 		private String mapFile;
 
+		/**
+		 * Constructor for StageButton that takes in the selected map name.
+		 * 
+		 * @param mapFile the map name for the stage selection
+		 */
 		public StageButton(String mapFile) {
 			this.mapFile = mapFile;
 		}
 
+		/**
+		 * If the game hasn't been played for the first time, then the chosenMap variable
+		 * will be used to pass in the map name to the TDView. If the game has already been 
+		 * played at least once, then the mapFile will be directly passed into the TDView 
+		 * for the stage selection.
+		 */
 		public void handle(MouseEvent e) {
 			if (!gameStarted) {
 				playerMenu.stop();
