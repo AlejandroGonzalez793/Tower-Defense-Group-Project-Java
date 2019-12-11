@@ -8,7 +8,7 @@ import view.TDView;
  * orchestrated tone that will play in the background.
  * 
  * <p>
- * <b>Compiation: </b>javac *.java model/*.java model/enemies/*.java
+ * <b>Compilation: </b>javac *.java model/*.java model/enemies/*.java
  * model/projectiles/*.java model/towers/*.java util/*.java view/*.java
  * </p>
  * 
