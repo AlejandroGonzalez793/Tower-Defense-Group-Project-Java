@@ -10,6 +10,7 @@ import view.TDView;
  * <p>
  * <b>Compilation: </b>javac *.java model/*.java model/enemies/*.java
  * model/projectiles/*.java model/towers/*.java util/*.java view/*.java
+ * controller/*.java
  * </p>
  * 
  * <p>
@@ -26,6 +27,7 @@ import view.TDView;
  * `-` - path space (where the enemies can travel)<br>
  * `+` - start of the path (where the enemies will start)<br>
  * `=` - end of the path (where the enemies will stop) <br>
+ * `d` - blocked tile space where nothing can be placed <br>
  * <br>
  * <b>Example:</b><br>
  * 16<br>
